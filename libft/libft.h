@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:37:17 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/02/12 18:52:46 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/04/19 14:36:19 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ size_t	ft_strlen_gnl(const char *str);
 char	*ft_strdup_gnl(const char *s);
 char	*ft_strchr_gnl(const char *s, int c);
 char	*ft_strjoin_gnl(char const *s1, char const *s2);
+int	    ft_strcmp(const char *s1, const char *s2);
 size_t	ft_strlcat(char *dst, const char *src, size_t size);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 void	ft_bzero(void *s, size_t n);

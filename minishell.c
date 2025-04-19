@@ -14,7 +14,7 @@ int	main(void)
 		}
 		if (*input)
 			add_history(input);
-		if (strcmp(input, "exit") == 0)
+		if (ft_strcmp(input, "exit") == 0)
 		{
 			free(input);
 			break ;
