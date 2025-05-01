@@ -1,37 +1,19 @@
-#===============================================================================
-#                                CONFIGURATION
-#===============================================================================
-
-# Compiler and flags
 CC      := cc
 CFLAGS  := -Wall -Wextra -Werror
-
-# Program name
 NAME    := minishell
 
-# Source and object files (manual listing)
 SRCS    := minishell.c
 OBJS    := $(SRCS:.c=.o)
 
-# Libft
 LIBFT_DIR := ./libft
 LIBFT_A   := $(LIBFT_DIR)/libft.a
 
-# External libraries
 LDFLAGS := -lreadline -lncurses
-
-#===============================================================================
-#                                 COLOR CODES
-#===============================================================================
 
 GREEN := \033[1;32m
 BLUE  := \033[1;34m
 RED   := \033[1;31m
 RESET := \033[0m
-
-#===============================================================================
-#                                   RULES
-#===============================================================================
 
 all: $(LIBFT_A) $(NAME)
 

@@ -6,7 +6,7 @@ int	main(void)
 
 	while (1)
 	{
-		input = readline("minishell> ");
+		input = readline("\001\033[31m\002minishell 🔥 > \001\033[0m\002");
 		if (!input)
 		{
 			printf("exit\n");
