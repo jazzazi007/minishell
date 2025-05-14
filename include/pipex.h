@@ -45,5 +45,7 @@ char	*null_ret(char *path);
 int		handle_ret(char *path, char **cmd, int err_num);
 int		handle_ret_num(char *path, char **cmd, int err_num);
 int		exceve_ret(char *path, char **cmd, int err_num);
+void check_pipes_forks(char *ag, char **env);
+
 
 #endif
