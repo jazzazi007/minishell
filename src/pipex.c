@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: moaljazz <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/05 19:57:50 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/01/05 19:57:54 by moaljazz         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../include/pipex.h"
 
@@ -72,12 +61,12 @@ void	pipex(int infile, int outfile, char **ag, char **env)
 	}
 }
 
-int	main(int ac, char **av, char **envp)
+int	minishell(int ac, char **av, char **envp)
 {
 	int	fd1;
 	int	fd2;
 
-	if (ac == 5)
+	if (ac >= 1)
 	{
 		fd1 = open(av[1], O_RDONLY);
 		fd2 = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);

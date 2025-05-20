@@ -2,16 +2,16 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 SRC_DIR = src
 INC_DIR = include
-SRCS = $(SRC_DIR)/pipex.c $(SRC_DIR)/ft_execute.c $(SRC_DIR)/ft_utils.c $(SRC_DIR)/return.c
+SRCS = $(SRC_DIR)/pipex.c $(SRC_DIR)/ft_execute.c $(SRC_DIR)/ft_utils.c $(SRC_DIR)/return.c $(SRC_DIR)/multi_pipes.c
 OBJS = $(SRCS:.c=.o)
-NAME = pipex
+NAME = minishell
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 all: $(LIBFT) $(NAME)
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L$(LIBFT_DIR) -lft
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L$(LIBFT_DIR) -lft -lreadline
 %.o: %.c
 	$(CC) $(CFLAGS) -I$(INC_DIR) -I$(LIBFT_DIR) -c $< -o $@
 clean:
