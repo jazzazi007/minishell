@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:28 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/05/10 17:24:51 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:13:12 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void sigint_handler(int signum)
     g_exit_status = 130;
 }
 // Setup handlers for SIGINT and SIGQUIT
+
 void setup_signal_handlers(void)
 {
     struct sigaction sa;

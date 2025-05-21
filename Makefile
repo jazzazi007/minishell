@@ -2,7 +2,7 @@ CC      := cc
 CFLAGS  := -Wall -Wextra -Werror
 NAME    := minishell
 
-SRCS    := minishell.c signal.c
+SRCS    := minishell.c signal.c execution/ft_execute.c execution/ft_utils.c execution/multi_pipes.c execution/pipex.c execution/return.c
 OBJS    := $(SRCS:.c=.o)
 
 LIBFT_DIR := ./libft

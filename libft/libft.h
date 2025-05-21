@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:37:17 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/04/19 14:36:19 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/05/21 14:47:29 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 #  define BUFFER_SIZE 1024
 # endif
 
+char	*ft_strcpy(char *destination, const char *source);
+char	*ft_strcat(char *dest, const char *src);
+char	*ft_strtok(char *str, const char *delim);
 char	*get_next_line(int fd);
 size_t	ft_strlen_gnl(const char *str);
 char	*ft_strdup_gnl(const char *s);
