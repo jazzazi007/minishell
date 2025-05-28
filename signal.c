@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:28 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/05/21 15:13:12 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:51:52 by ramroma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void sigint_handler(int signum)
     write(1, "\n", 1);
     rl_replace_line("", 0);
     rl_on_new_line();
-    rl_redisplay();
     g_exit_status = 130;
 }
 // Setup handlers for SIGINT and SIGQUIT
@@ -31,13 +30,13 @@ void setup_signal_handlers(void)
 
     // Set handler for SIGINT (Ctrl+C)
     sa.sa_handler = sigint_handler;
-    sa.sa_flags = SA_RESTART;
+    sa.sa_flags = 0;
     sigemptyset(&sa.sa_mask);
     sigaction(SIGINT, &sa, NULL);
 
     // Ignore SIGQUIT (Ctrl-\)
     sa.sa_handler = SIG_IGN;
-    sa.sa_flags = SA_RESTART;
+    sa.sa_flags = 0;
     sigemptyset(&sa.sa_mask);
     sigaction(SIGQUIT, &sa, NULL);
 }
