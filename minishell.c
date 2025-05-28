@@ -23,6 +23,67 @@ void print_shell_banner(void)
     printf("\033[1;34m    ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝\n");
     printf("\033[0m\n");
 }
+
+void cmd_tok(char *input)
+{
+    if (!input || !*input)
+        return;
+    
+    while (*input)
+    {
+        while (*input && (*input == ' ' || *input == '\t'))
+            input++;
+        
+        if (*input == '\0')
+            break;
+        
+        if (*input == '|')
+        {
+            printf("Token: PIPE\n");
+            input++;
+        }
+        else if (*input == '>')
+        {
+            printf("Token: REDIR_OUT\n");
+            input++;
+            if (*input == '>')
+            {
+                printf("Token: APPEND\n");
+                input++;
+            }
+        }
+        else if (*input == '<')
+        {
+            printf("Token: REDIR_IN\n");
+            input++;
+        }
+        else
+        {
+            char *start = input;
+            int len = 0;            
+            while (*input && *input != '|' && *input != ';')
+            {
+                if (*input != ' ' && *input != '\t')
+                {
+                    while (*input && *input != ' ' && *input != '\t' && 
+                           *input != '|' && *input != ';' && 
+                           *input != '>' && *input != '<')
+                        input++;
+                    len = input - start;
+                }
+                else
+                    input++;
+            }            
+            if (len > 0)
+                printf("Token: COMMAND (%.*s)\n", len, start);            
+            if (*input == ';')
+            {
+                printf("Token: SEMICOLON\n");
+                input++;
+            }
+        }
+    }
+}
 int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
@@ -46,6 +107,7 @@ int	main(int ac, char **av, char **envp)
 			free(input);
 			break ;
 		}
+		cmd_tok(input);
 		check_pipes_forks(input, envp);
 		free(input);
 	}
