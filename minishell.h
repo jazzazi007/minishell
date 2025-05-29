@@ -42,6 +42,16 @@ typedef struct s_tokenizer
 }	t_tokenizer;
 ///
 
+typedef struct minishell
+{
+	char			*input;
+	char			**envp;
+	char			**cmds;
+	int				exit_status;
+	int				*pipes[2];
+	t_tokenizer		*token_list;
+	int				token_count;
+}	t_minishell;
 //execute 
 
 int		cmd_exec(char *agv, char **envp);

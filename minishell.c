@@ -24,7 +24,7 @@ void print_shell_banner(void)
     printf("\033[0m\n");
 }
 
-void cmd_tok(char *input)
+/*void cmd_tok(char *input)
 {
     if (!input || !*input)
         return;
@@ -83,7 +83,8 @@ void cmd_tok(char *input)
             }
         }
     }
-}
+}*/
+
 int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
@@ -107,7 +108,6 @@ int	main(int ac, char **av, char **envp)
 			free(input);
 			break ;
 		}
-		cmd_tok(input);
 		check_pipes_forks(input, envp);
 		free(input);
 	}

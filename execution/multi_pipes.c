@@ -1,5 +1,41 @@
 #include "../minishell.h"
 
+char *get_command(char *input, int position)
+{
+    char *start = input;
+    int pipe_count = 0;
+    
+    while (*start && pipe_count < position)
+    {
+        if (*start == '|')
+            pipe_count++;
+        start++;
+    }
+    
+    while (*start && (*start == ' ' || *start == '\t'))
+        start++;
+    
+    if (!*start)
+        return NULL;
+    
+    char *end = start;
+    while (*end && *end != '|')
+        end++;
+    
+    int len = end - start;
+    char *cmd = malloc(len + 1);
+    if (!cmd)
+        return NULL;
+    
+    strncpy(cmd, start, len);
+    cmd[len] = '\0';
+    
+    while (len > 0 && (cmd[len - 1] == ' ' || cmd[len - 1] == '\t'))
+        cmd[--len] = '\0';
+    
+    return cmd;
+}
+
 bool is_valid_pipe_syntax(char *ag)
 {
     int i = 0;
@@ -34,7 +70,10 @@ bool is_valid_pipe_syntax(char *ag)
 
 void fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd)
 {
-    (void)env; // Placeholder for command execution
+    char *command = get_command(cmd, 0); // Get first command
+    if (!command)
+        exit(1);
+
     close(pipe_fd[0]);
     if (fd_in != STDIN_FILENO)
     {
@@ -43,8 +82,9 @@ void fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd)
     }
     dup2(pipe_fd[1], STDOUT_FILENO);
     close(pipe_fd[1]);
-    exit(cmd_exec(cmd, env));
-   
+    
+    exit(cmd_exec(command, env));
+    free(command);
 }
 
 int count_pipes(char *ag)
@@ -175,15 +215,27 @@ void check_pipes_forks(char *ag, char **env)
                 fd_in = pipe_fds[i - 1][0];
 
             if (i < pipe_count)
-                fork_operate(fd_in, ag, env, pipe_fds[i]);
+            {
+                char *command = get_command(ag, i);
+                if (command)
+                {
+                    fork_operate(fd_in, ag, env, pipe_fds[i]);
+                    free(command);
+                }
+            }
             else
             {
-                if (fd_in != STDIN_FILENO)
+                char *command = get_command(ag, i);
+                if (command)
                 {
-                    dup2(fd_in, STDIN_FILENO);
-                    close(fd_in);
+                    if (fd_in != STDIN_FILENO)
+                    {
+                        dup2(fd_in, STDIN_FILENO);
+                        close(fd_in);
+                    }
+                    exit(cmd_exec(command, env));
+                    free(command);
                 }
-                exit(cmd_exec(ag, env));
             }
             exit(1);
         }
