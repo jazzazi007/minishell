@@ -70,21 +70,19 @@ bool is_valid_pipe_syntax(char *ag)
 
 void fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd)
 {
-    char *command = get_command(cmd, 0); // Get first command
-    if (!command)
-        exit(1);
-
     close(pipe_fd[0]);
+
     if (fd_in != STDIN_FILENO)
     {
         dup2(fd_in, STDIN_FILENO);
         close(fd_in);
     }
+
     dup2(pipe_fd[1], STDOUT_FILENO);
     close(pipe_fd[1]);
     
-    exit(cmd_exec(command, env));
-    free(command);
+    cmd_exec(cmd, env);
+    exit(1);
 }
 
 int count_pipes(char *ag)
@@ -211,32 +209,38 @@ void check_pipes_forks(char *ag, char **env)
         if (child_pids[i] == 0)
         {
             int fd_in = STDIN_FILENO;
+            char *command;
+
+            int j = 0;
+            while (j < pipe_count)
+            {
+                if (j != i - 1) 
+                    close(pipe_fds[j][0]);
+                if (j != i)      
+                    close(pipe_fds[j][1]);
+                j++;
+            }
+
             if (i > 0)
                 fd_in = pipe_fds[i - 1][0];
 
+            command = get_command(ag, i);
+            if (!command)
+                exit(1);
+
             if (i < pipe_count)
-            {
-                char *command = get_command(ag, i);
-                if (command)
-                {
-                    fork_operate(fd_in, ag, env, pipe_fds[i]);
-                    free(command);
-                }
-            }
+                fork_operate(fd_in, command, env, pipe_fds[i]);
             else
             {
-                char *command = get_command(ag, i);
-                if (command)
+                if (fd_in != STDIN_FILENO)
                 {
-                    if (fd_in != STDIN_FILENO)
-                    {
-                        dup2(fd_in, STDIN_FILENO);
-                        close(fd_in);
-                    }
-                    exit(cmd_exec(command, env));
-                    free(command);
+                    dup2(fd_in, STDIN_FILENO);
+                    close(fd_in);
                 }
+                cmd_exec(command, env);
+                exit(1);
             }
+            free(command);
             exit(1);
         }
         i++;
