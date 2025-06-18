@@ -83,6 +83,8 @@ void fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd);
 int **init_pipes(int pipe_count);
 pid_t *init_child_pids(int pipe_count, int **pipe_fds);
 void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count);
+int count_pipes(char *ag);
+char *get_command(char *input, int position);
 /////////
 
 //signal

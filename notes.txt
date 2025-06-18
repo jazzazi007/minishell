@@ -1,0 +1,29 @@
+* leaks with no readline
+* history needs to be modified >> no spaces
+* ctrl c must be handeled well
+* expander
+* external commands
+* heredocs
+* redirections
+* handle "" ''
+* echo "ls | ls" ignore to split "|" or "<" ">" >> "<<"
+
+** completing the parsing**
+
+sh-5.2$ echo "'$USER'"
+'moaljazz'
+sh-5.2$ echo "'"$USER"'"
+'moaljazz'
+sh-5.2$ echo "'$USER"'
+> ^C
+sh-5.2$ echo '$USER'
+$USER
+sh-5.2$ echo '"$USER"'
+"$USER"
+sh-5.2$ echo '$USER'
+$USER
+
+*******
+
+input: ls | "ls" "-"l
+parsing: ls | ls -l
