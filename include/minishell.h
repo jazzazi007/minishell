@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/05/21 14:34:33 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/06/22 13:43:01 by ramroma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,15 @@ typedef enum e_tokentype
 
 typedef struct s_tokenizer
 {
-	char			*value;
-	t_tokentype	type;
-}	t_tokenizer;
+    char                *value;
+    t_tokentype         type;
+    struct s_tokenizer  *next;
+}   t_tokenizer;
+
+t_tokenizer *tokenize_input(const char *input);
+void free_tokens(t_tokenizer *head);
+t_tokenizer *new_token(const char *val, t_tokentype type);
+void add_token(t_tokenizer **head, t_tokenizer *new);
 ///
 
 typedef struct minishell
