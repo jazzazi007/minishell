@@ -6,7 +6,7 @@
 /*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:31:21 by ramroma           #+#    #+#             */
-/*   Updated: 2025/06/22 13:54:37 by ramroma          ###   ########.fr       */
+/*   Updated: 2025/06/25 14:36:52 by ramroma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,16 @@ static bool is_metachar(char c)
 
 static t_tokentype get_metatype(const char *s)
 {
-    if (!strncmp(s, "<<", 2)) return T_HEREDOC;
-    if (!strncmp(s, ">>", 2)) return T_APPEND;
-    if (*s == '<') return T_REDIR_IN;
-    if (*s == '>') return T_REDIR_OUT;
-    if (*s == '|') return T_PIPE;
+    if (!strncmp(s, "<<", 2))
+     return T_HEREDOC;
+    if (!strncmp(s, ">>", 2))
+     return T_APPEND;
+    if (*s == '<')
+     return T_REDIR_IN;
+    if (*s == '>')
+     return T_REDIR_OUT;
+    if (*s == '|')
+     return T_PIPE;
     return T_WORD;
 }
 
