@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:31:21 by ramroma           #+#    #+#             */
-/*   Updated: 2025/06/25 14:36:52 by ramroma          ###   ########.fr       */
+/*   Updated: 2025/07/17 13:48:18 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ static bool is_metachar(char c)
 
 static t_tokentype get_metatype(const char *s)
 {
-    if (!strncmp(s, "<<", 2))
+    if (!ft_strncmp(s, "<<", 2))
      return T_HEREDOC;
-    if (!strncmp(s, ">>", 2))
+    if (!ft_strncmp(s, ">>", 2))
      return T_APPEND;
     if (*s == '<')
      return T_REDIR_IN;
@@ -58,7 +58,7 @@ void add_token(t_tokenizer **head, t_tokenizer *new)
 static char *extract_quoted(const char *src, int *i, char quote)
 {
     int start = ++(*i);
-    while (src[*i] && src[*i] != quote)
+    while (src[*i] && (get_metatype(&src[*i])) == T_WORD)
         (*i)++;
     char *res = ft_substr(src, start, *i - start);
     if (src[*i] == quote)
@@ -90,7 +90,7 @@ t_tokenizer *tokenize_input(const char *input)
         if (input[i] == '\"' || input[i] == '\'')
         {
             char quote = input[i];
-            char *word = extract_quoted(input, &i, quote);
+            char *word = extract_quoted(input, &i, quote); 
             add_token(&head, new_token(word, T_WORD));
             free(word);
         }
