@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:48:22 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/05/21 14:36:38 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/07/17 18:58:23 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,18 +60,18 @@ void	fork2(int outfile, char **ag, char **env, int *pd)
 	return ;
 }
 
-char	*bash_cmd(char *agv)
-{
-	char	*new_cmd;
+// char	*bash_cmd(char *agv)
+// {
+// 	char	*new_cmd;
 
-	if (!agv || ft_strncmp(agv, "./", 2) != 0)
-	{
-		return (ft_strdup(agv));
-	}
-	if (ft_strncmp(agv, "./ ", 3) == 0)
-	{
-		return (ft_strdup(agv));
-	}
-	new_cmd = ft_strjoin("bash ", agv + 2);
-	return (new_cmd);
-}
+// 	if (!agv || ft_strncmp(agv, "./", 2) != 0)
+// 	{
+// 		return (ft_strdup(agv));
+// 	}
+// 	if (ft_strncmp(agv, "./ ", 3) == 0)
+// 	{
+// 		return (ft_strdup(agv));
+// 	}
+// 	new_cmd = ft_strjoin("bash ", agv + 2);
+// 	return (new_cmd);
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/06/22 13:43:01 by ramroma          ###   ########.fr       */
+/*   Updated: 2025/07/17 19:06:52 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,6 @@ extern int g_exit_status;
 void sigint_handler(int signum);
 void setup_signal_handlers(void);
 ///
+
+char **build_argv(t_tokenizer *tokens);
 #endif

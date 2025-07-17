@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:31:21 by ramroma           #+#    #+#             */
-/*   Updated: 2025/07/17 13:48:18 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/07/17 19:08:45 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,24 +55,64 @@ void add_token(t_tokenizer **head, t_tokenizer *new)
     }
 }
 
-static char *extract_quoted(const char *src, int *i, char quote)
-{
-    int start = ++(*i);
-    while (src[*i] && (get_metatype(&src[*i])) == T_WORD)
-        (*i)++;
-    char *res = ft_substr(src, start, *i - start);
-    if (src[*i] == quote)
-        (*i)++;
-    return res;
-}
+// static char *extract_quoted(const char *src, int *i, char quote)
+// {
+//     int start = ++(*i);
+//     while (src[*i] && (get_metatype(&src[*i])) == T_WORD)
+//         (*i)++;
+//     char *res = ft_substr(src, start, *i - start);
+//     if (src[*i] == quote)
+//         (*i)++;
+//     return res;
+// }
 
-static char *extract_word(const char *src, int *i)
-{
-    int start = *i;
-    while (src[*i] && !is_metachar(src[*i]) && src[*i] != ' ' && src[*i] != '\"' && src[*i] != '\'')
-        (*i)++;
-    return ft_substr(src, start, *i - start);
-}
+// static char *extract_word(const char *src, int *i)
+// {
+//     int start = *i;
+//     while (src[*i] && !is_metachar(src[*i]) && src[*i] != ' ' && src[*i] != '\"' && src[*i] != '\'')
+//         (*i)++;
+//     return ft_substr(src, start, *i - start);
+// }
+
+// t_tokenizer *tokenize_input(const char *input)
+// {
+//     int i = 0;
+//     t_tokenizer *head = NULL;
+
+//     while (input[i])
+//     {
+//         while (input[i] == ' ')
+//             i++;
+
+//         if (!input[i])
+//             break;
+
+//         if (input[i] == '\"' || input[i] == '\'')
+//         {
+//             char quote = input[i];
+//             char *word = extract_quoted(input, &i, quote); 
+//             add_token(&head, new_token(word, T_WORD));
+//             free(word);
+//         }
+//         else if (!ft_strncmp(&input[i], "<<", 2) || !ft_strncmp(&input[i], ">>", 2))
+//         {
+//             add_token(&head, new_token(ft_substr(input, i, 2), get_metatype(&input[i])));
+//             i += 2;
+//         }
+//         else if (is_metachar(input[i]))
+//         {
+//             add_token(&head, new_token(ft_substr(input, i, 1), get_metatype(&input[i])));
+//             i++;
+//         }
+//         else
+//         {
+//             char *word = extract_word(input, &i);
+//             add_token(&head, new_token(word, T_WORD));
+//             free(word);
+//         }
+//     }
+//     return head;
+// }
 
 t_tokenizer *tokenize_input(const char *input)
 {
@@ -87,33 +127,58 @@ t_tokenizer *tokenize_input(const char *input)
         if (!input[i])
             break;
 
-        if (input[i] == '\"' || input[i] == '\'')
-        {
-            char quote = input[i];
-            char *word = extract_quoted(input, &i, quote); 
-            add_token(&head, new_token(word, T_WORD));
-            free(word);
-        }
-        else if (!ft_strncmp(&input[i], "<<", 2) || !ft_strncmp(&input[i], ">>", 2))
+        // Handle << and >>
+        if (!ft_strncmp(&input[i], "<<", 2) || !ft_strncmp(&input[i], ">>", 2))
         {
             add_token(&head, new_token(ft_substr(input, i, 2), get_metatype(&input[i])));
             i += 2;
         }
+        // Handle single character metacharacters
         else if (is_metachar(input[i]))
         {
             add_token(&head, new_token(ft_substr(input, i, 1), get_metatype(&input[i])));
             i++;
         }
+        // Handle word (quoted or unquoted mixed)
         else
         {
-            char *word = extract_word(input, &i);
+            char *word = ft_strdup("");
+            while (input[i] && input[i] != ' ' && !is_metachar(input[i]))
+            {
+                char *part = NULL;
+
+                // Handle quoted segment
+                if (input[i] == '\"' || input[i] == '\'')
+                {
+                    char quote = input[i++];
+                    int start = i;
+                    while (input[i] && input[i] != quote)
+                        i++;
+                    part = ft_substr(input, start, i - start);
+                    if (input[i] == quote)
+                        i++; // skip closing quote
+                }
+                // Handle unquoted segment
+                else
+                {
+                    int start = i;
+                    while (input[i] && input[i] != ' ' && !is_metachar(input[i]) && input[i] != '\'' && input[i] != '\"')
+                        i++;
+                    part = ft_substr(input, start, i - start);
+                }
+
+                // Join part into word
+                char *tmp = word;
+                word = ft_strjoin(word, part);
+                free(tmp);
+                free(part);
+            }
             add_token(&head, new_token(word, T_WORD));
             free(word);
         }
     }
     return head;
 }
-
 void free_tokens(t_tokenizer *head)
 {
     while (head)
