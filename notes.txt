@@ -5,11 +5,12 @@
 * external commands
 * heredocs
 * redirections
-* handle "" ''
-* echo "ls | ls" ignore to split "|" or "<" ">" >> "<<"
+* handle "" '' > in expand 
+* echo "ls | ls" ignore to split "|" or "<" ">" >> "<<" > done
 
-** completing the parsing**
+** completing the parsing** > most complete
 
+this in expander i work on it:
 sh-5.2$ echo "'$USER'"
 'moaljazz'
 sh-5.2$ echo "'"$USER"'"
@@ -25,5 +26,6 @@ $USER
 
 *******
 
+done:
 input: ls | "ls" "-"l
 parsing: ls | ls -l
