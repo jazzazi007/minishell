@@ -4,7 +4,7 @@ NAME    := minishell
 
 SRCS    := src/minishell.c src/signal.c src/ft_execute.c src/ft_utils.c src/multi_pipes.c src/echo.c src/return.c \
 		   src/pwd.c src/pipex.c src/get_cmd.c src/init_fork.c src/init_pipes.c src/tokenizer.c \
-		   src/builed_argv.c 
+		   src/builed_argv.c src/token_utils.c src/error.c
 OBJS    := $(SRCS:.c=.o)
 
 LIBFT_DIR := ./libft

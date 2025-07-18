@@ -5,11 +5,13 @@
 * external commands
 * heredocs
 * redirections
-* handle "" ''
-* echo "ls | ls" ignore to split "|" or "<" ">" >> "<<"
+* handle "" '' >> working on it in expander 
+* echo "ls | ls" ignore to split "|" or "<" ">" >> "<<" >>>>> done but "|" still not give syntax error and "||" give
+ "Error: Invalid pipe or semicolon syntax" instead "command not found"
 
-** completing the parsing**
+** completing the parsing** >>>> mostly done 18/7
 
+expand :
 sh-5.2$ echo "'$USER'"
 'moaljazz'
 sh-5.2$ echo "'"$USER"'"
@@ -24,6 +26,6 @@ sh-5.2$ echo '$USER'
 $USER
 
 *******
-
+done 17/7 :
 input: ls | "ls" "-"l
 parsing: ls | ls -l

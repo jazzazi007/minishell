@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/07/17 14:10:44 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/07/18 07:50:56 by ramroma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,13 @@ int	main(int ac, char **av, char **envp)
 
 		// Tokenize the input first
 		tokens = tokenize_input(input);
+		if (is_syntax_error(tokens))
+		{
+			g_exit_status = 258;
+			free_tokens(tokens);
+			free(input);           // 🔥 VERY important!
+			continue;              // ✅ Prevent infinite loop
+		}
 
 		// Debug print
 		t_tokenizer *tmp = tokens;
