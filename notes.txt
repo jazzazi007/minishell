@@ -1,26 +1,22 @@
-* leaks with no readline
-* history needs to be modified >> no spaces
-* ctrl c must be handeled well
-* expander
-* external commands
-* heredocs
-* redirections
-<<<<<<< HEAD
-* handle "" '' > in expand 
-* echo "ls | ls" ignore to split "|" or "<" ">" >> "<<" > done
+* leaks with no readline  
+* history needs to be modified >> no spaces  
+* ctrl c must be handled well  
+* expander  
+* external commands  
+* heredocs  
+* redirections  
+* handle "" '' >> working on it in expander  
+* echo "ls | ls" ignore to split "|" or "<" ">" >> "<<" >>> done  
+  - but "|" still doesn't give syntax error  
+  - "||" gives: Error: Invalid pipe or semicolon syntax instead of command not found  
 
-** completing the parsing** > most complete
+**completing the parsing** >>> mostly done 18/7
 
-this in expander i work on it:
-=======
-* handle "" '' >> working on it in expander 
-* echo "ls | ls" ignore to split "|" or "<" ">" >> "<<" >>>>> done but "|" still not give syntax error and "||" give
- "Error: Invalid pipe or semicolon syntax" instead "command not found"
+---
 
-** completing the parsing** >>>> mostly done 18/7
+expand:
 
-expand :
->>>>>>> b7c2de9fc07b80afc5c0e9f44de1a34b3fdb10e2
+```bash
 sh-5.2$ echo "'$USER'"
 'moaljazz'
 sh-5.2$ echo "'"$USER"'"
@@ -33,13 +29,3 @@ sh-5.2$ echo '"$USER"'
 "$USER"
 sh-5.2$ echo '$USER'
 $USER
-
-*******
-<<<<<<< HEAD
-
-done:
-=======
-done 17/7 :
->>>>>>> b7c2de9fc07b80afc5c0e9f44de1a34b3fdb10e2
-input: ls | "ls" "-"l
-parsing: ls | ls -l
