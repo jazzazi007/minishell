@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/07/17 19:06:52 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/07/18 10:41:50 by ramroma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,10 @@ t_tokenizer *tokenize_input(const char *input);
 void free_tokens(t_tokenizer *head);
 t_tokenizer *new_token(const char *val, t_tokentype type);
 void add_token(t_tokenizer **head, t_tokenizer *new);
+bool is_metachar(char c);
+t_tokentype get_metatype(const char *s);
+bool	is_syntax_error(t_tokenizer *tokens);
+
 ///
 
 typedef struct minishell
@@ -76,7 +80,7 @@ int		file_errhandle(int file);
 char	*get_cmd_assist(char *cmd, char *dir);
 void	fork1(int infile, char **ag, char **env, int *pd);
 void	fork2(int outfile, char **ag, char **env, int *pd);
-char	*bash_cmd(char *agv);
+char *strip_quotes(const char *str);
 void	file_close(int file_closing);
 char	*path_ret(char *path, char *cpy);
 char	*null_ret(char *path);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   return.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:50:46 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/07/17 18:52:06 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/07/18 08:08:52 by ramroma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,8 @@ int	handle_ret(char *path, char **cmd, int err_num)
 	return (handle_ret_num(path, cmd, err_num));
 }
 
-int	exceve_ret(char *path, char **cmd, int err_num)
+int exceve_ret(char *path, char **cmd, int err_num)
 {
-	errno = ENOKEY;
-	perror("Error");
-	return (handle_ret_num(path, cmd, err_num));
+    // fprintf(stderr, "%s: command not found\n", cmd[0]);
+    return handle_ret_num(path, cmd, err_num);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:48:22 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/07/17 18:58:23 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/07/18 11:29:05 by ramroma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,19 @@ void	fork2(int outfile, char **ag, char **env, int *pd)
 		exit(1);
 	}
 	return ;
+}
+
+char *strip_quotes(const char *str)
+{
+    int len ;
+
+	len = ft_strlen(str);
+    if (len >= 2)
+    {
+        if ((str[0] == '"' && str[len - 1] == '"') || (str[0] == '\'' && str[len - 1] == '\''))
+            return ft_substr(str, 1, len - 2);
+    }
+    return ft_strdup(str);
 }
 
 // char	*bash_cmd(char *agv)
