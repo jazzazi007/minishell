@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/07/18 07:50:56 by ramroma          ###   ########.fr       */
+/*   Updated: 2025/08/02 19:40:07 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void print_shell_banner(void)
 {
+	write(STDOUT_FILENO, "\033[2J\033[H", 7);
     printf("\n");
     printf("\033[1;34m    ███████╗██╗  ██╗███████╗██╗     ██╗     ██╗  ██╗\n");
     printf("\033[1;34m    ██╔════╝██║  ██║██╔════╝██║     ██║     ╚██╗██╔╝\n");
@@ -24,60 +25,57 @@ void print_shell_banner(void)
     printf("\033[0m\n");
 }
 
+static void	handle_input(char *input, t_minishell *sh)
+{
+	t_tokenizer	*tokens;
+
+	check_unclosed_quotes(input);
+	tokens = tokenize_input(input);
+	if (!tokens)
+		return ;
+	if (is_syntax_error(tokens))
+	{
+		printf("here");
+		sh->last_exit = 258;
+		free_tokens(tokens);
+		return ;
+	}
+	// expand_tokens(tokens, sh);
+	cmd_exec(input , sh);
+	// check_pipes_forks(input, sh->envp);
+	free_tokens(tokens);
+}
+
 int	main(int ac, char **av, char **envp)
 {
+	t_minishell	sh;
+	char		*input;
+
 	(void)ac;
-    (void)av;
-	char	*input;
-	t_tokenizer *tokens;
-
+	(void)av;
+	sh.envp = envp;
+	sh.last_exit = 0;
 	setup_signal_handlers();
-	check_pipes_forks("clear", envp); // still uses old exec system
 	print_shell_banner();
-
 	while (1)
 	{
 		input = readline("\001\033[31m\002SHELLX 🔥 > \001\033[0m\002");
 		if (!input)
-		{
-			fprintf(stderr, "exit\n");
-			break;
-		}
+			break ;
 		if (*input)
 			add_history(input);
-		if (ft_strcmp(input, "exit") == 0)
+		if (!ft_strcmp(input, "exit"))
 		{
 			free(input);
-			break;
+			break ;
 		}
-
-		// Tokenize the input first
-		tokens = tokenize_input(input);
-		if (is_syntax_error(tokens))
-		{
-			g_exit_status = 258;
-			free_tokens(tokens);
-			free(input);           // 🔥 VERY important!
-			continue;              // ✅ Prevent infinite loop
-		}
-
-		// Debug print
-		t_tokenizer *tmp = tokens;
-		while (tmp)
-		{
-			printf("Token: %-10s | Type: %d\n", tmp->value, tmp->type);
-			tmp = tmp->next;
-		}
-
-		// For now, still use the old execution function
-		check_pipes_forks(input, envp);
-
-		// Clean up
-		free_tokens(tokens);
+		handle_input(input, &sh);
 		free(input);
 	}
+	printf("exit\n");
 	return (0);
 }
+
 // int	main(int ac, char **av, char **envp)
 // {
 // 	(void)ac;

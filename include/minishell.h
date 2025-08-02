@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/02 13:00:39 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/02 18:07:16 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ typedef struct s_tokenizer
 {
     char                *value;
     t_tokentype         type;
+	int				in_single_quotes;
+	int				in_double_quotes;
     struct s_tokenizer  *next;
 }   t_tokenizer;
 
@@ -106,12 +108,22 @@ void setup_signal_handlers(void);
 ///
 
 //expand
+typedef struct s_expand_ctx
+{
+	const char		*input;
+	int				*i;
+	t_minishell		*sh;
+	int				in_single;
+	int				in_double;
+}	t_expand_ctx;
+
 char	*expand_token_value(char *input, t_minishell *sh);
 char	*expand_var(const char *str, int *i, t_minishell *sh);
 char	*ft_strappend(char *dst, const char *src);
 char	*resolve_cmd_path(char *cmd0, t_minishell *shell);
 void	expand_tokens(t_tokenizer *head, t_minishell *sh);
 char	*get_env_value(const char *key, char **envp);
-
+int	check_unclosed_quotes(const char *input);
 char **build_argv(t_tokenizer *tokens);
+
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 07:01:45 by ramroma           #+#    #+#             */
-/*   Updated: 2025/07/18 07:01:49 by ramroma          ###   ########.fr       */
+/*   Updated: 2025/08/02 14:34:45 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,37 +32,51 @@ t_tokentype get_metatype(const char *s)
 	return T_WORD;
 }
 
-t_tokenizer *new_token(const char *val, t_tokentype type)
+t_tokenizer	*new_token(const char *val, t_tokentype type)
 {
-	t_tokenizer *tok = malloc(sizeof(t_tokenizer));
+	t_tokenizer	*tok;
+
+	tok = malloc(sizeof(t_tokenizer));
 	if (!tok)
-		return NULL;
+		return (NULL);
 	tok->value = ft_strdup(val);
+	if (!tok->value)
+	{
+		free(tok);
+		return (NULL);
+	}
 	tok->type = type;
+	tok->in_single_quotes = 0;
+	tok->in_double_quotes = 0;
 	tok->next = NULL;
-	return tok;
+	return (tok);
 }
 
-void add_token(t_tokenizer **head, t_tokenizer *new)
+void	add_token(t_tokenizer **head, t_tokenizer *new)
 {
+	t_tokenizer	*tmp;
+
 	if (!*head)
 		*head = new;
 	else
 	{
-		t_tokenizer *tmp = *head;
+		tmp = *head;
 		while (tmp->next)
 			tmp = tmp->next;
 		tmp->next = new;
 	}
 }
 
-void free_tokens(t_tokenizer *head)
+void	free_tokens(t_tokenizer *head)
 {
+	t_tokenizer	*tmp;
+
 	while (head)
 	{
-		t_tokenizer *tmp = head;
+		tmp = head;
 		head = head->next;
 		free(tmp->value);
 		free(tmp);
 	}
 }
+

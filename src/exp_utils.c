@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:26:27 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/02 13:00:24 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/02 20:03:08 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,11 @@ char	*expand_var(const char *str, int *i, t_minishell *sh)
 	char	*val;
 	int		start;
 
+	// printf("str:: %s\n", str);
 	if (str[*i] == '?')
 	{
 		(*i)++;
+		// printf("\n\nexpand_var:: %s\n\n", ft_itoa(sh->last_exit));
 		return (ft_itoa(sh->last_exit));
 	}
 	if (!ft_isalnum(str[*i]) && str[*i] != '_')

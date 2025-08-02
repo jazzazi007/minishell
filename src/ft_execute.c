@@ -6,10 +6,9 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/02 12:48:09 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/02 19:18:10 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../include/minishell.h"
 
@@ -83,34 +82,6 @@ void	free_split(char **cmd)
 	}
 	free(cmd);
 }
-
-// int	cmd_exec(char *agv, char **envp)
-// {
-// 	char	**cmd;
-// 	char	*cmd_path;
-// 	char	*bash_command;
-
-// 	cmd_path = NULL;
-// 	bash_command = bash_cmd(agv);
-// 	cmd = ft_split(bash_command, ' ');
-// 	free(bash_command);
-// 	if (!cmd || !cmd[0])
-// 	{
-// 		free_split(cmd);
-// 		return (0);
-// 	}
-// 	if (access(cmd[0], X_OK) == 0)
-// 		cmd_path = ft_strdup(cmd[0]);
-// 	else
-// 	{
-// 		cmd_path = get_cmd_path(cmd[0], envp);
-// 		if (!cmd_path)
-// 			return (handle_ret(cmd_path, cmd, 127));
-// 	}
-// 	if (execve(cmd_path, cmd, envp) == -1)
-// 		return (exceve_ret(cmd_path, cmd, 126));
-// 	return (handle_ret_num(cmd_path, cmd, 0));
-// }
 
 int	cmd_exec(char *agv, t_minishell *shell)
 {

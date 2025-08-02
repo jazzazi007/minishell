@@ -12,24 +12,26 @@
 
 #include "../include/minishell.h"
 
-int count_tokens(t_tokenizer *tokens)
+int	count_tokens(t_tokenizer *tokens)
 {
-    int count = 0;
-    while (tokens)
-    {
-        count++;
-        tokens = tokens->next;
-    }
-    return count;
+	int	count;
+
+	count = 0;
+	while (tokens)
+	{
+		count++;
+		tokens = tokens->next;
+	}
+	return (count);
 }
 
 // Build argv array copying tokens' values
 char	**build_argv(t_tokenizer *tokens)
 {
-	int				count;
-	int				i;
-	t_tokenizer		*tmp;
-	char			**argv;
+	int			count;
+	int			i;
+	t_tokenizer	*tmp;
+	char		**argv;
 
 	count = count_tokens(tokens);
 	argv = malloc(sizeof(char *) * (count + 1));
