@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/07/18 10:41:50 by ramroma          ###   ########.fr       */
+/*   Updated: 2025/08/02 13:00:39 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,11 @@ typedef struct minishell
 	int				*pipes[2];
 	t_tokenizer		*token_list;
 	int				token_count;
+	int				last_exit;
 }	t_minishell;
 //execute 
 
-int		cmd_exec(char *agv, char **envp);
+int		cmd_exec(char *agv, t_minishell *shell);
 char	*get_cmd_path(char *cmd, char **env);
 char	*ft_getenv(char **env);
 void	pipex(int infile, int outfile, char **ag, char **env);
@@ -103,6 +104,14 @@ extern int g_exit_status;
 void sigint_handler(int signum);
 void setup_signal_handlers(void);
 ///
+
+//expand
+char	*expand_token_value(char *input, t_minishell *sh);
+char	*expand_var(const char *str, int *i, t_minishell *sh);
+char	*ft_strappend(char *dst, const char *src);
+char	*resolve_cmd_path(char *cmd0, t_minishell *shell);
+void	expand_tokens(t_tokenizer *head, t_minishell *sh);
+char	*get_env_value(const char *key, char **envp);
 
 char **build_argv(t_tokenizer *tokens);
 #endif

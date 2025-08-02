@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_fork.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moaljazz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:11 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/06/18 19:23:14 by moaljazz         ###   ########.fr       */
+/*   Updated: 2025/08/02 12:58:06 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ bool is_valid_pipe_syntax(char *ag)
 
 void fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd)
 {
+    t_minishell	shell;
+
+	ft_memset(&shell, 0, sizeof(t_minishell));
+	shell.envp = env;
+    
     close(pipe_fd[0]);
 
     if (fd_in != STDIN_FILENO)
@@ -57,7 +62,7 @@ void fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd)
     dup2(pipe_fd[1], STDOUT_FILENO);
     close(pipe_fd[1]);
     
-    cmd_exec(cmd, env);
+    cmd_exec(cmd, &shell);
     exit(1);
 }
 

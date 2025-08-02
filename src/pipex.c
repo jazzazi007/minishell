@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moaljazz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:24:58 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/06/18 19:25:00 by moaljazz         ###   ########.fr       */
+/*   Updated: 2025/08/02 12:56:56 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,33 @@
 
 void	first_fork_operate(int infile, char **ag, char **env, int *pd)
 {
+	t_minishell	sh;
+
+	ft_memset(&sh, 0, sizeof(t_minishell));
+	sh.envp = env;
+	
 	close(pd[0]);
 	dup2(infile, STDIN_FILENO);
 	close(infile);
 	dup2(pd[1], STDOUT_FILENO);
 	close(pd[1]);
-	exit(cmd_exec(ag[2], env));
+	exit(cmd_exec(ag[2], &sh));
 	close(infile);
 }
 
 void	second_fork_operate(int outfile, char **ag, char **env, int *pd)
 {
+	t_minishell	sh;
+
+	ft_memset(&sh, 0, sizeof(t_minishell));
+	sh.envp = env;
+	
 	close(pd[1]);
 	dup2(outfile, STDOUT_FILENO);
 	close(outfile);
 	dup2(pd[0], STDIN_FILENO);
 	close(pd[0]);
-	exit(cmd_exec(ag[3], env));
+	exit(cmd_exec(ag[3], &sh));
 	close(outfile);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/07/18 08:08:17 by ramroma          ###   ########.fr       */
+/*   Updated: 2025/08/02 12:48:09 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,35 +112,31 @@ void	free_split(char **cmd)
 // 	return (handle_ret_num(cmd_path, cmd, 0));
 // }
 
-int cmd_exec(char *agv, char **envp)
+int	cmd_exec(char *agv, t_minishell *shell)
 {
-    t_tokenizer *tokens;
-    char **cmd;
-    char *cmd_path;
+	t_tokenizer	*tokens;
+	char		**cmd;
+	char		*cmd_path;
 
-    tokens = tokenize_input(agv);
-    if (!tokens)
-        return 1; // tokenization failed
-
-    cmd = build_argv(tokens);
-    free_tokens(tokens);
-    if (!cmd || !cmd[0])
-    {
-        free_split(cmd);
-        return 0;
-    }
-
-    if (access(cmd[0], X_OK) == 0)
-        cmd_path = ft_strdup(cmd[0]);
-    else
-    {
-        cmd_path = get_cmd_path(cmd[0], envp);
-        if (!cmd_path)
-            return handle_ret(cmd_path, cmd, 127);
-    }
-
-    if (execve(cmd_path, cmd, envp) == -1)
-        return exceve_ret(cmd_path, cmd, 126);
-
-    return handle_ret_num(cmd_path, cmd, 0);
+	tokens = tokenize_input(agv);
+	if (!tokens)
+		return (1);
+	expand_tokens(tokens, shell);
+	cmd = build_argv(tokens);
+	free_tokens(tokens);
+	if (!cmd || !cmd[0])
+	{
+		free_split(cmd);
+		return (0);
+	}
+	cmd_path = resolve_cmd_path(cmd[0], shell);
+	if (!cmd_path)
+		return (handle_ret(cmd_path, cmd, 127));
+	if (execve(cmd_path, cmd, shell->envp) == -1)
+	{
+		shell->last_exit = 126;
+		return (exceve_ret(cmd_path, cmd, 126));
+	}
+	shell->last_exit = 0;
+	return (handle_ret_num(cmd_path, cmd, 0));
 }
