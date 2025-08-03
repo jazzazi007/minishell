@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/03 12:05:38 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/03 17:27:29 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 #include <linux/limits.h>
 #include <dirent.h>
 
-
 //tokenizer
 typedef enum e_tokentype
 {
@@ -45,6 +44,17 @@ typedef struct s_tokenizer
     struct s_tokenizer  *next;
 }   t_tokenizer;
 
+typedef struct s_cmd
+{
+	char			*cmd_path;
+	char			**args;
+	// change redir type to a struct
+	int 			red_type; //0 ouput, 1 append, 2 input, 3 heredoc
+	char			*filename; //incase of heredoc, filename is the same as delim			
+	int				here_fd;
+	struct s_cmd 	*next;
+}	t_cmd;
+
 t_tokenizer *tokenize_input(const char *input);
 void free_tokens(t_tokenizer *head);
 t_tokenizer *new_token(const char *val, t_tokentype type);
@@ -59,7 +69,7 @@ typedef struct minishell
 {
 	char			*input;
 	char			**envp;
-	char			**cmds;
+	t_cmd			*cmds;
 	int				*pipes[2];
 	t_tokenizer		*token_list;
 	int				token_count;
@@ -112,8 +122,11 @@ char	*resolve_cmd_path(char *cmd0, t_minishell *shell);
 void	expand_tokens(t_tokenizer *head, t_minishell *sh);
 char	*get_env_value(const char *key, char **envp);
 
-char **build_argv(t_tokenizer *tokens);
+t_cmd *build_cmd(t_tokenizer **tokens);
+void ft_print_cmd(t_cmd **r_cmds);
 
+t_cmd   *ft_init_cmd();
 t_minishell *ft_init_shell(char **envp);
+int ft_add_cmd(t_cmd **r_rootcmd);
 
 #endif
