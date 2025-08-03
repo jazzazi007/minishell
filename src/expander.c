@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:14:56 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/02 12:47:48 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/03 11:27:49 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 static void	update_quotes(char c, int *squote, int *dquote)
 {
 	if (c == '\'' && !(*dquote))
-		*squote ^= 1;
+		*squote += 1;
 	else if (c == '"' && !(*squote))
-		*dquote ^= 1;
+		*dquote += 1;
 }
 
 static char	*append_expanded_part(char *res, char *input, int *i,

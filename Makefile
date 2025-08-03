@@ -12,6 +12,7 @@ SRCS := \
 	src/multi_pipes.c src/echo.c src/return.c src/pwd.c src/pipex.c \
 	src/get_cmd.c src/init_fork.c src/init_pipes.c src/tokenizer.c \
 	src/builed_argv.c src/token_utils.c src/error.c src/expander.c src/exp_utils.c \
+	src/shell_utils.c
 	
 
 OBJ_DIR := obj

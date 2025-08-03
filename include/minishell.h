@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/03 11:48:45 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/03 12:05:38 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ char	*null_ret(char *path);
 int		handle_ret(char *path, char **cmd, int err_num);
 int		handle_ret_num(char *path, char **cmd, int err_num);
 int		exceve_ret(char *path, char **cmd, int err_num);
-void check_pipes_forks(char *ag, char **env);
+void check_pipes_forks(char *ag, t_minishell	*sh);
 bool is_valid_pipe_syntax(char *ag);
 void fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd);
 int **init_pipes(int pipe_count);

@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/02 12:48:09 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/03 11:53:16 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,21 +114,21 @@ void	free_split(char **cmd)
 
 int	cmd_exec(char *agv, t_minishell *shell)
 {
-	t_tokenizer	*tokens;
-	char		**cmd;
+	// t_tokenizer	*tokens;
+	char		**cmd = NULL;
 	char		*cmd_path;
-
-	tokens = tokenize_input(agv);
-	if (!tokens)
-		return (1);
-	expand_tokens(tokens, shell);
-	cmd = build_argv(tokens);
-	free_tokens(tokens);
-	if (!cmd || !cmd[0])
-	{
-		free_split(cmd);
-		return (0);
-	}
+	(void)agv;
+	// tokens = tokenize_input(agv);
+	// if (!tokens)
+	// 	return (1);
+	// expand_tokens(tokens, shell);
+	// cmd = build_argv(tokens);
+	// free_tokens(tokens);
+	// if (!cmd || !cmd[0])
+	// {
+	// 	free_split(cmd);
+	// 	return (0);
+	// }
 	cmd_path = resolve_cmd_path(cmd[0], shell);
 	if (!cmd_path)
 		return (handle_ret(cmd_path, cmd, 127));

@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:45 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/02 12:53:54 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/03 12:05:16 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,18 +88,17 @@
 // }
 
 
-static int	init_shell_pipes(char *ag, char **env, t_minishell *sh,
+static int	init_shell_pipes(char *ag, t_minishell *sh,
 	int ***fds, pid_t **pids)
 {
 	int	count;
 
+	(void)sh;
 	if (!is_valid_pipe_syntax(ag))
 	{
 		printf("Error: Invalid pipe or semicolon syntax\n");
 		return (-1);
 	}
-	ft_memset(sh, 0, sizeof(t_minishell));
-	sh->envp = env;
 	count = count_pipes(ag);
 	*fds = init_pipes(count);
 	if (!(*fds))
@@ -146,15 +145,14 @@ static void	child_exec(int i, int count, int **fds,
 	exit(1);
 }
 
-void	check_pipes_forks(char *ag, char **env)
+void	check_pipes_forks(char *ag, t_minishell	*sh)
 {
-	t_minishell	sh;
 	int			**fds;
 	pid_t		*pids;
 	int			i;
 	int			count;
 
-	count = init_shell_pipes(ag, env, &sh, &fds, &pids);
+	count = init_shell_pipes(ag, sh, &fds, &pids);
 	if (count < 0)
 		return ;
 	i = -1;
@@ -168,7 +166,7 @@ void	check_pipes_forks(char *ag, char **env)
 			return ;
 		}
 		if (pids[i] == 0)
-			child_exec(i, count, fds, &sh, ag);
+			child_exec(i, count, fds, sh, ag);
 	}
 	cleanup_resources(fds, pids, count);
 }
