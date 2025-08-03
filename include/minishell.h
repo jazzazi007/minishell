@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/02 13:00:39 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/03 11:48:45 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ typedef struct minishell
 	char			*input;
 	char			**envp;
 	char			**cmds;
-	int				exit_status;
 	int				*pipes[2];
 	t_tokenizer		*token_list;
 	int				token_count;
@@ -114,4 +113,7 @@ void	expand_tokens(t_tokenizer *head, t_minishell *sh);
 char	*get_env_value(const char *key, char **envp);
 
 char **build_argv(t_tokenizer *tokens);
+
+t_minishell *ft_init_shell(char **envp);
+
 #endif
