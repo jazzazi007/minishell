@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/03 17:27:40 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/04 14:43:23 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,30 +56,33 @@ void	ft_run_shell(t_minishell *shell)
 			continue;
 		}
 		// Debug print
-		t_tokenizer *tmp = tokens;
-		while (tmp)
-		{
-			printf("Token: %-10s | Type: %d\n", tmp->value, tmp->type);
-			tmp = tmp->next;
-		}
+		// t_tokenizer *tmp = tokens;
+		// while (tmp)
+		// {
+		// 	printf("Token: %-10s | Type: %d\n", tmp->value, tmp->type);
+		// 	tmp = tmp->next;
+		// }
 		expand_tokens(tokens, shell);
-		printf("expansion part:\n");
-		tmp = tokens;
-		while (tmp)
-		{
-			printf("Token: %-10s | Type: %d\n", tmp->value, tmp->type);
-			tmp = tmp->next;
-		}
+		// printf("expansion part:\n");
+		// tmp = tokens;
+		// while (tmp)
+		// {
+		// 	printf("Token: %-10s | Type: %d\n", tmp->value, tmp->type);
+		// 	tmp = tmp->next;
+		// }
 		printf("calling build cmd\n");
 		shell->cmds = build_cmd(&tokens);
 		free_tokens(tokens);
-		if (!shell->cmds)
+		printf("finished cmd\n");
+		if (!shell->cmds || shell->cmds == NULL)
 		{
 			// free_split(cmd); //create a function
+			printf("here\n");
 			shell->last_exit = 1;
 			//ensure no leaks
 			break;
 		}
+		printf("calling print_cmd\n");
 		ft_print_cmd(&shell->cmds);
 		// For now, still use the old execution function
 		// check_pipes_forks(input, shell);
@@ -103,6 +106,6 @@ int	main(int ac, char **av, char **envp)
 	ft_run_shell(shell);
 	status = shell->last_exit;
 	// ft_del_shell(shell); (TODO)
-	// printf("exit\n");
+	printf("exit\n");
 	return (status);
 }

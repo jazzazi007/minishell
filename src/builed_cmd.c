@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 19:05:14 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/03 17:42:37 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/04 14:49:36 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,26 @@ void ft_print_cmd(t_cmd **r_cmds)
 {
 	t_cmd *curr;
 	int i;
+	t_redir *redir;
 
+	if (!r_cmds || !*r_cmds)
+		return ;
 	curr = *r_cmds;
-	while(curr)
+	while(curr != NULL)
 	{
 		i = 0;
+		redir = curr->redir;
 		while (curr->args[i] != NULL)
 		{
 			printf("arg[%d]: %s\n", i, curr->args[i]);
 			i++;
 		}
-		// printf("")
+		while (redir)
+		{
+			printf("redir: type %d, filename: %s, heredoc: %d\n", redir->red_type,
+				redir->filename, redir->here_fd);
+			redir = redir->next;
+		}
 		curr = curr->next;	
 	}
 }
@@ -48,60 +57,65 @@ int ft_count_pipe(t_tokenizer **r_tokens)
 	return (count);
 }
 
-int ft_fill_redir(t_cmd **r_cmd, t_tokenizer *curr)
+int ft_is_redir(char *s)
+{
+	if (!ft_strncmp(s, "<<", 2))
+		return 1;
+	if (!ft_strncmp(s, ">>", 2))
+		return 1;
+	if (*s == '<')
+		return 1;
+	if (*s == '>')
+		return 1;
+	return 0;
+}
+
+int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr)
 {
 	int status;
+	t_redir  *c_red;
 	
-	printf("redir\n");
-	status = 1;//change it to 2
+	status = 1;
+	c_red = ft_add_redir(r_redir);
+	while(c_red->next != NULL)
+		c_red = c_red->next;
 	if (curr->type == T_REDIR_OUT)
-		(*r_cmd)->red_type = 0;
+		c_red->red_type = 0;
 	else if (curr->type == T_APPEND)
-		(*r_cmd)->red_type = 1;
+		c_red->red_type = 1;
 	else if (curr->type == T_REDIR_IN)
-		(*r_cmd)->red_type = 2;
+		c_red->red_type = 2;
 	else if (curr->type == T_HEREDOC)
 	{
 		//open heredoc here
-		(*r_cmd)->red_type = 3;
+		c_red->red_type = 3;
 	}
 	else
-	{
-		printf("no redir\n");
 		status = 0;
-	}
-	if (status == 1)
+	if (status == 1 && curr->next)
 	{
-		if (curr->next)
-			(*r_cmd)->filename = curr->next->value;
+		curr->next->type = T_FILE;
+		c_red->filename = ft_strdup(curr->next->value);
+		if (!c_red->filename)
+			return (-1);		
 	}
 	return (status);
 }
 
-int ft_fill_args(t_cmd **r_cmd, t_tokenizer **r_tokens, int size,
-	int *count)
+int ft_fill_args(t_cmd **r_cmd, t_tokenizer *token, int *i)
 {
-	int i;
-	t_tokenizer *curr;
-	
-	(*r_cmd)->args = malloc(sizeof(char *) * (size + 1));
-	if (!(*r_cmd)->args)
-		return (-1);
-	curr = *r_tokens;
-	i = 0;
-	while(curr)
+	if (token->type == T_WORD)
 	{
-		if (curr->type == T_WORD)
+		(*r_cmd)->args[*i] = ft_strdup(token->value);
+		if (!(*r_cmd)->args[*i])
 		{
-			(*r_cmd)->args[i] = curr->value;
-			i++;
+			//free all args
+			return (-1);
 		}
-		curr = curr->next;
+		(*i)++;
 	}
-	(*r_cmd)->args[i] = NULL;
-	count += i;
-	printf("count: %d\n", *count);
-	return (i);
+	(*r_cmd)->args[*i] = NULL;
+	return (0);
 }
 
 int	ft_find_size(t_tokenizer **r_tokens)
@@ -120,12 +134,14 @@ int	ft_find_size(t_tokenizer **r_tokens)
 	return (size);
 }
 
+
 // Build argv array copying tokens' values
 t_cmd *build_cmd(t_tokenizer **r_tokens)
 {
 	t_tokenizer				*curr;
 	int				pipe_count;
 	t_cmd			*cmd;
+	t_cmd			*c_cmd;
 	int 			size;
 	int				i;
 	
@@ -133,27 +149,32 @@ t_cmd *build_cmd(t_tokenizer **r_tokens)
 	pipe_count = ft_count_pipe(r_tokens);
 	cmd = NULL;
 	size = ft_find_size(r_tokens);
-	printf("size of cmd:  %i\n", size);
+	printf("size: %d\n", size);
 	while (curr != NULL)
 	{
-		ft_add_cmd(&cmd);
+		c_cmd = ft_add_cmd(&cmd); //traverse
 		i = 0;
+		c_cmd->args = malloc(sizeof(char *) * (size + 1));
+		if (!c_cmd->args)
+		{
+			free(cmd);//change it to free all cmds
+			printf("error\n");
+			return (NULL);
+		}
 		while (curr && ft_strncmp(curr->value, "|", 1) != 0)
 		{
-			printf("i: %d\n", i);
-			i += ft_fill_redir(&cmd, curr);
-			printf("i: %d\n", i);
-			if (ft_fill_args(&cmd, r_tokens, size, &i) < 0)
-			{
-				//free cmd;
-				return (NULL);
-			}
+			if (ft_is_redir(curr->value))
+				ft_fill_redir(&c_cmd->redir, curr);
+			else
+				if (ft_fill_args(&c_cmd, curr, &i) < 0)
+				{
+					//free all cmds
+					printf("error filling args\n");
+					return (NULL);
+				}
 			curr = curr->next;
 		}
-		// if (curr->next)
-		// 	curr = curr->next;
-		printf("HI\n");
-		
 	}
+	printf("here\n");
 	return (cmd);
 }

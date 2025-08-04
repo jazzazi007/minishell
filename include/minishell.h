@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/03 17:27:29 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/04 14:25:49 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef enum e_tokentype
 	T_REDIR_OUT,
 	T_HEREDOC,
 	T_APPEND,
+	T_FILE,
 }	t_tokentype;
 
 typedef struct s_tokenizer
@@ -44,24 +45,29 @@ typedef struct s_tokenizer
     struct s_tokenizer  *next;
 }   t_tokenizer;
 
+typedef struct s_redir
+{
+	int 			red_type; //0 ouput, 1 append, 2 input, 3 heredoc
+	char			*filename; //incase of heredoc, filename is the same as delim			
+	int				here_fd;
+	struct s_redir 	*next;
+}	t_redir;
+
 typedef struct s_cmd
 {
 	char			*cmd_path;
 	char			**args;
-	// change redir type to a struct
-	int 			red_type; //0 ouput, 1 append, 2 input, 3 heredoc
-	char			*filename; //incase of heredoc, filename is the same as delim			
-	int				here_fd;
+	t_redir			*redir;
 	struct s_cmd 	*next;
 }	t_cmd;
 
-t_tokenizer *tokenize_input(const char *input);
-void free_tokens(t_tokenizer *head);
-t_tokenizer *new_token(const char *val, t_tokentype type);
-void add_token(t_tokenizer **head, t_tokenizer *new);
-bool is_metachar(char c);
-t_tokentype get_metatype(const char *s);
-bool	is_syntax_error(t_tokenizer *tokens);
+t_tokenizer		*tokenize_input(const char *input);
+void 			free_tokens(t_tokenizer *head);
+t_tokenizer 	*new_token(const char *val, t_tokentype type);
+void 			add_token(t_tokenizer **head, t_tokenizer *new);
+bool 			is_metachar(char c);
+t_tokentype 	get_metatype(const char *s);
+bool			is_syntax_error(t_tokenizer *tokens);
 
 ///
 
@@ -97,21 +103,21 @@ char	*null_ret(char *path);
 int		handle_ret(char *path, char **cmd, int err_num);
 int		handle_ret_num(char *path, char **cmd, int err_num);
 int		exceve_ret(char *path, char **cmd, int err_num);
-void check_pipes_forks(char *ag, t_minishell	*sh);
-bool is_valid_pipe_syntax(char *ag);
-void fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd);
-int **init_pipes(int pipe_count);
-pid_t *init_child_pids(int pipe_count, int **pipe_fds);
-void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count);
-int count_pipes(char *ag);
-char *get_command(char *input, int position);
+void 	check_pipes_forks(char *ag, t_minishell	*sh);
+bool 	is_valid_pipe_syntax(char *ag);
+void 	fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd);
+int 	**init_pipes(int pipe_count);
+pid_t 	*init_child_pids(int pipe_count, int **pipe_fds);
+void 	cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count);
+int 	count_pipes(char *ag);
+char 	*get_command(char *input, int position);
 /////////
 
 //signal
 extern int g_exit_status;
 
-void sigint_handler(int signum);
-void setup_signal_handlers(void);
+void 	sigint_handler(int signum);
+void 	setup_signal_handlers(void);
 ///
 
 //expand
@@ -122,11 +128,13 @@ char	*resolve_cmd_path(char *cmd0, t_minishell *shell);
 void	expand_tokens(t_tokenizer *head, t_minishell *sh);
 char	*get_env_value(const char *key, char **envp);
 
-t_cmd *build_cmd(t_tokenizer **tokens);
-void ft_print_cmd(t_cmd **r_cmds);
+t_cmd 	*build_cmd(t_tokenizer **tokens);
+void 	ft_print_cmd(t_cmd **r_cmds);
 
-t_cmd   *ft_init_cmd();
-t_minishell *ft_init_shell(char **envp);
-int ft_add_cmd(t_cmd **r_rootcmd);
+t_cmd   		*ft_init_cmd();
+t_minishell 	*ft_init_shell(char **envp);
+t_cmd 			*ft_add_cmd(t_cmd **r_rootcmd);
+t_redir			*ft_init_redir();
+t_redir 			*ft_add_redir(t_redir **r_root);
 
 #endif
