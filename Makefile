@@ -14,6 +14,7 @@ SRCS := \
 	src/return.c 				\
 	src/error.c 				\
 	src/ft_free.c				\
+	src/debug.c					\
 	src/built-ins/echo.c		\
 	src/built-ins/pwd.c			\
 	src/parsing/get_cmd.c 		\

@@ -6,55 +6,11 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 19:05:14 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/05 12:09:52 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/05 17:59:05 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-void ft_print_cmd(t_cmd **r_cmds)
-{
-	t_cmd *curr;
-	int i;
-	t_redir *redir;
-
-	if (!r_cmds || !*r_cmds)
-		return ;
-	curr = *r_cmds;
-	while(curr != NULL)
-	{
-		i = 0;
-		redir = curr->redir;
-		while (curr->args[i] != NULL)
-		{
-			printf("arg[%d]: %s\n", i, curr->args[i]);
-			i++;
-		}
-		while (redir)
-		{
-			printf("redir: type %d, filename: %s, heredoc: %d\n", redir->red_type,
-				redir->filename, redir->here_fd);
-			redir = redir->next;
-		}
-		curr = curr->next;	
-	}
-}
-
-int ft_count_pipe(t_tokenizer **r_tokens)
-{
-	int count;
-	t_tokenizer *curr;
-
-	count = 0;
-	curr = *r_tokens;
-	while(curr->next != NULL)
-	{
-		if (ft_strncmp(curr->value, "|", 1) == 0)
-			count++;
-		curr = curr->next;
-	}
-	return (count);
-}
 
 int ft_is_redir(char *s)
 {
@@ -75,11 +31,9 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr)
 	t_redir  *c_red;
 	
 	status = 1;
-	printf("creating redir\n");
 	c_red = ft_add_redir(r_redir);
 	if (!c_red)
 		return (-1);
-	printf("created\n");
 	if (curr->type == T_REDIR_OUT)
 		c_red->red_type = 0;
 	else if (curr->type == T_APPEND)
@@ -93,7 +47,6 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr)
 	}
 	else
 		status = 0;
-	printf("curr redir type = %d\n", curr->type);
 	if (status == 1 && curr->next)
 	{
 		curr->next->type = T_FILE;

@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   init_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moaljazz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:24 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/06/18 19:23:27 by moaljazz         ###   ########.fr       */
+/*   Updated: 2025/08/05 17:59:15 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+int ft_count_pipe(t_tokenizer **r_tokens)
+{
+	int count;
+	t_tokenizer *curr;
+
+	count = 0;
+	curr = *r_tokens;
+	while(curr->next != NULL)
+	{
+		if (ft_strncmp(curr->value, "|", 1) == 0)
+			count++;
+		curr = curr->next;
+	}
+	return (count);
+}
 
 int **init_pipes(int pipe_count)
 {

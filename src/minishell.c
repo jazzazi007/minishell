@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/05 17:52:49 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/05 18:01:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,7 @@ void	ft_run_shell(t_minishell **r_shell)
 			continue;
 		}
 		free(input);
-		// Debug print
-		// t_tokenizer *tmp = tokens;
-		// while (tmp)
-		// {
-		// 	printf("Token: %-10s | Type: %d\n", tmp->value, tmp->type);
-		// 	tmp = tmp->next;
-		// }
+		ft_print_tokens(&tokens);
 		expand_tokens(tokens, *r_shell);
 		(*r_shell)->cmds = build_cmd(&tokens);
 		free_tokens(tokens);

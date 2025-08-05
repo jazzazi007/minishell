@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/05 12:12:44 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/05 18:01:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ char	*get_env_value(const char *key, char **envp);
 
 t_cmd 	*build_cmd(t_tokenizer **tokens);
 void 	ft_print_cmd(t_cmd **r_cmds);
+void ft_print_tokens(t_tokenizer **r_tokens);
 
 t_cmd   		*ft_init_cmd();
 t_minishell 	*ft_init_shell(char **envp);
