@@ -29,3 +29,11 @@ sh-5.2$ echo '"$USER"'
 "$USER"
 sh-5.2$ echo '$USER'
 $USER
+
+tokenizer should split on pipes incase no space was found, the below test case has an issue:
+SHELLX 🔥 > ls | ls |ls|ls|ls|ls|
+Token: ls         | Type: 0
+Token: |          | Type: 1
+Token: ls         | Type: 0
+Token: |          | Type: 1
+Token: ls|ls|ls|ls| | Type: 0

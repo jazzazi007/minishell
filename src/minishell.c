@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/05 20:17:23 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/05 22:10:15 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void print_shell_banner(void)
     printf("\033[0m\n");
 }
 
-void	ft_run_shell(t_minishell **r_shell)
+void	ft_run_shell(t_minishell *shell)
 {
 	char	*input;
 	
@@ -40,15 +40,15 @@ void	ft_run_shell(t_minishell **r_shell)
 			continue;
 		}
 		add_history(input);
-		if (ft_parse_cmd(r_shell, input) == -1)
+		if (ft_parse_cmd(shell, input) == -1)
 		{
 			free(input);
 			continue;
 		}
 		free(input);
 		// check_pipes_forks(input, shell);
-		ft_free_cmds((*r_shell)->cmds);
-		(*r_shell)->cmds = NULL; // Prevent double free
+		ft_free_cmds(shell->cmds);
+		shell->cmds = NULL; // Prevent double free
 	}
 }
 
@@ -63,7 +63,7 @@ int	main(int ac, char **av, char **envp)
 	shell = ft_init_shell(envp);
 	if (!shell)
 		return (1);
-	ft_run_shell(&shell);
+	ft_run_shell(shell);
 	status = shell->exit_status;
 	ft_free_shell(shell);
 	printf("exit\n");

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/05 20:09:53 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/05 22:11:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,22 +61,21 @@ typedef struct s_cmd
 	struct s_cmd 	*next;
 }	t_cmd;
 
-t_tokenizer		*tokenize_input(const char *input);
-void 			free_tokens(t_tokenizer *head);
-t_tokenizer 	*new_token(const char *val, t_tokentype type);
-void 			add_token(t_tokenizer **head, t_tokenizer *new);
-bool 			is_metachar(char c);
-t_tokentype 	get_metatype(const char *s);
-bool			is_syntax_error(t_tokenizer *tokens);
-
-///
-
 typedef struct minishell
 {
 	char			**envp;
 	t_cmd			*cmds;
 	int				exit_status;
 }	t_minishell;
+
+t_tokenizer		*tokenize_input(const char *input);
+void 			free_tokens(t_tokenizer *head);
+t_tokenizer 	*new_token(const char *val, t_tokentype type);
+void 			add_token(t_tokenizer **head, t_tokenizer *new);
+bool 			is_metachar(char c);
+t_tokentype 	get_metatype(const char *s);
+int			is_syntax_error(t_tokenizer **r_tokens, t_minishell *shell);
+
 //execute 
 
 int		cmd_exec(char *agv, t_minishell *shell);
@@ -141,7 +140,7 @@ void 			ft_free_cmds(t_cmd *cmds);
 void 			ft_free_shell(t_minishell *shell);
 
 int 			ft_indicate_error(const char *msg, int exit_code, t_minishell *shell);
-int 			ft_parse_cmd(t_minishell **r_shell, const char *input);
+int 			ft_parse_cmd(t_minishell *shell, const char *input);
 
 int 			ft_is_redir(char *s);
 int 			ft_fill_redir(t_redir **r_redir, t_tokenizer *curr);

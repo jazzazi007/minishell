@@ -6,33 +6,40 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 07:15:16 by ramroma           #+#    #+#             */
-/*   Updated: 2025/08/05 20:23:09 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/05 22:05:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-bool	is_syntax_error(t_tokenizer *tokens)
+int	is_syntax_error(t_tokenizer **r_tokens, t_minishell *shell)
 {
-	if (!tokens)
-		return false;
-	if (tokens->type == T_PIPE || (tokens->type == T_PIPE && tokens->next->value == NULL )) //|| tokens->type == T_REDIR_OUT || tokens->type == T_REDIR_IN || tokens->type == T_APPEND ||
-		// tokens->type == T_HEREDOC)
+	t_tokenizer *curr;
+	
+	curr = *r_tokens;
+	if (curr->type == T_PIPE )
 	{
-		fprintf(stderr, "syntax error near unexpected token `%s'\n", tokens->value);
-		return true;
+		fprintf(stderr, "syntax error near unexpected token `%s'\n", curr->value);
+		return (ft_indicate_error(NULL, 1, shell));
 	}
-	while (tokens && tokens->next)
+	while (curr)
 	{
-		if ((tokens->type >= T_REDIR_IN && tokens->type <= T_HEREDOC)
-			&& (tokens->next->type != T_WORD))
+		if ((curr->type >= T_REDIR_IN && curr->type <= T_HEREDOC))
 		{
-			fprintf(stderr, "syntax error near unexpected token `%s'\n", tokens->next->value);
-			return true;
+			if (!curr->next || curr->next->type != T_WORD)
+			{
+				fprintf(stderr, "syntax error near unexpected token `%s'\n", curr->value);
+				return (ft_indicate_error(NULL, 1, shell));
+			}
 		}
-		tokens = tokens->next;
+		if (curr->type == T_PIPE && (!curr->next || curr->next->type != T_WORD))
+		{
+			fprintf(stderr, "syntax error near unexpected token `%s'\n", curr->value);
+			return (ft_indicate_error(NULL, 1, shell));
+		}
+		curr = curr->next;
 	}
-	return false;
+	return (0);
 }
 
 int ft_indicate_error(const char *msg, int exit_code, t_minishell *shell)

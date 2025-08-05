@@ -24,7 +24,8 @@ void ft_print_cmd(t_cmd **r_cmds)
 				redir->filename, redir->here_fd);
 			redir = redir->next;
 		}
-		curr = curr->next;	
+		curr = curr->next;
+		printf("------------------\n");
 	}
 }
 
