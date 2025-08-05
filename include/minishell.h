@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/05 18:01:16 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/05 20:09:53 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,5 +141,8 @@ void 			ft_free_cmds(t_cmd *cmds);
 void 			ft_free_shell(t_minishell *shell);
 
 int 			ft_indicate_error(const char *msg, int exit_code, t_minishell *shell);
+int 			ft_parse_cmd(t_minishell **r_shell, const char *input);
 
+int 			ft_is_redir(char *s);
+int 			ft_fill_redir(t_redir **r_redir, t_tokenizer *curr);
 #endif

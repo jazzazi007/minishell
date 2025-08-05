@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/05 18:01:28 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/05 20:17:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,44 +27,25 @@ void print_shell_banner(void)
 void	ft_run_shell(t_minishell **r_shell)
 {
 	char	*input;
-	t_tokenizer *tokens;
-
+	
 	setup_signal_handlers();
-	print_shell_banner();
 	while (1)
 	{
 		input = readline("\001\033[31m\002SHELLX 🔥 > \001\033[0m\002");
 		if (!input)
-		{
-			fprintf(stderr, "exit\n");
 			break;
-		}
-		if (*input)
-			add_history(input);
-		if (ft_strcmp(input, "exit") == 0) //replace this with exit command built-in
+		if(!*input)
 		{
 			free(input);
-			break;
+			continue;
 		}
-		tokens = tokenize_input(input);
-		if (!tokens || is_syntax_error(tokens))
+		add_history(input);
+		if (ft_parse_cmd(r_shell, input) == -1)
 		{
-			free_tokens(tokens);
 			free(input);
 			continue;
 		}
 		free(input);
-		ft_print_tokens(&tokens);
-		expand_tokens(tokens, *r_shell);
-		(*r_shell)->cmds = build_cmd(&tokens);
-		free_tokens(tokens);
-		if (!(*r_shell)->cmds || (*r_shell)->cmds == NULL)
-		{
-			(*r_shell)->exit_status = 1;
-			break;
-		}
-		ft_print_cmd(&(*r_shell)->cmds);
-		// For now, still use the old execution function
 		// check_pipes_forks(input, shell);
 		ft_free_cmds((*r_shell)->cmds);
 		(*r_shell)->cmds = NULL; // Prevent double free
@@ -78,11 +59,13 @@ int	main(int ac, char **av, char **envp)
 	
 	(void)ac;
 	(void)av;
+	print_shell_banner();
 	shell = ft_init_shell(envp);
 	if (!shell)
 		return (1);
 	ft_run_shell(&shell);
 	status = shell->exit_status;
 	ft_free_shell(shell);
+	printf("exit\n");
 	return (status);
 }
