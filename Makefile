@@ -13,6 +13,7 @@ SRCS := \
 	src/ft_utils.c 				\
 	src/return.c 				\
 	src/error.c 				\
+	src/ft_free.c				\
 	src/built-ins/echo.c		\
 	src/built-ins/pwd.c			\
 	src/parsing/get_cmd.c 		\

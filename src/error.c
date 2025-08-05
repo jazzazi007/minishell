@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 07:15:16 by ramroma           #+#    #+#             */
-/*   Updated: 2025/08/03 14:39:15 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:11:46 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,12 @@ bool	is_syntax_error(t_tokenizer *tokens)
 		tokens = tokens->next;
 	}
 	return false;
+}
+
+int ft_indicate_error(const char *msg, int exit_code, t_minishell *shell)
+{
+	if (msg)
+		printf("%s\n", msg);
+	shell->exit_status = exit_code;
+	return (-1);
 }

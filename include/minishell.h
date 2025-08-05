@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/04 14:25:49 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:12:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,9 @@ bool			is_syntax_error(t_tokenizer *tokens);
 
 typedef struct minishell
 {
-	char			*input;
 	char			**envp;
 	t_cmd			*cmds;
-	int				*pipes[2];
-	t_tokenizer		*token_list;
-	int				token_count;
-	int				last_exit;
+	int				exit_status;
 }	t_minishell;
 //execute 
 
@@ -136,5 +132,13 @@ t_minishell 	*ft_init_shell(char **envp);
 t_cmd 			*ft_add_cmd(t_cmd **r_rootcmd);
 t_redir			*ft_init_redir();
 t_redir 			*ft_add_redir(t_redir **r_root);
+
+void 			ft_free_redir(t_redir *redir);
+void 			ft_free_args(char **args);
+void 			ft_free_cmd(t_cmd *cmd);
+void 			ft_free_cmds(t_cmd *cmds);
+void 			ft_free_shell(t_minishell *shell);
+
+int 			ft_indicate_error(const char *msg, int exit_code, t_minishell *shell);
 
 #endif

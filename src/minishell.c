@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/04 14:43:23 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/05 17:52:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,12 @@ void print_shell_banner(void)
     printf("\033[0m\n");
 }
 
-void	ft_run_shell(t_minishell *shell)
+void	ft_run_shell(t_minishell **r_shell)
 {
 	char	*input;
 	t_tokenizer *tokens;
 
 	setup_signal_handlers();
-	// check_pipes_forks("clear", envp); // still uses old exec system
 	print_shell_banner();
 	while (1)
 	{
@@ -42,12 +41,11 @@ void	ft_run_shell(t_minishell *shell)
 		}
 		if (*input)
 			add_history(input);
-		if (ft_strcmp(input, "exit") == 0)
+		if (ft_strcmp(input, "exit") == 0) //replace this with exit command built-in
 		{
 			free(input);
 			break;
 		}
-		// Tokenize the input first
 		tokens = tokenize_input(input);
 		if (!tokens || is_syntax_error(tokens))
 		{
@@ -55,6 +53,7 @@ void	ft_run_shell(t_minishell *shell)
 			free(input);
 			continue;
 		}
+		free(input);
 		// Debug print
 		// t_tokenizer *tmp = tokens;
 		// while (tmp)
@@ -62,34 +61,19 @@ void	ft_run_shell(t_minishell *shell)
 		// 	printf("Token: %-10s | Type: %d\n", tmp->value, tmp->type);
 		// 	tmp = tmp->next;
 		// }
-		expand_tokens(tokens, shell);
-		// printf("expansion part:\n");
-		// tmp = tokens;
-		// while (tmp)
-		// {
-		// 	printf("Token: %-10s | Type: %d\n", tmp->value, tmp->type);
-		// 	tmp = tmp->next;
-		// }
-		printf("calling build cmd\n");
-		shell->cmds = build_cmd(&tokens);
+		expand_tokens(tokens, *r_shell);
+		(*r_shell)->cmds = build_cmd(&tokens);
 		free_tokens(tokens);
-		printf("finished cmd\n");
-		if (!shell->cmds || shell->cmds == NULL)
+		if (!(*r_shell)->cmds || (*r_shell)->cmds == NULL)
 		{
-			// free_split(cmd); //create a function
-			printf("here\n");
-			shell->last_exit = 1;
-			//ensure no leaks
+			(*r_shell)->exit_status = 1;
 			break;
 		}
-		printf("calling print_cmd\n");
-		ft_print_cmd(&shell->cmds);
+		ft_print_cmd(&(*r_shell)->cmds);
 		// For now, still use the old execution function
 		// check_pipes_forks(input, shell);
-
-	// 	// Clean up
-	// 	free_tokens(tokens);
-	// 	free(input);
+		ft_free_cmds((*r_shell)->cmds);
+		(*r_shell)->cmds = NULL; // Prevent double free
 	}
 }
 
@@ -103,9 +87,8 @@ int	main(int ac, char **av, char **envp)
 	shell = ft_init_shell(envp);
 	if (!shell)
 		return (1);
-	ft_run_shell(shell);
-	status = shell->last_exit;
-	// ft_del_shell(shell); (TODO)
-	printf("exit\n");
+	ft_run_shell(&shell);
+	status = shell->exit_status;
+	ft_free_shell(shell);
 	return (status);
 }

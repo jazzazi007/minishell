@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/03 11:53:16 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/05 11:54:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,9 +133,9 @@ int	cmd_exec(char *agv, t_minishell *shell)
 		return (handle_ret(cmd_path, cmd, 127));
 	if (execve(cmd_path, cmd, shell->envp) == -1)
 	{
-		shell->last_exit = 126;
+		shell->exit_status = 126;
 		return (exceve_ret(cmd_path, cmd, 126));
 	}
-	shell->last_exit = 0;
+	shell->exit_status = 0;
 	return (handle_ret_num(cmd_path, cmd, 0));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builed_cmd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 19:05:14 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/04 14:49:36 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:09:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,11 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr)
 	t_redir  *c_red;
 	
 	status = 1;
+	printf("creating redir\n");
 	c_red = ft_add_redir(r_redir);
-	while(c_red->next != NULL)
-		c_red = c_red->next;
+	if (!c_red)
+		return (-1);
+	printf("created\n");
 	if (curr->type == T_REDIR_OUT)
 		c_red->red_type = 0;
 	else if (curr->type == T_APPEND)
@@ -91,6 +93,7 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr)
 	}
 	else
 		status = 0;
+	printf("curr redir type = %d\n", curr->type);
 	if (status == 1 && curr->next)
 	{
 		curr->next->type = T_FILE;
@@ -107,10 +110,7 @@ int ft_fill_args(t_cmd **r_cmd, t_tokenizer *token, int *i)
 	{
 		(*r_cmd)->args[*i] = ft_strdup(token->value);
 		if (!(*r_cmd)->args[*i])
-		{
-			//free all args
 			return (-1);
-		}
 		(*i)++;
 	}
 	(*r_cmd)->args[*i] = NULL;
@@ -138,42 +138,47 @@ int	ft_find_size(t_tokenizer **r_tokens)
 t_cmd *build_cmd(t_tokenizer **r_tokens)
 {
 	t_tokenizer				*curr;
-	// int				pipe_count;
 	t_cmd			*cmd;
 	t_cmd			*c_cmd;
 	int 			size;
 	int				i;
 	
 	curr = *r_tokens;
-	// pipe_count = ft_count_pipe(r_tokens);
 	cmd = NULL;
 	size = ft_find_size(r_tokens);
-	printf("size: %d\n", size);
 	while (curr != NULL)
 	{
-		c_cmd = ft_add_cmd(&cmd); //traverse
+		c_cmd = ft_add_cmd(&cmd);
 		i = 0;
 		c_cmd->args = malloc(sizeof(char *) * (size + 1));
 		if (!c_cmd->args)
 		{
-			free(cmd);//change it to free all cmds
+			ft_free_cmds(cmd);
 			printf("error\n");
 			return (NULL);
 		}
 		while (curr && ft_strncmp(curr->value, "|", 1) != 0)
 		{
 			if (ft_is_redir(curr->value))
-				ft_fill_redir(&c_cmd->redir, curr);
+			{
+				if (ft_fill_redir(&c_cmd->redir, curr) < 0)
+				{
+					ft_free_cmds(cmd);
+					printf("error filling redir\n");
+					return (NULL);
+				}
+			}
 			else
 				if (ft_fill_args(&c_cmd, curr, &i) < 0)
 				{
-					//free all cmds
+					ft_free_cmds(cmd);
 					printf("error filling args\n");
 					return (NULL);
 				}
 			curr = curr->next;
 		}
+		if (curr && curr->next)
+			curr = curr->next; //skip the pipe token
 	}
-	printf("here\n");
 	return (cmd);
 }

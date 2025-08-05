@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:26:27 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/02 13:00:24 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/05 11:54:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*expand_var(const char *str, int *i, t_minishell *sh)
 	if (str[*i] == '?')
 	{
 		(*i)++;
-		return (ft_itoa(sh->last_exit));
+		return (ft_itoa(sh->exit_status));
 	}
 	if (!ft_isalnum(str[*i]) && str[*i] != '_')
 		return (ft_strdup("$"));
