@@ -8,11 +8,25 @@ NAME    := minishell
 
 # Source and Object Files
 SRCS := \
-	src/minishell.c src/signal.c src/ft_execute.c src/ft_utils.c \
-	src/multi_pipes.c src/echo.c src/return.c src/pwd.c src/pipex.c \
-	src/get_cmd.c src/init_fork.c src/init_pipes.c src/tokenizer.c \
-	src/builed_cmd.c src/token_utils.c src/error.c src/expander.c src/exp_utils.c \
-	src/shell_utils.c
+	src/minishell.c 			\
+	src/signal.c    			\
+	src/ft_utils.c 				\
+	src/return.c 				\
+	src/error.c 				\
+	src/built-ins/echo.c		\
+	src/built-ins/pwd.c			\
+	src/parsing/get_cmd.c 		\
+	src/execution/ft_execute.c 	\
+	src/execution/pipex.c 		\
+	src/execution/multi_pipes.c \
+	src/execution/init_fork.c 	\
+	src/execution/init_pipes.c 	\
+	src/parsing/tokenizer.c 	\
+	src/parsing/builed_cmd.c 	\
+	src/parsing/token_utils.c 	\
+	src/parsing/expander.c 		\
+	src/parsing/exp_utils.c 	\
+	src/parsing/shell_utils.c
 	
 
 OBJ_DIR := obj

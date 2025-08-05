@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-
+#include "../../include/minishell.h"
 
 void ft_print_cmd(t_cmd **r_cmds)
 {
@@ -139,14 +138,14 @@ int	ft_find_size(t_tokenizer **r_tokens)
 t_cmd *build_cmd(t_tokenizer **r_tokens)
 {
 	t_tokenizer				*curr;
-	int				pipe_count;
+	// int				pipe_count;
 	t_cmd			*cmd;
 	t_cmd			*c_cmd;
 	int 			size;
 	int				i;
 	
 	curr = *r_tokens;
-	pipe_count = ft_count_pipe(r_tokens);
+	// pipe_count = ft_count_pipe(r_tokens);
 	cmd = NULL;
 	size = ft_find_size(r_tokens);
 	printf("size: %d\n", size);

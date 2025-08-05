@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 int	check_fork(pid_t id)
 {

@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 void	first_fork_operate(int infile, char **ag, char **env, int *pd)
 {
