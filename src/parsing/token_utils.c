@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 07:01:45 by ramroma           #+#    #+#             */
-/*   Updated: 2025/07/18 07:01:49 by ramroma          ###   ########.fr       */
+/*   Updated: 2025/08/06 19:55:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-bool is_metachar(char c)
+int is_metachar(char c)
 {
 	return (c == '|' || c == '<' || c == '>');
 }

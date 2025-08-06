@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:31:21 by ramroma           #+#    #+#             */
-/*   Updated: 2025/08/03 12:31:27 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/06 21:30:25 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,19 @@
 static char *extract_unquoted_segment(const char *input, int *i)
 {
 	int start;
+	char *token;
 	
 	start = *i;
 	while (input[*i] && input[*i] != ' ')
+	{
+		if(is_metachar(input[*i]))
+			break;
 		(*i)++;
-	return ft_substr(input, start, *i - start);
+	}
+	token = ft_substr(input, start, *i - start);
+	if (!token)
+		return (NULL);
+	return (token);
 }
 
 static char *extract_word_combined(const char *input, int *i)
@@ -29,18 +37,30 @@ static char *extract_word_combined(const char *input, int *i)
 	char *tmp;
 	
 	word = ft_strdup("");
-	while (input[*i] && input[*i] != ' ' && !is_metachar(input[*i]))
+	if (input[*i] && input[*i] != ' ')
 	{
 		part = extract_unquoted_segment(input, i);
+		if (!part)
+		{
+			free(word);
+			return NULL;
+		}
 		tmp  = word;
 		word = ft_strjoin(word, part);
+		if (!word)
+		{
+			free(tmp);
+			free(part);
+			return NULL;
+		}
 		free(tmp);
 		free(part);
 	}
 	return (word);
 }
 
-static bool handle_metacharacters(const char *input, int *i, 
+//static 
+bool handle_metacharacters(const char *input, int *i, 
 		t_tokenizer **head)
 {
 	if (!ft_strncmp(&input[*i], "<<", 2) || !ft_strncmp(&input[*i], ">>", 2))
@@ -60,12 +80,12 @@ static bool handle_metacharacters(const char *input, int *i,
 	return false;
 }
 
-t_tokenizer *tokenize_input(const char *input)
+t_tokenizer *tokenize_input(const char *input, t_minishell *shell)
 {
 	int i;
 	t_tokenizer *head;
 	char *word;
-
+	
 	head = NULL;
 	i = 0;
 	while (input[i])
@@ -74,11 +94,40 @@ t_tokenizer *tokenize_input(const char *input)
 			i++;
 		if (!input[i])
 			break;
-		if (handle_metacharacters(input, &i, &head))
-			continue;
 		word = extract_word_combined(input, &i);
+		if (!word)
+		{
+			ft_indicate_error("Memory allocation failed", 1, shell);
+			return NULL;
+		}
 		add_token(&head, new_token(word, T_WORD));
 		free(word);
+		if (handle_metacharacters(input, &i, &head))
+			continue;
 	}
 	return head;
 }
+
+// t_tokenizer *tokenize_input(const char *input)
+// {
+// 	int i;
+// 	t_tokenizer *head;
+// 	char *word;
+
+// 	head = NULL;
+// 	i = 0;
+// 	while (input[i])
+// 	{
+// 		while (input[i] == ' ')
+// 			i++;
+// 		if (!input[i])
+// 			break;
+// 		if (handle_metacharacters(input, &i, &head))
+// 			continue;
+// 		word = extract_word_combined(input, &i);
+// 		printf("Extracted word: %s\n", word);
+// 		add_token(&head, new_token(word, T_WORD));
+// 		free(word);
+// 	}
+// 	return head;
+// }

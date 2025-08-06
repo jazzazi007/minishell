@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/06 14:42:07 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/06 21:33:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,11 @@ typedef struct minishell
 	int				exit_status;
 }	t_minishell;
 
-t_tokenizer		*tokenize_input(const char *input);
+t_tokenizer		*tokenize_input(const char *input, t_minishell *shell);
 void 			free_tokens(t_tokenizer *head);
 t_tokenizer 	*new_token(const char *val, t_tokentype type);
 void 			add_token(t_tokenizer **head, t_tokenizer *new);
-bool 			is_metachar(char c);
+int 			is_metachar(char c);
 t_tokentype 	get_metatype(const char *s);
 int			is_syntax_error(t_tokenizer **r_tokens, t_minishell *shell);
 

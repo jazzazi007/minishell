@@ -4,7 +4,7 @@ int ft_parse_cmd(t_minishell *shell, const char *input)
 {
     t_tokenizer *tokens;
 
-    tokens = tokenize_input(input);
+    tokens = tokenize_input(input, shell);
 	if (!tokens || is_syntax_error(&tokens, shell) == -1)
 	{
 		free_tokens(tokens);
