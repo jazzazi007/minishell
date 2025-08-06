@@ -11,7 +11,7 @@ int ft_parse_cmd(t_minishell *shell, const char *input)
 		return (-1);
 	}
     ft_print_tokens(&tokens);
-	expand_tokens(tokens, shell);
+	expand_tokens(&tokens, shell);
 	shell->cmds = build_cmd(&tokens, shell);
 	free_tokens(tokens);
 	if (!shell->cmds || shell->cmds == NULL)

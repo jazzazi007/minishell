@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:14:56 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/03 11:27:49 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/06 21:44:37 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,18 @@ char	*expand_token_value(char *input, t_minishell *sh)
 	return (res);
 }
 
-void	expand_tokens(t_tokenizer *head, t_minishell *sh)
+int	expand_tokens(t_tokenizer **head_r, t_minishell *sh)
 {
 	char	*expanded;
+	t_tokenizer *head;
 
+	if (!head_r || !*head_r || !sh)
+		return (-1);
+	head = *head_r;
 	while (head)
 	{
+		if (head->type >= T_REDIR_IN && head->type < T_FILE)
+			head->next->type = T_FILE;
 		if (head->type == T_WORD)
 		{
 			expanded = expand_token_value(head->value, sh);
@@ -79,4 +85,5 @@ void	expand_tokens(t_tokenizer *head, t_minishell *sh)
 		}
 		head = head->next;
 	}
+	return (0);
 }

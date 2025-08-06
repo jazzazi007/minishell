@@ -19,6 +19,7 @@ int ft_open_heredoc(char *delim, t_minishell *shell)
 	char *input;
 
 	//call expansion on delim if needed (call expand_var)
+	//strip delimm in case of quotes
 	printf("Heredoc delimiter: %s\n", delim);
 	(void)shell;
 	if (pipe(fd) == -1)
@@ -61,14 +62,13 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr, t_minishell *shell)
 	else if (curr->type == T_HEREDOC)
 	{
 		c_red->red_type = 3;
-		if (curr->next && curr->next->type == T_WORD)
+		if (curr->next && curr->next->type == T_FILE)
 			c_red->here_fd = ft_open_heredoc(curr->next->value, shell);
 	}
 	else
 		status = 0;
 	if (status == 1 && curr->next)
 	{
-		curr->next->type = T_FILE;
 		c_red->filename = ft_strdup(curr->next->value);
 		if (!c_red->filename)
 			return (-1);		

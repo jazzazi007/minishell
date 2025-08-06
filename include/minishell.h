@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/06 21:33:23 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/06 21:43:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ char	*expand_token_value(char *input, t_minishell *sh);
 char	*expand_var(const char *str, int *i, t_minishell *sh);
 char	*ft_strappend(char *dst, const char *src);
 char	*resolve_cmd_path(char *cmd0, t_minishell *shell);
-void	expand_tokens(t_tokenizer *head, t_minishell *sh);
+int	expand_tokens(t_tokenizer **r_head, t_minishell *sh);
 char	*get_env_value(const char *key, char **envp);
 
 t_cmd 	*build_cmd(t_tokenizer **tokens, t_minishell *shell);
