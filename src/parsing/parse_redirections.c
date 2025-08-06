@@ -13,7 +13,37 @@ int ft_is_redir(char *s)
 	return 0;
 }
 
-int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr)
+int ft_open_heredoc(char *delim, t_minishell *shell)
+{
+	int fd[2];
+	char *input;
+
+	//call expansion on delim if needed (call expand_var)
+	printf("Heredoc delimiter: %s\n", delim);
+	(void)shell;
+	if (pipe(fd) == -1)
+		return (-1);
+	while(1)
+	{
+		input = readline("> ");
+		if (!input)
+		{
+			printf("warning: heredoc terminated by EOF\n");
+			break;
+		}
+		if (ft_strcmp(input, delim) == 0)
+		{
+			free(input);
+			break;
+		}
+		write(fd[1], input, ft_strlen(input));
+		write(fd[1], "\n", 1);
+	}
+	close(fd[1]);
+	return (fd[0]);
+}
+
+int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr, t_minishell *shell)
 {
 	int status;
 	t_redir  *c_red;
@@ -30,8 +60,9 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr)
 		c_red->red_type = 2;
 	else if (curr->type == T_HEREDOC)
 	{
-		//open heredoc here
 		c_red->red_type = 3;
+		if (curr->next && curr->next->type == T_WORD)
+			c_red->here_fd = ft_open_heredoc(curr->next->value, shell);
 	}
 	else
 		status = 0;

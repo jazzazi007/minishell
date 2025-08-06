@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 19:05:14 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/05 21:35:19 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/06 14:41:09 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ t_cmd *ft_create_cmd(t_cmd **r_cmd, t_tokenizer **r_tokens)
 	return (new);
 }
 
-t_cmd *build_cmd(t_tokenizer **r_tokens)
+t_cmd *build_cmd(t_tokenizer **r_tokens, t_minishell *shell)
 {
 	t_tokenizer				*curr;
 	t_cmd			*cmd;
@@ -88,7 +88,7 @@ t_cmd *build_cmd(t_tokenizer **r_tokens)
 			printf("Processing token: %s\n", curr->value);
 			if (ft_is_redir(curr->value))
 			{
-				if (ft_fill_redir(&c_cmd->redir, curr) < 0)
+				if (ft_fill_redir(&c_cmd->redir, curr, shell) < 0)
 				{
 					ft_free_cmds(cmd);
 					printf("error filling redir\n");
