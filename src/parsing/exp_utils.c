@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:26:27 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/05 11:54:41 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/07 19:11:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,41 @@ char	*resolve_cmd_path(char *cmd0, t_minishell *shell)
 	if (access(cmd0, X_OK) == 0)
 		return (ft_strdup(cmd0));
 	return (get_cmd_path(cmd0, shell->envp));
+}
+
+int ft_strstrip(char **str_r)
+{
+	int i;
+	int j;
+	char quote;
+	char *buff;
+
+	if (!str_r || !*str_r)
+		return (0);
+	i = 0;
+	j = 0;
+	quote = '\0';
+	buff = *str_r;
+	while ((*str_r)[i])
+	{
+		if (((*str_r)[i] == '\'' || (*str_r)[i] == '\"') && quote == '\0')
+		{
+			quote = (*str_r)[i];
+			i++;
+		}
+		if ((*str_r)[i] && ((*str_r)[i] != quote))
+		{
+			buff[j] = (*str_r)[i];
+			i++;
+			j++;
+		}
+		if (quote && (*str_r)[i] == quote)
+		{
+			quote = '\0';
+			i++;
+		}
+	}
+	buff[j] = '\0';
+	*str_r = buff;
+	return (0);
 }

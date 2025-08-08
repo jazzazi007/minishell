@@ -26,6 +26,7 @@ SRCS := \
 	src/parsing/builed_cmd.c 			\
 	src/parsing/expander.c 				\
 	src/parsing/exp_utils.c 			\
+	src/parsing/heredoc.c 				\
 	src/parsing/parse_cmd.c 			\
 	src/parsing/parse_redirections.c 	\
 	src/parsing/shell_utils.c			\

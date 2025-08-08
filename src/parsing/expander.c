@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:14:56 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/06 21:44:37 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 07:41:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	update_quotes(char c, int *squote, int *dquote)
 		*dquote += 1;
 }
 
-static char	*append_expanded_part(char *res, char *input, int *i,
+char	*append_expanded_part(char *res, char *input, int *i,
 	t_minishell *sh, int in_single)
 {
 	char	*tmp;

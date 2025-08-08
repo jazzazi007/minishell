@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:24 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/05 17:59:15 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 10:56:48 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,12 @@ int **init_pipes(int pipe_count)
     return (child_pids);
 }
 
+void ft_close_fdpair(int fd[2])
+{
+    close(fd[0]);
+    close(fd[1]);
+}
+
 void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count)
 {
     int i;
@@ -85,8 +91,7 @@ void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count)
     i = 0;
     while (i < pipe_count)
     {
-        close(pipe_fds[i][0]);
-        close(pipe_fds[i][1]);
+        ft_close_fdpair(pipe_fds[i]);
         i++;
     }
 
