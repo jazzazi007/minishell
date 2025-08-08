@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:31:21 by ramroma           #+#    #+#             */
-/*   Updated: 2025/08/06 21:30:25 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 11:38:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ bool handle_metacharacters(const char *input, int *i,
 {
 	if (!ft_strncmp(&input[*i], "<<", 2) || !ft_strncmp(&input[*i], ">>", 2))
 	{
-		add_token(head, new_token(ft_substr(input, *i, 2), 
+		add_token(head, new_token(ft_substr(input, *i, 2), //leak
 			get_metatype(&input[*i])));
 		*i += 2;
 		return true;

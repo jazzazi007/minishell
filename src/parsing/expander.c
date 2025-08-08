@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:14:56 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/08 07:41:00 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 15:52:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,27 @@ char	*append_expanded_part(char *res, char *input, int *i,
 	{
 		(*i)++;
 		tmp = expand_var(input, i, sh);
+		if (!tmp)
+			return (NULL);
 		res = ft_strappend(res, tmp);
+		if (!res)
+		{
+			free(tmp);
+			return (NULL);
+		}
 		free(tmp);
 	}
 	else
 	{
 		tmp = ft_substr(input, *i, 1);
+		if (!tmp)
+			return (NULL);
 		res = ft_strappend(res, tmp);
+		if (!res)
+		{
+			free(tmp);
+			return (NULL);
+		}
 		free(tmp);
 		(*i)++;
 	}
@@ -60,7 +74,14 @@ char	*expand_token_value(char *input, t_minishell *sh)
 			|| (input[i] == '"' && !in_squote))
 			i++;
 		else
+		{
 			res = append_expanded_part(res, input, &i, sh, in_squote);
+			if (!res)
+			{
+				sh->exit_status = 1;
+				return (NULL);
+			}
+		}	
 	}
 	return (res);
 }

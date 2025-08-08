@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:26:27 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/07 19:11:28 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 15:57:26 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,40 @@ char	*expand_var(const char *str, int *i, t_minishell *sh)
 {
 	char	*key;
 	char	*val;
+	char 	*tmp;
 	int		start;
 
 	if (str[*i] == '?')
 	{
 		(*i)++;
-		return (ft_itoa(sh->exit_status));
+		tmp = ft_itoa(sh->exit_status);
+		if (!tmp)
+			return (NULL);
+		return (tmp);
 	}
 	if (!ft_isalnum(str[*i]) && str[*i] != '_')
-		return (ft_strdup("$"));
+	{
+		tmp = ft_strdup("$");
+		if (!tmp)
+			return (NULL);
+		return (tmp);
+	}
 	start = *i;
 	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
 		(*i)++;
 	key = ft_substr(str, start, *i - start);
-	val = ft_strdup(get_env_value(key, sh->envp));
+	if (!key)
+		return (NULL);
+	tmp = get_env_value(key, sh->envp);
+	if (!tmp)
+		val = ft_strdup("");
+	else
+		val = ft_strdup(tmp);
+	if (!val)
+	{
+		free(key);
+		return (NULL);
+	}
 	free(key);
 	return (val);
 }
@@ -78,15 +98,13 @@ char	*resolve_cmd_path(char *cmd0, t_minishell *shell)
 	return (get_cmd_path(cmd0, shell->envp));
 }
 
-int ft_strstrip(char **str_r)
+void ft_strstrip(char **str_r)
 {
 	int i;
 	int j;
 	char quote;
 	char *buff;
 
-	if (!str_r || !*str_r)
-		return (0);
 	i = 0;
 	j = 0;
 	quote = '\0';
@@ -112,5 +130,4 @@ int ft_strstrip(char **str_r)
 	}
 	buff[j] = '\0';
 	*str_r = buff;
-	return (0);
 }

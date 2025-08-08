@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 19:21:12 by codespace         #+#    #+#             */
-/*   Updated: 2025/08/08 10:57:22 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 15:54:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,14 @@ char *ft_expand(char *str, t_minishell *shell)
 	if (ft_strchr(str, '$'))
 	{	
 		while (str[i])
+		{
 			tmp = append_expanded_part(tmp, str, &i, shell, 0);
+			if (!tmp)
+			{
+				shell->exit_status = 1;
+				return (NULL);
+			}
+		}
 	}
 	return (tmp);
 }

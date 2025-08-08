@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/06 14:39:55 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 11:26:14 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	main(int ac, char **av, char **envp)
 	
 	(void)ac;
 	(void)av;
-	print_shell_banner();
+	// print_shell_banner();
 	shell = ft_init_shell(envp);
 	if (!shell)
 		return (1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:18:43 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/02/12 18:36:27 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/08 15:34:11 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ char	*ft_itoa(int n)
 	if (n == -2147483648)
 		return (ft_strdup("-2147483648"));
 	string = malloc(sizeof(char) * (length + 1));
-	number = n;
 	if (!string)
 		return (NULL);
+	number = n;
 	if (number < 0)
 	{
 		string[0] = '-';
