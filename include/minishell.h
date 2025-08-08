@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/08 15:57:39 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 16:12:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int		file_errhandle(int file);
 char	*get_cmd_assist(char *cmd, char *dir);
 void	fork1(int infile, char **ag, char **env, int *pd);
 void	fork2(int outfile, char **ag, char **env, int *pd);
-char *strip_quotes(const char *str);
+char	*strip_quotes(const char *str);
 void	file_close(int file_closing);
 char	*path_ret(char *path, char *cpy);
 char	*null_ret(char *path);
@@ -103,7 +103,7 @@ bool 	is_valid_pipe_syntax(char *ag);
 void 	fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd);
 int 	**init_pipes(int pipe_count);
 pid_t 	*init_child_pids(int pipe_count, int **pipe_fds);
-void ft_close_fdpair(int fd[2]);
+void	ft_close_fdpair(int fd[2]);
 void 	cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count);
 int 	count_pipes(char *ag);
 char 	*get_command(char *input, int position);
@@ -123,20 +123,20 @@ char	*expand_token_value(char *input, t_minishell *sh);
 char	*expand_var(const char *str, int *i, t_minishell *sh);
 char	*ft_strappend(char *dst, const char *src);
 char	*resolve_cmd_path(char *cmd0, t_minishell *shell);
-int	expand_tokens(t_tokenizer **r_head, t_minishell *sh);
+int		expand_tokens(t_tokenizer **r_head, t_minishell *sh);
 char	*get_env_value(const char *key, char **envp);
-void ft_strstrip(char **str_r);
+void 	ft_strstrip(char **str_r);
 
 
 t_cmd 	*build_cmd(t_tokenizer **tokens, t_minishell *shell);
 void 	ft_print_cmd(t_cmd **r_cmds);
-void ft_print_tokens(t_tokenizer **r_tokens);
+void 	ft_print_tokens(t_tokenizer **r_tokens);
 
 t_cmd   		*ft_init_cmd();
 t_minishell 	*ft_init_shell(char **envp);
 t_cmd 			*ft_add_cmd(t_cmd **r_rootcmd);
 t_redir			*ft_init_redir();
-t_redir 			*ft_add_redir(t_redir **r_root);
+t_redir 		*ft_add_redir(t_redir **r_root);
 
 void 			ft_free_redir(t_redir *redir);
 void 			ft_free_args(char **args);
@@ -149,6 +149,6 @@ int 			ft_parse_cmd(t_minishell *shell, const char *input);
 
 int 			ft_is_redir(char *s);
 int 			ft_fill_redir(t_redir **r_redir, t_tokenizer *curr, t_minishell *shell);
-int ft_open_heredoc(char *delim, t_minishell *shell);
+int 			ft_open_heredoc(char *delim, t_minishell *shell);
 
 #endif

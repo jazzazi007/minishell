@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:26:27 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/08 15:57:26 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 17:41:20 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,7 @@ char	*expand_var(const char *str, int *i, t_minishell *sh)
 	if (str[*i] == '?')
 	{
 		(*i)++;
-		tmp = ft_itoa(sh->exit_status);
-		if (!tmp)
-			return (NULL);
-		return (tmp);
+		return (ft_itoa(sh->exit_status));
 	}
 	if (!ft_isalnum(str[*i]) && str[*i] != '_')
 	{

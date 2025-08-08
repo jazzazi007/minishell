@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 11:37:05 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/05 17:08:10 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 18:21:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,32 @@ t_cmd   *ft_init_cmd()
     return (new);
 }
 
+char **ft_create_envp(char **envp)
+{
+	int i;
+	char **envp_c;
+
+	if (!envp || !*envp)
+		return (NULL);
+	i = 0;
+	envp_c = malloc(sizeof(envp));
+	if (!envp_c)
+		return (NULL);
+	while(envp[i])
+	{
+		envp_c[i] = ft_strdup(envp[i]);
+		if (!envp_c)
+		{
+			while (--i >= 0)
+				free(envp_c[i]);
+			free(envp_c);
+			return (NULL);
+		}
+		i++;
+	}
+	return (envp);
+}
+
 t_minishell *ft_init_shell(char **envp)
 {
     t_minishell *new;
@@ -85,7 +111,9 @@ t_minishell *ft_init_shell(char **envp)
 	new = malloc(sizeof(t_minishell));
 	if (!new)
         return (NULL);
-    new->envp = envp; //this should be a copy of envp, not the original
+    new->envp = ft_create_envp(envp);
+	if (!new->envp)
+		return (NULL);
     new->cmds = NULL;
     new->exit_status = 0;
 	return (new);

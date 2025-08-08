@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:14:56 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/08 15:52:23 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 17:42:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,6 @@ char	*append_expanded_part(char *res, char *input, int *i,
 		if (!tmp)
 			return (NULL);
 		res = ft_strappend(res, tmp);
-		if (!res)
-		{
-			free(tmp);
-			return (NULL);
-		}
 		free(tmp);
 	}
 	else
@@ -45,11 +40,6 @@ char	*append_expanded_part(char *res, char *input, int *i,
 		if (!tmp)
 			return (NULL);
 		res = ft_strappend(res, tmp);
-		if (!res)
-		{
-			free(tmp);
-			return (NULL);
-		}
 		free(tmp);
 		(*i)++;
 	}
