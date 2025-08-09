@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/08 11:26:14 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 19:13:46 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_run_shell(t_minishell *shell)
 		free(input);
 		// check_pipes_forks(input, shell);
 		ft_free_cmds(shell->cmds);
-		shell->cmds = NULL; // Prevent double free
+		shell->cmds = NULL; 
 	}
 }
 

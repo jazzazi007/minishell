@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:28 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/05/28 17:51:52 by ramroma          ###   ########.fr       */
+/*   Updated: 2025/08/09 19:11:55 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void sigint_handler(int signum)
     rl_on_new_line();
     g_exit_status = 130;
 }
-// Setup handlers for SIGINT and SIGQUIT
 
+// Setup handlers for SIGINT and SIGQUIT
 void setup_signal_handlers(void)
 {
     struct sigaction sa;

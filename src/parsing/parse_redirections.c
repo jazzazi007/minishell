@@ -31,7 +31,10 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr, t_minishell *shell)
 	else if (curr->type == T_HEREDOC)
 	{
 		c_red->red_type = 3;
-		close(c_red->prev->here_fd);
+		printf("type: %d\n", c_red->red_type);
+		if (c_red->prev)
+			close(c_red->prev->here_fd);
+		printf("...\n");
 		c_red->here_fd = ft_open_heredoc(curr->next->value, shell);
 	}
 	else

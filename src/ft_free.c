@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 11:55:39 by codespace         #+#    #+#             */
-/*   Updated: 2025/08/09 10:39:34 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 18:47:54 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ void ft_free_shell(t_minishell *shell)
 		ft_free_cmds(shell->cmds);
 		shell->cmds = NULL; // Prevent double free
 	}
-	if (shell->envp)
-	{
-		ft_free_envp(shell->envp);
-		shell->envp = NULL; // Prevent double free
-	}
+	// if (shell->envp)
+	// {
+	// 	ft_free_envp(shell->envp);
+	// 	shell->envp = NULL; // Prevent double free
+	// }
 	free(shell);
 }

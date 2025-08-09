@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:26:27 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/09 09:31:32 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 18:55:30 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,21 @@ char	*get_env_value(const char *key, char **envp)
 {
 	int		i;
 	size_t	len;
+	char *tmp;
 
 	i = 0;
 	len = ft_strlen(key);
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], key, len) == 0 && envp[i][len] == '=')
-			return (&envp[i][len + 1]);
+		{
+			tmp = ft_strdup(&envp[i][len + 1]);
+			return (tmp);
+		}
 		i++;
 	}
-	return (ft_strdup(""));
+	tmp = ft_strdup("");
+	return (tmp);
 }
 
 char	*ft_var_expand(const char *str, int *i, t_minishell *sh)
