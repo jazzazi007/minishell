@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:31:21 by ramroma           #+#    #+#             */
-/*   Updated: 2025/08/08 11:38:01 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 10:51:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,18 +63,26 @@ static char *extract_word_combined(const char *input, int *i)
 bool handle_metacharacters(const char *input, int *i, 
 		t_tokenizer **head)
 {
+	char *new;
+	
 	if (!ft_strncmp(&input[*i], "<<", 2) || !ft_strncmp(&input[*i], ">>", 2))
 	{
-		add_token(head, new_token(ft_substr(input, *i, 2), //leak
-			get_metatype(&input[*i])));
+		new = ft_substr(input, *i, 2);
+		if (!new)
+			return (false);
+		add_token(head, new_token(new, get_metatype(&input[*i])));
 		*i += 2;
+		free(new);
 		return true;
 	}
 	else if (is_metachar(input[*i]))
 	{
-		add_token(head, new_token(ft_substr(input, *i, 1), 
-			get_metatype(&input[*i])));
+		new = ft_substr(input, *i, 1);
+		if (!new)
+			return (false);
+		add_token(head, new_token(new, get_metatype(&input[*i])));
 		(*i)++;
+		free(new);
 		return true;
 	}
 	return false;
@@ -100,7 +108,8 @@ t_tokenizer *tokenize_input(const char *input, t_minishell *shell)
 			ft_indicate_error("Memory allocation failed", 1, shell);
 			return NULL;
 		}
-		add_token(&head, new_token(word, T_WORD));
+		if (ft_strcmp(word, "") != 0)
+			add_token(&head, new_token(word, T_WORD));
 		free(word);
 		if (handle_metacharacters(input, &i, &head))
 			continue;

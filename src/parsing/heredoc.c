@@ -6,13 +6,13 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 19:21:12 by codespace         #+#    #+#             */
-/*   Updated: 2025/08/08 15:54:43 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 09:31:51 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char *ft_expand(char *str, t_minishell *shell)
+char *ft_here_expand(char *str, t_minishell *shell)
 {
 	char *tmp;
 	int i;
@@ -44,7 +44,7 @@ static int ft_write_to_heredoc(char *input, int fd[2], int status,
 	
 	if (status == 1)
 	{
-		tmp = ft_expand(input, shell);
+		tmp = ft_here_expand(input, shell);
 		if (!tmp)
 		{
 			free(input);

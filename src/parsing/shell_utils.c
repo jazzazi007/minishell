@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 11:37:05 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/08 18:21:41 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 10:35:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ t_redir *ft_add_redir(t_redir **r_root)
 	while(curr->next != NULL)
 		curr = curr->next;
 	curr->next = new;
+	new->prev = curr;
 	return (new);
 }
 
@@ -62,6 +63,7 @@ t_redir	*ft_init_redir()
 	ft_bzero(new, sizeof(new));
 	new->here_fd = -1;
 	new->next = NULL;
+	new->prev = NULL;
 	return (new);
 }
 
@@ -76,32 +78,6 @@ t_cmd   *ft_init_cmd()
 	new->redir = NULL;
 	new->next = NULL;
     return (new);
-}
-
-char **ft_create_envp(char **envp)
-{
-	int i;
-	char **envp_c;
-
-	if (!envp || !*envp)
-		return (NULL);
-	i = 0;
-	envp_c = malloc(sizeof(envp));
-	if (!envp_c)
-		return (NULL);
-	while(envp[i])
-	{
-		envp_c[i] = ft_strdup(envp[i]);
-		if (!envp_c)
-		{
-			while (--i >= 0)
-				free(envp_c[i]);
-			free(envp_c);
-			return (NULL);
-		}
-		i++;
-	}
-	return (envp);
 }
 
 t_minishell *ft_init_shell(char **envp)

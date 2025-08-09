@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 19:05:14 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/06 14:41:09 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/08 18:23:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ t_cmd *build_cmd(t_tokenizer **r_tokens, t_minishell *shell)
 	while (curr != NULL)
 	{
 		i = 0;
-		printf("Building command...\n");
 		c_cmd = ft_create_cmd(&cmd, r_tokens);
 		if (!c_cmd)
 		{
@@ -85,7 +84,6 @@ t_cmd *build_cmd(t_tokenizer **r_tokens, t_minishell *shell)
 		}
 		while (curr && ft_strncmp(curr->value, "|", 1) != 0)
 		{
-			printf("Processing token: %s\n", curr->value);
 			if (ft_is_redir(curr->value))
 			{
 				if (ft_fill_redir(&c_cmd->redir, curr, shell) < 0)

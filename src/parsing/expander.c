@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:14:56 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/08 17:42:01 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 10:19:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*append_expanded_part(char *res, char *input, int *i,
 	if (input[*i] == '$' && !in_single)
 	{
 		(*i)++;
-		tmp = expand_var(input, i, sh);
+		tmp = ft_var_expand(input, i, sh);
 		if (!tmp)
 			return (NULL);
 		res = ft_strappend(res, tmp);
@@ -86,7 +86,7 @@ int	expand_tokens(t_tokenizer **head_r, t_minishell *sh)
 	head = *head_r;
 	while (head)
 	{
-		if (head->type >= T_REDIR_IN && head->type < T_FILE)
+		if (head->next && (head->type >= T_REDIR_IN && head->type < T_FILE))
 			head->next->type = T_FILE;
 		if (head->type == T_WORD)
 		{

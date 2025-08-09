@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 07:15:16 by ramroma           #+#    #+#             */
-/*   Updated: 2025/08/06 21:25:20 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 10:21:35 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	is_syntax_error(t_tokenizer **r_tokens, t_minishell *shell)
 {
 	t_tokenizer *curr;
 	
-	//Add error handling for unclosed quotes
 	curr = *r_tokens;
 	if (curr->type == T_PIPE )
 	{
@@ -25,9 +24,9 @@ int	is_syntax_error(t_tokenizer **r_tokens, t_minishell *shell)
 	}
 	while (curr)
 	{
-		if ((curr->type >= T_REDIR_IN && curr->type <= T_HEREDOC))
+		if ((curr->type >= T_REDIR_IN && curr->type <= T_APPEND))
 		{
-			if (!curr->next || curr->next->type != T_WORD)
+			if (!curr->next || (curr->next->type != T_WORD && curr->next->type != T_FILE))
 			{
 				fprintf(stderr, "syntax error near unexpected token `%s'\n", curr->value);
 				return (ft_indicate_error(NULL, 1, shell));

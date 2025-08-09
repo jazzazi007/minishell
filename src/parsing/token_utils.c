@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 07:01:45 by ramroma           #+#    #+#             */
-/*   Updated: 2025/08/06 19:55:28 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 10:45:14 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,15 @@ void add_token(t_tokenizer **head, t_tokenizer *new)
 
 void free_tokens(t_tokenizer *head)
 {
-	while (head)
+	t_tokenizer *curr;
+	t_tokenizer *next;
+
+	curr = head;
+	while (curr)
 	{
-		t_tokenizer *tmp = head;
-		head = head->next;
-		free(tmp->value);
-		free(tmp);
+		next = curr->next;
+		free(curr->value);
+		free(curr);
+		curr = next;
 	}
 }

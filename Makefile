@@ -8,13 +8,14 @@ NAME    := minishell
 
 # Source and Object Files
 SRCS := \
-	src/minishell.c 					\
-	src/signal.c    					\
-	src/ft_utils.c 						\
-	src/return.c 						\
+	src/debug.c							\
+	src/environment.c 					\
 	src/error.c 						\
 	src/ft_free.c						\
-	src/debug.c							\
+	src/ft_utils.c 						\
+	src/minishell.c 					\
+	src/return.c 						\
+	src/signal.c    					\
 	src/built-ins/echo.c				\
 	src/built-ins/pwd.c					\
 	src/parsing/get_cmd.c 				\

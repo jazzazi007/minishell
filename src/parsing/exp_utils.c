@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:26:27 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/08 17:41:20 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 09:31:32 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,13 @@ char	*get_env_value(const char *key, char **envp)
 			return (&envp[i][len + 1]);
 		i++;
 	}
-	return (NULL);
+	return (ft_strdup(""));
 }
 
-char	*expand_var(const char *str, int *i, t_minishell *sh)
+char	*ft_var_expand(const char *str, int *i, t_minishell *sh)
 {
 	char	*key;
 	char	*val;
-	char 	*tmp;
 	int		start;
 
 	if (str[*i] == '?')
@@ -41,28 +40,14 @@ char	*expand_var(const char *str, int *i, t_minishell *sh)
 		return (ft_itoa(sh->exit_status));
 	}
 	if (!ft_isalnum(str[*i]) && str[*i] != '_')
-	{
-		tmp = ft_strdup("$");
-		if (!tmp)
-			return (NULL);
-		return (tmp);
-	}
+		return (ft_strdup("$"));
 	start = *i;
 	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
 		(*i)++;
 	key = ft_substr(str, start, *i - start);
 	if (!key)
 		return (NULL);
-	tmp = get_env_value(key, sh->envp);
-	if (!tmp)
-		val = ft_strdup("");
-	else
-		val = ft_strdup(tmp);
-	if (!val)
-	{
-		free(key);
-		return (NULL);
-	}
+	val = get_env_value(key, sh->envp);
 	free(key);
 	return (val);
 }

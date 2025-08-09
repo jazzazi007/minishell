@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/08 16:12:38 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/09 10:38:48 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_redir
 	char			*filename; //incase of heredoc, filename is the same as delim			
 	int				here_fd;
 	struct s_redir 	*next;
+	struct s_redir	*prev;
 }	t_redir;
 
 typedef struct s_cmd
@@ -120,7 +121,7 @@ void 	setup_signal_handlers(void);
 char	*append_expanded_part(char *res, char *input, int *i,
 	t_minishell *sh, int in_single);
 char	*expand_token_value(char *input, t_minishell *sh);
-char	*expand_var(const char *str, int *i, t_minishell *sh);
+char	*ft_var_expand(const char *str, int *i, t_minishell *sh);
 char	*ft_strappend(char *dst, const char *src);
 char	*resolve_cmd_path(char *cmd0, t_minishell *shell);
 int		expand_tokens(t_tokenizer **r_head, t_minishell *sh);
@@ -143,6 +144,8 @@ void 			ft_free_args(char **args);
 void 			ft_free_cmd(t_cmd *cmd);
 void 			ft_free_cmds(t_cmd *cmds);
 void 			ft_free_shell(t_minishell *shell);
+char 			**ft_create_envp(char **envp);
+void 			ft_free_envp(char **envp);
 
 int 			ft_indicate_error(const char *msg, int exit_code, t_minishell *shell);
 int 			ft_parse_cmd(t_minishell *shell, const char *input);

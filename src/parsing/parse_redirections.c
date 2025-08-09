@@ -31,8 +31,8 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr, t_minishell *shell)
 	else if (curr->type == T_HEREDOC)
 	{
 		c_red->red_type = 3;
-		if (curr->next && curr->next->type == T_FILE)
-			c_red->here_fd = ft_open_heredoc(curr->next->value, shell);
+		close(c_red->prev->here_fd);
+		c_red->here_fd = ft_open_heredoc(curr->next->value, shell);
 	}
 	else
 		status = 0;
