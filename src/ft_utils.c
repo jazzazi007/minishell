@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramroma <ramroma@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:48:22 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/07/18 11:29:05 by ramroma          ###   ########.fr       */
+/*   Updated: 2025/08/13 23:11:00 by yaman-alrif      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,34 +30,6 @@ char	*get_cmd_assist(char *cmd, char *dir)
 	ft_strcat(full_path, "/");
 	ft_strcat(full_path, cmd);
 	return (full_path);
-}
-
-void	fork1(int infile, char **ag, char **env, int *pd)
-{
-	if (file_errhandle(infile) == 0)
-	{
-		first_fork_operate(infile, ag, env, pd);
-	}
-	else
-	{
-		close(pd[0]);
-		close(pd[1]);
-		exit(1);
-	}
-	return ;
-}
-
-void	fork2(int outfile, char **ag, char **env, int *pd)
-{
-	if (file_errhandle(outfile) == 0)
-		second_fork_operate(outfile, ag, env, pd);
-	else
-	{
-		close(pd[0]);
-		close(pd[1]);
-		exit(1);
-	}
-	return ;
 }
 
 char *strip_quotes(const char *str)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   multi_pipes.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:45 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/03 12:05:16 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/13 23:07:11 by yaman-alrif      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,18 +88,13 @@
 // }
 
 
-static int	init_shell_pipes(char *ag, t_minishell *sh,
+static int	init_shell_pipes(t_minishell *sh,
 	int ***fds, pid_t **pids)
 {
 	int	count;
 
 	(void)sh;
-	if (!is_valid_pipe_syntax(ag))
-	{
-		printf("Error: Invalid pipe or semicolon syntax\n");
-		return (-1);
-	}
-	count = count_pipes(ag);
+	count = count_pipes(sh->cmds);
 	*fds = init_pipes(count);
 	if (!(*fds))
 		return (-1);
@@ -110,13 +105,14 @@ static int	init_shell_pipes(char *ag, t_minishell *sh,
 }
 
 static void	child_exec(int i, int count, int **fds,
-	t_minishell *sh, char *ag)
+	t_minishell *sh, t_cmd *cmd)
 {
 	int		fd_in;
+	int 	fd_out;
 	int		j;
-	char	*cmd;
 
 	fd_in = STDIN_FILENO;
+	fd_out = STDOUT_FILENO;
 	j = -1;
 	while (++j < count)
 	{
@@ -127,32 +123,36 @@ static void	child_exec(int i, int count, int **fds,
 	}
 	if (i > 0)
 		fd_in = fds[i - 1][0];
-	cmd = get_command(ag, i);
-	if (!cmd)
-		exit(1);
-	if (i < count)
-		fork_operate(fd_in, cmd, sh->envp, fds[i]);
-	else
-	{
-		if (fd_in != STDIN_FILENO)
-		{
-			dup2(fd_in, STDIN_FILENO);
-			close(fd_in);
-		}
-		cmd_exec(cmd, sh);
-	}
-	free(cmd);
+	if (i < count - 1)
+		fd_out = fds[i][1];
+	fork_operate(fd_in, fd_out, cmd, fds[i]);
+	cmd_exec(cmd, sh);
 	exit(1);
 }
 
-void	check_pipes_forks(char *ag, t_minishell	*sh)
+t_cmd *get_cmd_node(t_minishell *sh, int i)
+{
+	t_cmd *cmd;
+	int j;
+
+	cmd = sh->cmds;
+	j = 0;
+	while (cmd && j < i)
+	{
+		cmd = cmd->next;
+		j++;
+	}
+	return cmd;
+}
+
+void	check_pipes_forks(t_minishell	*sh)
 {
 	int			**fds;
 	pid_t		*pids;
 	int			i;
 	int			count;
 
-	count = init_shell_pipes(ag, sh, &fds, &pids);
+	count = init_shell_pipes(sh, &fds, &pids);
 	if (count < 0)
 		return ;
 	i = -1;
@@ -166,7 +166,7 @@ void	check_pipes_forks(char *ag, t_minishell	*sh)
 			return ;
 		}
 		if (pids[i] == 0)
-			child_exec(i, count, fds, sh, ag);
+			child_exec(i, count, fds, sh, get_cmd_node(sh, i));
 	}
 	cleanup_resources(fds, pids, count);
 }

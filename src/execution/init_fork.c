@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_fork.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:11 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/02 12:58:06 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/13 23:09:54 by yaman-alrif      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,38 +44,77 @@ bool is_valid_pipe_syntax(char *ag)
     return true;
 }
 
-void fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd)
+void fork_operate(int fd_in, int fd_out, t_cmd *cmd, int *pipe_fd)
 {
-    t_minishell	shell;
+    t_redir *redir;
 
-	ft_memset(&shell, 0, sizeof(t_minishell));
-	shell.envp = env;
-    
-    close(pipe_fd[0]);
-
+    (void)pipe_fd;
+    redir = cmd->redir;
     if (fd_in != STDIN_FILENO)
     {
         dup2(fd_in, STDIN_FILENO);
         close(fd_in);
     }
-
-    dup2(pipe_fd[1], STDOUT_FILENO);
-    close(pipe_fd[1]);
-    
-    cmd_exec(cmd, &shell);
-    exit(1);
+    if (fd_out != STDOUT_FILENO)
+    {
+        dup2(fd_out, STDOUT_FILENO);
+        close(fd_out);
+    }
+    while (redir)
+    {
+        if (redir->red_type == 2)
+        {
+            int fd = open(redir->filename, O_RDONLY);
+            if (fd < 0)
+            {
+                perror("Error opening input file");
+                exit(EXIT_FAILURE);
+            }
+            dup2(fd, STDIN_FILENO);
+            close(fd);
+        }
+        else if (redir->red_type == 0)
+        {
+            int fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (fd < 0)
+            {
+                perror("Error opening output file");
+                exit(EXIT_FAILURE);
+            }
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+        }
+        else if (redir->red_type == 1)
+        {
+            int fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+            if (fd < 0)
+            {
+                perror("Error opening append file");
+                exit(EXIT_FAILURE);
+            }
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+        }
+        else if (redir->red_type == 3)
+        {
+            if (redir->here_fd >= 0)
+            {
+                dup2(redir->here_fd, STDIN_FILENO);
+                close(redir->here_fd);
+            }
+        }
+        redir = redir->next;
+    }
 }
 
-int count_pipes(char *ag)
+int count_pipes(t_cmd *cmd)
 {
-    int i = 0;
     int pipe_count = 0;
 
-    while (ag[i])
+    while (cmd)
     {
-        if (ag[i] == '|')
-            pipe_count++;
-        i++;
+        cmd = cmd->next;
+        pipe_count++;
     }
     return (pipe_count);
 }

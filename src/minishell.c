@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/09 19:13:46 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/13 22:42:34 by yaman-alrif      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_run_shell(t_minishell *shell)
 			continue;
 		}
 		free(input);
-		// check_pipes_forks(input, shell);
+		check_pipes_forks(shell);
 		ft_free_cmds(shell->cmds);
 		shell->cmds = NULL; 
 	}

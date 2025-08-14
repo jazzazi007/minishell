@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/05 11:54:41 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/13 22:56:42 by yaman-alrif      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,31 +111,16 @@ void	free_split(char **cmd)
 // 	return (handle_ret_num(cmd_path, cmd, 0));
 // }
 
-int	cmd_exec(char *agv, t_minishell *shell)
+int	cmd_exec(t_cmd *agv, t_minishell *shell)
 {
-	// t_tokenizer	*tokens;
-	char		**cmd = NULL;
-	char		*cmd_path;
-	(void)agv;
-	// tokens = tokenize_input(agv);
-	// if (!tokens)
-	// 	return (1);
-	// expand_tokens(tokens, shell);
-	// cmd = build_argv(tokens);
-	// free_tokens(tokens);
-	// if (!cmd || !cmd[0])
-	// {
-	// 	free_split(cmd);
-	// 	return (0);
-	// }
-	cmd_path = resolve_cmd_path(cmd[0], shell);
-	if (!cmd_path)
-		return (handle_ret(cmd_path, cmd, 127));
-	if (execve(cmd_path, cmd, shell->envp) == -1)
+	agv->cmd_path = resolve_cmd_path(agv->args[0], shell);
+	if (!agv->cmd_path)
+		return (handle_ret(agv->cmd_path, agv->args, 127));
+	if (execve(agv->cmd_path, agv->args, shell->envp) == -1)
 	{
 		shell->exit_status = 126;
-		return (exceve_ret(cmd_path, cmd, 126));
+		return (exceve_ret(agv->cmd_path, agv->args, 126));
 	}
 	shell->exit_status = 0;
-	return (handle_ret_num(cmd_path, cmd, 0));
+	return (handle_ret_num(agv->cmd_path, agv->args, 0));
 }

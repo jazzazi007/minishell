@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/09 10:38:48 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/13 22:58:35 by yaman-alrif      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <signal.h>
-# include <errno.h>
+#include <errno.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include "../libft/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -79,7 +81,7 @@ int			is_syntax_error(t_tokenizer **r_tokens, t_minishell *shell);
 
 //execute 
 
-int		cmd_exec(char *agv, t_minishell *shell);
+int		cmd_exec(t_cmd *agv, t_minishell *shell);
 char	*get_cmd_path(char *cmd, char **env);
 char	*ft_getenv(char **env);
 void	pipex(int infile, int outfile, char **ag, char **env);
@@ -99,14 +101,14 @@ char	*null_ret(char *path);
 int		handle_ret(char *path, char **cmd, int err_num);
 int		handle_ret_num(char *path, char **cmd, int err_num);
 int		exceve_ret(char *path, char **cmd, int err_num);
-void 	check_pipes_forks(char *ag, t_minishell	*sh);
+void 	check_pipes_forks(t_minishell	*sh);
 bool 	is_valid_pipe_syntax(char *ag);
-void 	fork_operate(int fd_in, char *cmd, char **env, int *pipe_fd);
+void fork_operate(int fd_in, int fd_out, t_cmd *cmd, int *pipe_fd);
 int 	**init_pipes(int pipe_count);
 pid_t 	*init_child_pids(int pipe_count, int **pipe_fds);
 void	ft_close_fdpair(int fd[2]);
 void 	cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count);
-int 	count_pipes(char *ag);
+int 	count_pipes(t_cmd *ag);
 char 	*get_command(char *input, int position);
 /////////
 

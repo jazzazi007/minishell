@@ -10,10 +10,7 @@ int ft_parse_cmd(t_minishell *shell, const char *input)
 		free_tokens(tokens);
 		return (-1);
 	}
-    ft_print_tokens(&tokens);
-	printf("start expansion\n");
 	expand_tokens(&tokens, shell);
-	printf("end expansion\n");
 	shell->cmds = build_cmd(&tokens, shell);
 	free_tokens(tokens);
 	if (!shell->cmds || shell->cmds == NULL)

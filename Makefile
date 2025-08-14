@@ -20,7 +20,6 @@ SRCS := \
 	src/built-ins/pwd.c					\
 	src/parsing/get_cmd.c 				\
 	src/execution/ft_execute.c 			\
-	src/execution/pipex.c 				\
 	src/execution/multi_pipes.c 		\
 	src/execution/init_fork.c 			\
 	src/execution/init_pipes.c 			\
