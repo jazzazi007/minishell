@@ -110,9 +110,29 @@ void	free_split(char **cmd)
 // 		return (exceve_ret(cmd_path, cmd, 126));
 // 	return (handle_ret_num(cmd_path, cmd, 0));
 // }
-
+int built_ins(t_cmd *agv, t_minishell *shell)
+{
+	(void)shell;
+	if (ft_strncmp(agv->args[0], "cd", 3) == 0)
+		return(0);
+	else if (ft_strncmp(agv->args[0], "echo", 5) == 0)
+		return (echo(agv->args[1]));
+	else if (ft_strncmp(agv->args[0], "export", 7) == 0)
+		printf("export command not implemented yet\n");
+	else if (ft_strncmp(agv->args[0], "unset", 6) == 0)
+		printf("unset command not implemented yet\n");
+	else if (ft_strncmp(agv->args[0], "env", 4) == 0)
+		printf("env command not implemented yet\n");
+	else if (ft_strncmp(agv->args[0], "exit", 5) == 0)
+		printf("exit command not implemented yet\n");
+	else if (ft_strncmp(agv->args[0], "pwd", 4) == 0)
+		return (pwd(), 0);
+	return (1);
+}
 int	cmd_exec(t_cmd *agv, t_minishell *shell)
 {
+	if (!built_ins(agv, shell))
+		return (0);
 	agv->cmd_path = resolve_cmd_path(agv->args[0], shell);
 	if (!agv->cmd_path)
 		return (handle_ret(agv->cmd_path, agv->args, 127));

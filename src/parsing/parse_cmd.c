@@ -18,6 +18,6 @@ int ft_parse_cmd(t_minishell *shell, const char *input)
 		shell->exit_status = 1;
 		return (-1);
 	}
-	ft_print_cmd(&shell->cmds);
+	//ft_print_cmd(&shell->cmds);
     return (0);
 }

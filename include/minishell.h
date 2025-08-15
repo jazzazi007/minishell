@@ -155,5 +155,9 @@ int 			ft_parse_cmd(t_minishell *shell, const char *input);
 int 			ft_is_redir(char *s);
 int 			ft_fill_redir(t_redir **r_redir, t_tokenizer *curr, t_minishell *shell);
 int 			ft_open_heredoc(char *delim, t_minishell *shell);
+int pwd();
+int cd(char **av, char **envp);
+int built_ins(t_cmd *agv, t_minishell *shell);
+int echo(char *cmd);
 
 #endif

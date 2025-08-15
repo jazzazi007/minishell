@@ -155,6 +155,20 @@ void	check_pipes_forks(t_minishell	*sh)
 	count = init_shell_pipes(sh, &fds, &pids);
 	if (count < 0)
 		return ;
+		//cd command handling
+	if (ft_strncmp(get_cmd_node(sh, 0)->args[0], "cd", 2) == 0 && count == 1)
+		{
+			if (cd(get_cmd_node(sh, 0)->args, sh->envp))
+			{
+				return ;
+			}
+			else
+			{
+				sh->exit_status = 0;
+				return ;
+			}
+		}
+		// If only one command, execute it directly
 	i = -1;
 	while (++i <= count)
 	{
