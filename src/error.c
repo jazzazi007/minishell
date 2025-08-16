@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 07:15:16 by ramroma           #+#    #+#             */
-/*   Updated: 2025/08/09 10:21:35 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/16 16:03:42 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	is_syntax_error(t_tokenizer **r_tokens, t_minishell *shell)
 	curr = *r_tokens;
 	if (curr->type == T_PIPE )
 	{
-		fprintf(stderr, "syntax error near unexpected token `%s'\n", curr->value);
+		printf("syntax error near unexpected token `%s'\n", curr->value);
 		return (ft_indicate_error(NULL, 1, shell));
 	}
 	while (curr)
@@ -28,13 +28,13 @@ int	is_syntax_error(t_tokenizer **r_tokens, t_minishell *shell)
 		{
 			if (!curr->next || (curr->next->type != T_WORD && curr->next->type != T_FILE))
 			{
-				fprintf(stderr, "syntax error near unexpected token `%s'\n", curr->value);
+				printf("syntax error near unexpected token `%s'\n", curr->value);
 				return (ft_indicate_error(NULL, 1, shell));
 			}
 		}
 		if (curr->type == T_PIPE && (!curr->next))
 		{
-			fprintf(stderr, "syntax error near unexpected token `%s'\n", curr->value);
+			printf("syntax error near unexpected token `%s'\n", curr->value);
 			return (ft_indicate_error(NULL, 1, shell));
 		}
 		curr = curr->next;
