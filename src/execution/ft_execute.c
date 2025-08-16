@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/13 22:56:42 by yaman-alrif      ###   ########.fr       */
+/*   Updated: 2025/08/16 15:34:18 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,33 +83,6 @@ void	free_split(char **cmd)
 	free(cmd);
 }
 
-// int	cmd_exec(char *agv, char **envp)
-// {
-// 	char	**cmd;
-// 	char	*cmd_path;
-// 	char	*bash_command;
-
-// 	cmd_path = NULL;
-// 	bash_command = bash_cmd(agv);
-// 	cmd = ft_split(bash_command, ' ');
-// 	free(bash_command);
-// 	if (!cmd || !cmd[0])
-// 	{
-// 		free_split(cmd);
-// 		return (0);
-// 	}
-// 	if (access(cmd[0], X_OK) == 0)
-// 		cmd_path = ft_strdup(cmd[0]);
-// 	else
-// 	{
-// 		cmd_path = get_cmd_path(cmd[0], envp);
-// 		if (!cmd_path)
-// 			return (handle_ret(cmd_path, cmd, 127));
-// 	}
-// 	if (execve(cmd_path, cmd, envp) == -1)
-// 		return (exceve_ret(cmd_path, cmd, 126));
-// 	return (handle_ret_num(cmd_path, cmd, 0));
-// }
 int built_ins(t_cmd *agv, t_minishell *shell)
 {
 	(void)shell;
@@ -123,8 +96,6 @@ int built_ins(t_cmd *agv, t_minishell *shell)
 		printf("unset command not implemented yet\n");
 	else if (ft_strncmp(agv->args[0], "env", 4) == 0)
 		printf("env command not implemented yet\n");
-	else if (ft_strncmp(agv->args[0], "exit", 5) == 0)
-		printf("exit command not implemented yet\n");
 	else if (ft_strncmp(agv->args[0], "pwd", 4) == 0)
 		return (pwd(), 0);
 	return (1);

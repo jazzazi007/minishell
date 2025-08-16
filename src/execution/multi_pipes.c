@@ -3,90 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   multi_pipes.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:45 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/13 23:07:11 by yaman-alrif      ###   ########.fr       */
+/*   Updated: 2025/08/16 15:32:38 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-// void check_pipes_forks(char *ag, char **env)
-// {
-//     t_minishell shell;
-// 	ft_memset(&shell, 0, sizeof(t_minishell));
-// 	shell.envp = env;
-    
-//     if (!is_valid_pipe_syntax(ag))
-//     {
-//         printf("Error: Invalid pipe or semicolon syntax\n");
-//         return;
-//     }
-
-//     int pipe_count = count_pipes(ag);
-//     int **pipe_fds = init_pipes(pipe_count);
-//     if (!pipe_fds)
-//         return;
-
-//     pid_t *child_pids = init_child_pids(pipe_count, pipe_fds);
-//     if (!child_pids)
-//         return;
-
-//     int i = 0;
-//     while (i <= pipe_count)
-//     {
-//         child_pids[i] = fork();
-//         if (child_pids[i] == -1)
-//         {
-//             perror("Fork failed");
-//             cleanup_resources(pipe_fds, child_pids, pipe_count);
-//             return;
-//         }
-
-//         if (child_pids[i] == 0)
-//         {
-//             int fd_in = STDIN_FILENO;
-//             char *command;
-
-//             int j = 0;
-//             while (j < pipe_count)
-//             {
-//                 if (j != i - 1) 
-//                     close(pipe_fds[j][0]);
-//                 if (j != i)      
-//                     close(pipe_fds[j][1]);
-//                 j++;
-//             }
-
-//             if (i > 0)
-//                 fd_in = pipe_fds[i - 1][0];
-
-//             command = get_command(ag, i);
-//             if (!command)
-//                 exit(1);
-
-//             if (i < pipe_count)
-//                 fork_operate(fd_in, command, env, pipe_fds[i]);
-//             else
-//             {
-//                 if (fd_in != STDIN_FILENO)
-//                 {
-//                     dup2(fd_in, STDIN_FILENO);
-//                     close(fd_in);
-//                 }
-//                 cmd_exec(command, &shell);
-//                 exit(1);
-//             }
-//             free(command);
-//             exit(1);
-//         }
-//         i++;
-//     }
-
-//     cleanup_resources(pipe_fds, child_pids, pipe_count);
-// }
-
 
 static int	init_shell_pipes(t_minishell *sh,
 	int ***fds, pid_t **pids)
@@ -95,7 +19,10 @@ static int	init_shell_pipes(t_minishell *sh,
 
 	(void)sh;
 	count = count_pipes(sh->cmds);
-	*fds = init_pipes(count);
+	// *fds = init_pipes(count);
+	*fds = NULL;
+	if (count > 0)
+		*fds = init_pipes(count);
 	if (!(*fds))
 		return (-1);
 	*pids = init_child_pids(count, *fds);
@@ -111,6 +38,8 @@ static void	child_exec(int i, int count, int **fds,
 	int 	fd_out;
 	int		j;
 
+	if (ft_strcmp(cmd->args[0], "exit") == 0)
+		exit_command(cmd, sh);
 	fd_in = STDIN_FILENO;
 	fd_out = STDOUT_FILENO;
 	j = -1;
@@ -125,7 +54,7 @@ static void	child_exec(int i, int count, int **fds,
 		fd_in = fds[i - 1][0];
 	if (i < count - 1)
 		fd_out = fds[i][1];
-	fork_operate(fd_in, fd_out, cmd, fds[i]);
+	fork_operate(fd_in, fd_out, cmd);
 	cmd_exec(cmd, sh);
 	exit(1);
 }
@@ -155,32 +84,45 @@ void	check_pipes_forks(t_minishell	*sh)
 	count = init_shell_pipes(sh, &fds, &pids);
 	if (count < 0)
 		return ;
-		//cd command handling
+
+	// Handle 'exit' in parent if it's the only command
+	if (ft_strcmp(get_cmd_node(sh, 0)->args[0], "exit") == 0 && count == 1)
+	{
+		exit_command(get_cmd_node(sh, 0), sh);
+		return ;
+	}
+
+	// cd command handling
 	if (ft_strncmp(get_cmd_node(sh, 0)->args[0], "cd", 2) == 0 && count == 1)
+	{
+		if (cd(get_cmd_node(sh, 0)->args, sh->envp))
 		{
-			if (cd(get_cmd_node(sh, 0)->args, sh->envp))
-			{
-				return ;
-			}
-			else
-			{
-				sh->exit_status = 0;
-				return ;
-			}
+			return ;
 		}
-		// If only one command, execute it directly
+		else
+		{
+			sh->exit_status = 0;
+			return ;
+		}
+	}
+
 	i = -1;
-	while (++i <= count)
+	while (++i < count)
 	{
 		pids[i] = fork();
 		if (pids[i] == -1)
 		{
 			perror("Fork failed");
-			cleanup_resources(fds, pids, count);
+			cleanup_resources(fds, pids, count , sh);
 			return ;
 		}
 		if (pids[i] == 0)
-			child_exec(i, count, fds, sh, get_cmd_node(sh, i));
+		{
+			if (built_ins(get_cmd_node(sh, i), sh))
+				child_exec(i, count, fds, sh, get_cmd_node(sh, i));
+			else
+				exit (0);
+		}
 	}
-	cleanup_resources(fds, pids, count);
+	cleanup_resources(fds, pids, count , sh);
 }

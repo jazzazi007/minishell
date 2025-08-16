@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_fork.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:11 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/13 23:09:54 by yaman-alrif      ###   ########.fr       */
+/*   Updated: 2025/08/16 15:33:53 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,10 @@ bool is_valid_pipe_syntax(char *ag)
     return true;
 }
 
-void fork_operate(int fd_in, int fd_out, t_cmd *cmd, int *pipe_fd)
+void fork_operate(int fd_in, int fd_out, t_cmd *cmd)
 {
     t_redir *redir;
 
-    (void)pipe_fd;
     redir = cmd->redir;
     if (fd_in != STDIN_FILENO)
     {

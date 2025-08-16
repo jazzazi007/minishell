@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/13 22:58:35 by yaman-alrif      ###   ########.fr       */
+/*   Updated: 2025/08/16 15:16:32 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include <linux/limits.h>
 #include <dirent.h>
 
+# define SPACES " \t\n\v\f\r"
 //tokenizer
 typedef enum e_tokentype
 {
@@ -103,11 +104,12 @@ int		handle_ret_num(char *path, char **cmd, int err_num);
 int		exceve_ret(char *path, char **cmd, int err_num);
 void 	check_pipes_forks(t_minishell	*sh);
 bool 	is_valid_pipe_syntax(char *ag);
-void fork_operate(int fd_in, int fd_out, t_cmd *cmd, int *pipe_fd);
+void fork_operate(int fd_in, int fd_out, t_cmd *cmd);
 int 	**init_pipes(int pipe_count);
 pid_t 	*init_child_pids(int pipe_count, int **pipe_fds);
 void	ft_close_fdpair(int fd[2]);
-void 	cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count);
+void 	cleanup_resources(int **pipe_fds, pid_t *child_pids,
+	 	int pipe_count , t_minishell *shell);
 int 	count_pipes(t_cmd *ag);
 char 	*get_command(char *input, int position);
 /////////
@@ -159,5 +161,6 @@ int pwd();
 int cd(char **av, char **envp);
 int built_ins(t_cmd *agv, t_minishell *shell);
 int echo(char *cmd);
+void exit_command(t_cmd *cmd, t_minishell *shell);
 
 #endif

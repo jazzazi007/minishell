@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:24 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/08 10:56:48 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/16 15:33:36 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,13 @@ void ft_close_fdpair(int fd[2])
     close(fd[1]);
 }
 
-void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count)
+void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count , t_minishell *shell)
 {
     int i;
+    int status;
 
+    pid_t pid;
+    pid = 1;
     i = 0;
     while (i < pipe_count)
     {
@@ -95,11 +98,16 @@ void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count)
         i++;
     }
 
-    i = 0;
-    while (i <= pipe_count)
+    while (pid > 0)
     {
-        waitpid(child_pids[i], NULL, 0);
-        i++;
+        pid = waitpid(-1, &status, 0);
+        if (pid == child_pids[pipe_count])
+        {
+            if (WIFEXITED(status))
+                shell->exit_status = WEXITSTATUS(status);
+            if (WIFSIGNALED(status))
+                shell->exit_status = 128 + WTERMSIG(status);
+        }
     }
 
     i = 0;

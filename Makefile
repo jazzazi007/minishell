@@ -17,6 +17,7 @@ SRCS := \
 	src/return.c 						\
 	src/signal.c    					\
 	src/built-ins/echo.c				\
+	src/built-ins/exit.c				\
 	src/built-ins/pwd.c					\
 	src/built-ins/cd.c					\
 	src/parsing/get_cmd.c 				\
