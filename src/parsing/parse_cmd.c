@@ -6,11 +6,51 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 15:40:13 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/16 15:40:15 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/16 16:42:10 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+int	check_is_closed(t_tokenizer *tokens)
+{
+	t_tokenizer *tmp;
+	int flag;
+	int i;
+
+	flag = 1;
+	tmp = tokens;
+	if (!tokens)
+		return (1);
+	while (tmp && flag)
+	{
+		i = 0;
+		while (tmp->value[i] && flag)
+		{
+			if (tmp->value[i] == '\'' || tmp->value[i] == '\"')
+			{
+				flag = 0;
+				char quote = tmp->value[i];
+				i++;
+				while (tmp->value[i] && tmp->value[i] != quote)
+					i++;
+				if (tmp->value[i] != quote)
+					break ;
+				flag = 1;
+				i++;
+			}
+			else
+				i++;
+		}
+		tmp = tmp->next;
+	}
+	if (!flag)
+	{
+		write(2,"Unclosed quotes\n", 17);
+		return (1);
+	}
+	return (0);
+}
 
 int ft_parse_cmd(t_minishell *shell, const char *input)
 {
@@ -19,6 +59,12 @@ int ft_parse_cmd(t_minishell *shell, const char *input)
     tokens = tokenize_input(input, shell);
 	if (!tokens || is_syntax_error(&tokens, shell) == -1)
 	{
+		free_tokens(tokens);
+		return (-1);
+	}
+	if (check_is_closed(tokens))
+	{
+		shell->exit_status = 1;//check the exit status for unclosed quote commands
 		free_tokens(tokens);
 		return (-1);
 	}
