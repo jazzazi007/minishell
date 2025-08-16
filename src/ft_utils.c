@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:48:22 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/13 23:11:00 by yaman-alrif      ###   ########.fr       */
+/*   Updated: 2025/08/16 15:39:06 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,3 @@ char *strip_quotes(const char *str)
     }
     return ft_strdup(str);
 }
-
-// char	*bash_cmd(char *agv)
-// {
-// 	char	*new_cmd;
-
-// 	if (!agv || ft_strncmp(agv, "./", 2) != 0)
-// 	{
-// 		return (ft_strdup(agv));
-// 	}
-// 	if (ft_strncmp(agv, "./ ", 3) == 0)
-// 	{
-// 		return (ft_strdup(agv));
-// 	}
-// 	new_cmd = ft_strjoin("bash ", agv + 2);
-// 	return (new_cmd);
-// }

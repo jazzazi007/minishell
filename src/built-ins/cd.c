@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moaljazz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:22:39 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/06/18 19:22:43 by moaljazz         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:41:17 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,7 @@ int cd(char **av, char **envp)
             return 1;
         }
     }
-
-    // Optionally update PWD environment variable here
-
+    
     if (getcwd(path, sizeof(path)) == NULL)
         perror("getcwd");
 

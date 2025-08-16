@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_cmd.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/16 15:40:13 by ralbliwi          #+#    #+#             */
+/*   Updated: 2025/08/16 15:40:15 by ralbliwi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/minishell.h"
 
 int ft_parse_cmd(t_minishell *shell, const char *input)
@@ -18,6 +30,5 @@ int ft_parse_cmd(t_minishell *shell, const char *input)
 		shell->exit_status = 1;
 		return (-1);
 	}
-	//ft_print_cmd(&shell->cmds);
     return (0);
 }

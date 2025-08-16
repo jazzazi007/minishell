@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 11:55:39 by codespace         #+#    #+#             */
-/*   Updated: 2025/08/09 18:47:54 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:38:55 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void ft_free_cmd(t_cmd *cmd)
 		return ;
 	ft_free_redir(cmd->redir);
 	ft_free_args(cmd->args);
-	// free(cmd->cmd_path);
 	free(cmd);
 }
 
@@ -73,7 +72,7 @@ void ft_free_shell(t_minishell *shell)
 	if (shell->cmds)
 	{
 		ft_free_cmds(shell->cmds);
-		shell->cmds = NULL; // Prevent double free
+		shell->cmds = NULL;
 	}
 	// if (shell->envp)
 	// {

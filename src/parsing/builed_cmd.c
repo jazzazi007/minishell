@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builed_cmd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaman-alrifai <yaman-alrifai@student.42    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 19:05:14 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/13 23:00:52 by yaman-alrif      ###   ########.fr       */
+/*   Updated: 2025/08/16 15:40:47 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ t_cmd *build_cmd(t_tokenizer **r_tokens, t_minishell *shell)
 			curr = curr->next;
 		}
 		if (curr)
-			curr = curr->next; //skip the pipe token
+			curr = curr->next;
 	}
 	return (cmd);
 }

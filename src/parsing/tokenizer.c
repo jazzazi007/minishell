@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:31:21 by ramroma           #+#    #+#             */
-/*   Updated: 2025/08/09 10:51:38 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/16 15:39:52 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,27 +116,3 @@ t_tokenizer *tokenize_input(const char *input, t_minishell *shell)
 	}
 	return head;
 }
-
-// t_tokenizer *tokenize_input(const char *input)
-// {
-// 	int i;
-// 	t_tokenizer *head;
-// 	char *word;
-
-// 	head = NULL;
-// 	i = 0;
-// 	while (input[i])
-// 	{
-// 		while (input[i] == ' ')
-// 			i++;
-// 		if (!input[i])
-// 			break;
-// 		if (handle_metacharacters(input, &i, &head))
-// 			continue;
-// 		word = extract_word_combined(input, &i);
-// 		printf("Extracted word: %s\n", word);
-// 		add_token(&head, new_token(word, T_WORD));
-// 		free(word);
-// 	}
-// 	return head;
-// }
