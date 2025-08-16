@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/16 15:16:32 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:57:19 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ int pwd();
 int cd(char **av, char **envp);
 int built_ins(t_cmd *agv, t_minishell *shell);
 int echo(char *cmd);
+int env(t_minishell *shell);
 void exit_command(t_cmd *cmd, t_minishell *shell);
 
 #endif

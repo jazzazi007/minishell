@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/16 15:34:18 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:58:32 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ void	free_split(char **cmd)
 
 int built_ins(t_cmd *agv, t_minishell *shell)
 {
-	(void)shell;
 	if (ft_strncmp(agv->args[0], "cd", 3) == 0)
 		return(0);
 	else if (ft_strncmp(agv->args[0], "echo", 5) == 0)
@@ -95,7 +94,7 @@ int built_ins(t_cmd *agv, t_minishell *shell)
 	else if (ft_strncmp(agv->args[0], "unset", 6) == 0)
 		printf("unset command not implemented yet\n");
 	else if (ft_strncmp(agv->args[0], "env", 4) == 0)
-		printf("env command not implemented yet\n");
+		return (env(shell));
 	else if (ft_strncmp(agv->args[0], "pwd", 4) == 0)
 		return (pwd(), 0);
 	return (1);
