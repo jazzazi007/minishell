@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:22:39 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/16 15:41:17 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:42:08 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int cd(char **av, char **envp)
         home = getenv("HOME");
         if (!home)
         {
-            fprintf(stderr, "cd: HOME not set\n");
+            printf("cd: HOME not set\n");
             return 1;
         }
         if (chdir(home) != 0)
