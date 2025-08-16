@@ -163,5 +163,7 @@ int built_ins(t_cmd *agv, t_minishell *shell);
 int echo(char *cmd);
 int env(t_minishell *shell);
 void exit_command(t_cmd *cmd, t_minishell *shell);
+int export_cmd(char **args, t_minishell *shell);
+int unset_cmd(char **args, t_minishell *shell);
 
 #endif

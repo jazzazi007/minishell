@@ -90,9 +90,9 @@ int built_ins(t_cmd *agv, t_minishell *shell)
 	else if (ft_strncmp(agv->args[0], "echo", 5) == 0)
 		return (echo(agv->args[1]));
 	else if (ft_strncmp(agv->args[0], "export", 7) == 0)
-		printf("export command not implemented yet\n");
+		return (export_cmd(agv->args, shell));
 	else if (ft_strncmp(agv->args[0], "unset", 6) == 0)
-		printf("unset command not implemented yet\n");
+		return (unset_cmd(agv->args, shell));
 	else if (ft_strncmp(agv->args[0], "env", 4) == 0)
 		return (env(shell));
 	else if (ft_strncmp(agv->args[0], "pwd", 4) == 0)

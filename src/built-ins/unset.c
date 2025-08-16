@@ -1,0 +1,46 @@
+#include "../../include/minishell.h"
+
+static int find_env(char **envp, const char *name)
+{
+    int i = 0;
+    size_t len = strlen(name);
+    while (envp[i])
+    {
+        if (strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+            return i;
+        i++;
+    }
+    return -1;
+}
+
+static void remove_env(char ***envp, int index)
+{
+    int count = 0;
+    while ((*envp)[count])
+        count++;
+    free((*envp)[index]);
+    for (int i = index; i < count - 1; i++)
+        (*envp)[i] = (*envp)[i + 1];
+    (*envp)[count - 1] = NULL;
+}
+
+int unset_cmd(char **args, t_minishell *shell)
+{
+    int i = 1;
+    int ret = 0;
+    if (!args[1])
+        return 1;
+    while (args[i])
+    {
+        int idx = find_env(shell->envp, args[i]);
+        if (idx != -1)
+            remove_env(&shell->envp, idx);
+        else
+        {
+            fprintf(stderr, "minishell: unset: `%s': not a valid identifier\n", args[i]);
+            ret = 1;
+        }
+        i++;
+    }
+    return ret;
+}
