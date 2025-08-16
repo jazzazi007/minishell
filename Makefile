@@ -19,6 +19,7 @@ SRCS := \
 	src/built-ins/echo.c				\
 	src/built-ins/pwd.c					\
 	src/built-ins/cd.c					\
+	src/built-ins/env.c					\
 	src/parsing/get_cmd.c 				\
 	src/execution/ft_execute.c 			\
 	src/execution/multi_pipes.c 		\

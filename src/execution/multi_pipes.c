@@ -169,6 +169,7 @@ void	check_pipes_forks(t_minishell	*sh)
 			}
 		}
 		// If only one command, execute it directly
+		//env(sh->cmds);
 	i = -1;
 	while (++i <= count)
 	{

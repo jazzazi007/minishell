@@ -59,7 +59,7 @@ int	main(int ac, char **av, char **envp)
 	
 	(void)ac;
 	(void)av;
-	// print_shell_banner();
+	print_shell_banner();
 	shell = ft_init_shell(envp);
 	if (!shell)
 		return (1);

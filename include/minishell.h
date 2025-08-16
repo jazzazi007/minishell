@@ -159,5 +159,6 @@ int pwd();
 int cd(char **av, char **envp);
 int built_ins(t_cmd *agv, t_minishell *shell);
 int echo(char *cmd);
+int env(t_minishell *shell);
 
 #endif
