@@ -87,6 +87,8 @@ int built_ins(t_cmd *agv, t_minishell *shell)
 {
 	if (ft_strncmp(agv->args[0], "cd", 3) == 0)
 		return(0);
+	if (ft_strncmp(agv->args[0], "exit", 5) == 0)
+		return (0);
 	else if (ft_strncmp(agv->args[0], "echo", 5) == 0)
 		return (echo(agv->args[1]));
 	else if (ft_strncmp(agv->args[0], "export", 7) == 0)
@@ -111,6 +113,6 @@ int	cmd_exec(t_cmd *agv, t_minishell *shell)
 		shell->exit_status = 126;
 		return (exceve_ret(agv->cmd_path, agv->args, 126));
 	}
-	shell->exit_status = 0;
+	// shell->exit_status = 0;
 	return (handle_ret_num(agv->cmd_path, agv->args, 0));
 }

@@ -38,3 +38,9 @@ Token: |          | Type: 1
 Token: ls         | Type: 0
 Token: |          | Type: 1
 Token: ls|ls|ls|ls| | Type: 0
+
+//
+EXIT STATUS
+SIGNALING
+NORMINATION
+LEAKS

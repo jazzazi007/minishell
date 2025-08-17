@@ -101,12 +101,18 @@ void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count , t_min
     while (pid > 0)
     {
         pid = waitpid(-1, &status, 0);
-        if (child_pids[pipe_count])
+        if (child_pids[pipe_count - 1])
         {
             if (WIFEXITED(status))
+            {
                 shell->exit_status = WEXITSTATUS(status);
+                printf("exit_status:%i \n",WEXITSTATUS(status));
+            }
             if (WIFSIGNALED(status))
+            {
+                
                 shell->exit_status = 128 + WTERMSIG(status);
+            }
         }
     }
 

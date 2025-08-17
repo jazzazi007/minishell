@@ -38,10 +38,10 @@ static void	child_exec(int i, int count, int **fds,
 	int 	fd_out;
 	int		j;
 
-	if (ft_strcmp(cmd->args[0], "exit") == 0)
-		exit_command(cmd, sh);
 	fd_in = STDIN_FILENO;
 	fd_out = STDOUT_FILENO;
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	j = -1;
 	while (++j < count)
 	{
@@ -84,14 +84,12 @@ void	check_pipes_forks(t_minishell	*sh)
 	count = init_shell_pipes(sh, &fds, &pids);
 	if (count < 0)
 		return ;
-
 	// Handle 'exit' in parent if it's the only command
 	if (ft_strcmp(get_cmd_node(sh, 0)->args[0], "exit") == 0 && count == 1)
 	{
 		exit_command(get_cmd_node(sh, 0), sh);
 		return ;
 	}
-
 	// cd command handling
 	if (ft_strncmp(get_cmd_node(sh, 0)->args[0], "cd", 2) == 0 && count == 1)
 	{
@@ -101,7 +99,7 @@ void	check_pipes_forks(t_minishell	*sh)
 		}
 		else
 		{
-			sh->exit_status = 0;
+			// sh->exit_status = 0;
 			return ;
 		}
 	}
