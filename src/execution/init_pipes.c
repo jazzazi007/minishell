@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:24 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/16 15:33:36 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/16 16:50:48 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count , t_min
     while (pid > 0)
     {
         pid = waitpid(-1, &status, 0);
-        if (pid == child_pids[pipe_count])
+        if (child_pids[pipe_count])
         {
             if (WIFEXITED(status))
                 shell->exit_status = WEXITSTATUS(status);

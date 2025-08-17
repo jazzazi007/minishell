@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:45 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/16 15:59:04 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/17 14:57:06 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,11 @@ static void	child_exec(int i, int count, int **fds,
 	}
 	if (i > 0)
 		fd_in = fds[i - 1][0];
-	if (i < count - 1)
+	if (i < count - 1 && count > 1)
 		fd_out = fds[i][1];
 	fork_operate(fd_in, fd_out, cmd);
 	cmd_exec(cmd, sh);
-	exit(1);
+	// exit(1);
 }
 
 t_cmd *get_cmd_node(t_minishell *sh, int i)
@@ -66,7 +66,7 @@ t_cmd *get_cmd_node(t_minishell *sh, int i)
 
 	cmd = sh->cmds;
 	j = 0;
-	while (cmd && j < i)
+	while (cmd && j < i )
 	{
 		cmd = cmd->next;
 		j++;
@@ -107,21 +107,29 @@ void	check_pipes_forks(t_minishell	*sh)
 	}
 
 	i = -1;
-	while (++i < count)
+	if (count == 1 && !built_ins(get_cmd_node(sh, i), sh))
 	{
-		pids[i] = fork();
-		if (pids[i] == -1)
+		//handle free
+		return;
+	}
+	else
+	{
+		while (++i < count)
 		{
-			perror("Fork failed");
-			cleanup_resources(fds, pids, count , sh);
-			return ;
-		}
-		if (pids[i] == 0)
-		{
-			if (built_ins(get_cmd_node(sh, i), sh))
-				child_exec(i, count, fds, sh, get_cmd_node(sh, i));
-			else
-				exit (0);
+			pids[i] = fork();
+			if (pids[i] == -1)
+			{
+				perror("Fork failed");
+				cleanup_resources(fds, pids, count , sh);
+				return ;
+			}
+			if (pids[i] == 0)
+			{
+				// if (built_ins(get_cmd_node(sh, i), sh))
+					child_exec(i, count, fds, sh, get_cmd_node(sh, i));
+				// else
+					exit (0);
+			}
 		}
 	}
 	cleanup_resources(fds, pids, count , sh);

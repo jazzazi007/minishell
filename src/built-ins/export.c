@@ -29,19 +29,22 @@ static int check_export_name(const char *name)
 
 static void set_env(char ***envp, const char *arg)
 {
-    char *eq = strchr(arg, '=');
-    if (!eq)
-        return;
-    size_t name_len = eq - arg;
+    char *eq = ft_strchr(arg, '=');
+    size_t name_len = 0;
+    // if (!eq)
+    //     return; //this condition if i want to add to env and there is no '=' sign
+    if (eq)
+        name_len = eq - arg;
+    else
+        name_len = ft_strlen(arg);
     char name[name_len + 1];
-    strncpy(name, arg, name_len);
+    strncpy(name, arg, name_len);//convert to ft_stncpy
     name[name_len] = '\0';
-
     int idx = find_env(*envp, name);
     if (idx != -1)
     {
         free((*envp)[idx]);
-        (*envp)[idx] = strdup(arg);
+        (*envp)[idx] = ft_strdup(arg);
     }
     else
     {
@@ -52,7 +55,7 @@ static void set_env(char ***envp, const char *arg)
         char **new_envp = malloc(sizeof(char *) * (count + 2));
         for (int i = 0; i < count; i++)
             new_envp[i] = (*envp)[i];
-        new_envp[count] = strdup(arg);
+        new_envp[count] = ft_strdup(arg);//protection
         new_envp[count + 1] = NULL;
         free(*envp);
         *envp = new_envp;
