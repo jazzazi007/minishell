@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:26:27 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/09 18:55:30 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/18 16:56:47 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ char	*ft_strappend(char *dst, const char *src)
 
 char	*resolve_cmd_path(char *cmd0, t_minishell *shell)
 {
+	if (!cmd0)
+		return(NULL);
 	if (access(cmd0, X_OK) == 0)
 		return (ft_strdup(cmd0));
 	return (get_cmd_path(cmd0, shell->envp));

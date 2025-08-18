@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:45 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/17 14:57:06 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/18 19:09:03 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,27 @@ t_cmd *get_cmd_node(t_minishell *sh, int i)
 	return cmd;
 }
 
+void	ft_free_child(int **fds, pid_t *pids, int count , t_minishell *sh)
+{
+	t_cmd *tmp;
+	ft_free_args(sh->envp);
+	// if (sh->cmds->args)
+	ft_free_args(sh->cmds->args);
+	cleanup_resources(fds,pids,count,sh);
+	
+	if (!sh->cmds)
+		return ;
+	while (sh->cmds)
+	{
+		tmp = sh->cmds->next;
+		ft_free_redir(sh->cmds->redir);
+		free(sh->cmds);
+		sh->cmds = tmp;
+	}
+	free(tmp);
+	free(sh);
+}
+
 void	check_pipes_forks(t_minishell	*sh)
 {
 	int			**fds;
@@ -87,6 +108,7 @@ void	check_pipes_forks(t_minishell	*sh)
 	// Handle 'exit' in parent if it's the only command
 	if (ft_strcmp(get_cmd_node(sh, 0)->args[0], "exit") == 0 && count == 1)
 	{
+		cleanup_resources(fds, pids, count , sh);
 		exit_command(get_cmd_node(sh, 0), sh);
 		return ;
 	}
@@ -121,13 +143,16 @@ void	check_pipes_forks(t_minishell	*sh)
 				cleanup_resources(fds, pids, count , sh);
 				return ;
 			}
+			signal_excuter();
 			if (pids[i] == 0)
 			{
 				// if (built_ins(get_cmd_node(sh, i), sh))
-					child_exec(i, count, fds, sh, get_cmd_node(sh, i));
+				child_exec(i, count, fds, sh, get_cmd_node(sh, i));
 				// else
+				ft_free_child(fds,pids,count,sh);
 					exit (0);
 			}
+		signla_exc_parent();
 		}
 	}
 	cleanup_resources(fds, pids, count , sh);

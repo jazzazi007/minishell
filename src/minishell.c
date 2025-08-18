@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/16 14:42:21 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/18 19:59:56 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	ft_run_shell(t_minishell *shell)
 		}
 		free(input);
 		check_pipes_forks(shell);
+		// ft_free_args(shell->cmds->args);
 		ft_free_cmds(shell->cmds);
 		shell->cmds = NULL; 
 	}
@@ -59,13 +60,17 @@ int	main(int ac, char **av, char **envp)
 	
 	(void)ac;
 	(void)av;
+	if(!&isatty)
+		dup2(2, 0);
 	print_shell_banner();
 	shell = ft_init_shell(envp);
 	if (!shell)
 		return (1);
 	ft_run_shell(shell);
 	status = shell->exit_status;
+	ft_free_args(shell->envp);
 	ft_free_shell(shell);
 	printf("exit\n");
 	return (status);
 }
+	

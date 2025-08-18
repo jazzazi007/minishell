@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:48:22 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/16 15:39:06 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/18 16:40:03 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ char	*get_cmd_assist(char *cmd, char *dir)
 {
 	char	*full_path;
 
+	// if (!dir)
+	// 	return(NULL);
+	// printf("cmd:%s\ndir:%s\n",cmd,dir);
 	full_path = malloc(ft_strlen(dir) + ft_strlen(cmd) + 2);
 	if (!full_path)
 		return (NULL);

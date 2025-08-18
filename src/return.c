@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:50:46 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/16 15:39:44 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/18 17:36:56 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ char	*path_ret(char *path, char *cpy)
 
 int	handle_ret_num(char *path, char **cmd, int err_num)
 {
+	(void)cmd;
 	free(path);
-	free_split(cmd);
+	// free_split(cmd);
 	return (err_num);
 }
 

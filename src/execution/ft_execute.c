@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/17 13:46:11 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/18 19:08:25 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	close_pipes(int outfile, int *pd, pid_t id, pid_t id2)
 
 	if (outfile >= 0)
 		close(outfile);
+	signla_exc_parent();
 	close(pd[0]);
 	close(pd[1]);
 	waitpid(id, NULL, 0);
@@ -36,6 +37,7 @@ int	close_pipes(int outfile, int *pd, pid_t id, pid_t id2)
 		return (WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
 		return (128 + WTERMSIG(status));
+	setup_signal_handlers();
 	return (0);
 }
 
@@ -105,6 +107,8 @@ int	cmd_exec(t_cmd *agv, t_minishell *shell)
 {
 	if (!built_ins(agv, shell))
 		return (0);
+	if(agv->args[0] == NULL && agv->redir->red_type == 3)
+		return(0);
 	agv->cmd_path = resolve_cmd_path(agv->args[0], shell);
 	if (!agv->cmd_path)
 		return (handle_ret(agv->cmd_path, agv->args, 127));

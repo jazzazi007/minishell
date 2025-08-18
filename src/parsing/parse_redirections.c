@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 15:37:40 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/16 15:37:42 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/18 16:43:56 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,8 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr, t_minishell *shell)
 	else if (curr->type == T_HEREDOC)
 	{
 		c_red->red_type = 3;
-		printf("type: %d\n", c_red->red_type);
 		if (c_red->prev)
 			close(c_red->prev->here_fd);
-		printf("...\n");
 		c_red->here_fd = ft_open_heredoc(curr->next->value, shell);
 	}
 	else
@@ -57,5 +55,7 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr, t_minishell *shell)
 		if (!c_red->filename)
 			return (-1);		
 	}
+	if (c_red->here_fd != -1)
+		close(c_red->here_fd);//check if this cause an error
 	return (status);
 }

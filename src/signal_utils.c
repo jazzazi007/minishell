@@ -1,32 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   signal_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 12:10:45 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/18 14:21:56 by ralbliwi         ###   ########.fr       */
+/*   Created: 2025/08/18 19:11:15 by ralbliwi          #+#    #+#             */
+/*   Updated: 2025/08/18 19:30:05 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stddef.h>
+#include "minishell.h"
 
-size_t	ft_strlen(const char *str)
-{
-	int	i;
 
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i])
-	{
-		i++;
-	}
-	return (i);
-}
-/*
-int main ()
-{
-	printf ("%ld",ft_strlen("rama"));
-}*/

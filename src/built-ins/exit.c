@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 13:24:56 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/16 15:33:16 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/18 15:05:45 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ static int	ft_atoi_exit(const char *str, char **endptr)
 
 static void	exit_status(t_minishell *shell, int status)
 {
+	ft_free_args(shell->envp);
 	ft_free_shell(shell);
 	exit(status);
 }

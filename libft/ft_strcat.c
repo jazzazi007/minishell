@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moaljazz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 18:01:07 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/01/16 18:01:09 by moaljazz         ###   ########.fr       */
+/*   Updated: 2025/08/18 14:28:56 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strcat(char *dest, const char *src)
 	int	i;
 
 	i = 0;
+	if (!src)
+		return (dest);
 	size = ft_strlen(dest);
 	while (src[i] != '\0')
 	{
