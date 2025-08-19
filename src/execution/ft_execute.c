@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/18 19:08:25 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 15:59:08 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int built_ins(t_cmd *agv, t_minishell *shell)
 	if (ft_strncmp(agv->args[0], "exit", 5) == 0)
 		return (0);
 	else if (ft_strncmp(agv->args[0], "echo", 5) == 0)
-		return (echo(agv->args[1]));
+		return (echo(agv->args));
 	else if (ft_strncmp(agv->args[0], "export", 7) == 0)
 		return (export_cmd(agv->args, shell));
 	else if (ft_strncmp(agv->args[0], "unset", 6) == 0)

@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 11:37:05 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/16 14:04:15 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 15:25:38 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_redir	*ft_init_redir()
 	if (!new)
 		return (NULL);
 	ft_bzero(new, sizeof(new));
+	new->filename = NULL;
 	new->here_fd = -1;
 	new->next = NULL;
 	new->prev = NULL;
@@ -75,6 +76,7 @@ t_cmd   *ft_init_cmd()
     if (!new)
         return (NULL);
     ft_bzero(new, sizeof(new));
+	new->args = NULL;
 	new->redir = NULL;
 	new->next = NULL;
     return (new);

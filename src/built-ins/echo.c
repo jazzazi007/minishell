@@ -3,38 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moaljazz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:22:51 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/06/18 19:22:54 by moaljazz         ###   ########.fr       */
+/*   Updated: 2025/08/19 15:54:06 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int echo(char *cmd)
+int	echo(char **args)
 {
-    char **split_;
-    int i;
-    bool is_n = false;
+	int	i;
+	int	j;
+	int	newline;
 
-    split_ = ft_split(cmd, ' ');
-    if (!split_)
-        return 1;
-    i = 0;
-    if (ft_strcmp(split_[i], "-n") == 0)
-    {
-        is_n = true;
-        i++;
-    }
-    while (split_[i]) 
-    {
-        if (is_n)
-            printf("%s", split_[i]);
-        else
-            printf("%s\n", split_[i]);
-        i++;
-    }
-    free(split_);
+	i = 1;
+	newline = 1;
+	while (args[i] && args[i][0] == '-' && args[i][1] == 'n')
+	{
+		j = 1;
+		while (args[i][j] == 'n')
+			j++;
+		if (args[i][j] != '\0')
+			break ;
+		newline = 0;
+		i++;
+	}
+	while (args[i])
+	{
+		printf("%s", args[i]);
+		if (args[i + 1])
+			printf(" ");
+		i++;
+	}
+	if (newline)
+		printf("\n");
     return 0;
 }

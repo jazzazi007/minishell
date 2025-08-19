@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/18 19:44:24 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 15:52:06 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,9 @@ typedef struct minishell
 	char				**envp;
 	t_cmd				*cmds;
 	int					exit_status;
+	int					**fds;
+	int					in_squote;
+	int					in_dquote;
 }						t_minishell;
 
 t_tokenizer				*tokenize_input(const char *input, t_minishell *shell);
@@ -126,7 +129,7 @@ void					setup_signal_handlers(void);
 
 // expand
 char					*append_expanded_part(char *res, char *input, int *i,
-							t_minishell *sh, int in_single);
+							t_minishell *sh);
 char					*expand_token_value(char *input, t_minishell *sh);
 char					*ft_var_expand(const char *str, int *i,
 							t_minishell *sh);
@@ -165,7 +168,7 @@ int						ft_open_heredoc(char *delim, t_minishell *shell);
 int						pwd(void);
 int						cd(char **av, char **envp);
 int						built_ins(t_cmd *agv, t_minishell *shell);
-int						echo(char *cmd);
+int						echo(char **cmd);
 int						env(t_minishell *shell);
 void					exit_command(t_cmd *cmd, t_minishell *shell);
 int						export_cmd(char **args, t_minishell *shell);

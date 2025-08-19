@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:22:39 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/16 15:42:08 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 16:22:32 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,35 +16,38 @@ int cd(char **av, char **envp)
 {
     char path[PATH_MAX];
     char *home;
+    int status;
 
     (void)envp;
 
-    // If no argument, go to HOME
+    status = 0;
     if (!av[1])
     {
         home = getenv("HOME");
         if (!home)
         {
             printf("cd: HOME not set\n");
-            return 1;
+            status = 1;
         }
         if (chdir(home) != 0)
         {
             perror("cd");
-            return 1;
+            status =  1;
         }
     }
-    else
+    else if(av[2])
     {
+        printf("minishell: cd: too many arguments\n");
+        status = 1;
+    }
+    else
         if (chdir(av[1]) != 0)
         {
             perror("cd");
-            return 1;
+            status = 1;
         }
-    }
     
     if (getcwd(path, sizeof(path)) == NULL)
         perror("getcwd");
-
-    return 0;
+    return(status);
 }

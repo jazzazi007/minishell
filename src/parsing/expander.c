@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:14:56 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/09 10:19:56 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/19 13:52:26 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ static void	update_quotes(char c, int *squote, int *dquote)
 }
 
 char	*append_expanded_part(char *res, char *input, int *i,
-	t_minishell *sh, int in_single)
+	t_minishell *sh)
 {
 	char	*tmp;
 
-	if (input[*i] == '$' && !in_single)
+	if (input[*i] == '$' && !sh->in_squote)
 	{
 		(*i)++;
 		tmp = ft_var_expand(input, i, sh);
@@ -50,22 +50,22 @@ char	*expand_token_value(char *input, t_minishell *sh)
 {
 	char	*res;
 	int		i;
-	int		in_squote;
-	int		in_dquote;
+	// int		in_squote;
+	// int		in_dquote;
 
 	res = ft_strdup("");
 	i = 0;
-	in_squote = 0;
-	in_dquote = 0;
+	sh->in_squote = 0;
+	sh->in_dquote = 0;
 	while (input[i])
 	{
-		update_quotes(input[i], &in_squote, &in_dquote);
-		if ((input[i] == '\'' && !in_dquote)
-			|| (input[i] == '"' && !in_squote))
+		update_quotes(input[i], &sh->in_squote, &sh->in_dquote);
+		if ((input[i] == '\'' && !sh->in_dquote)
+			|| (input[i] == '"' && !sh->in_squote))
 			i++;
 		else
 		{
-			res = append_expanded_part(res, input, &i, sh, in_squote);
+			res = append_expanded_part(res, input, &i, sh);
 			if (!res)
 			{
 				sh->exit_status = 1;

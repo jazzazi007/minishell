@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/18 19:59:56 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 14:45:53 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ void	ft_run_shell(t_minishell *shell)
 	setup_signal_handlers();
 	while (1)
 	{
+		if(!isatty(0))
+			dup2(2, 0);
+		setup_signal_handlers();
 		input = readline("\001\033[31m\002SHELLX 🔥 > \001\033[0m\002");
 		if (!input)
 			break;

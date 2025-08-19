@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 19:21:12 by codespace         #+#    #+#             */
-/*   Updated: 2025/08/18 20:11:38 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 15:01:41 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char *ft_here_expand(char *str, t_minishell *shell)
 	{	
 		while (str[i])
 		{
-			tmp = append_expanded_part(tmp, str, &i, shell, 0);
+			tmp = append_expanded_part(tmp, str, &i, shell);
 			if (!tmp)
 			{
 				shell->exit_status = 1;
@@ -90,9 +90,17 @@ int ft_open_heredoc(char *delim, t_minishell *shell)
 		return (-1);
 	while(1)
 	{
+		handle_herdoc();
 		input = readline("> ");
 		if (!input)
 		{
+			if(g_exit_status == 130)
+			{
+				// g_exit_status = 0;
+				break;
+				// close(fd[1]);
+				// return(-1);
+			}
 			printf("warning: heredoc terminated by EOF\n");
 			break;
 		}

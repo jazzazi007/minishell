@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 15:37:40 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/18 16:43:56 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 15:36:39 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,15 @@ int ft_fill_redir(t_redir **r_redir, t_tokenizer *curr, t_minishell *shell)
 		c_red->red_type = 3;
 		if (c_red->prev)
 			close(c_red->prev->here_fd);
+    	signal(SIGINT, SIG_IGN);
 		c_red->here_fd = ft_open_heredoc(curr->next->value, shell);
+		if (g_exit_status == 130)
+		{
+			shell->exit_status = 130;
+			g_exit_status = 0;
+			return -1;
+		}
+		setup_signal_handlers();
 	}
 	else
 		status = 0;

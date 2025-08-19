@@ -6,7 +6,7 @@ static int find_env(char **envp, const char *name)
     size_t len = strlen(name);
     while (envp[i])
     {
-        if (strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+        if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
             return i;
         i++;
     }

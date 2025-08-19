@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 19:05:14 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/16 15:40:47 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 15:33:46 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,14 @@ t_cmd *ft_create_cmd(t_cmd **r_cmd, t_tokenizer **r_tokens)
 
 	size = ft_find_size(r_tokens);
 	new = ft_add_cmd(r_cmd);
+	new->redir = NULL;
 	if (!new)
 	{
 		printf("error in creating cmd\n");
 		return (NULL);
 	}
 	new->args = malloc(sizeof(char *) * (size + 1));
+	new->args[0] = NULL;
 	if (!new->args)
 	{
 		printf("error in allocating args\n");
