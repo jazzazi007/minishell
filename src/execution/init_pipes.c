@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:24 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/18 17:43:43 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:38:14 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int **init_pipes(int pipe_count)
 {
     pid_t *child_pids;
 
-    child_pids = malloc(sizeof(pid_t) * (pipe_count + 1));
+    child_pids = malloc(sizeof(pid_t) * (pipe_count));
     if (!child_pids)
     {
         int i = 0;
@@ -74,6 +74,12 @@ int **init_pipes(int pipe_count)
         }
         free(pipe_fds);
         return (NULL);
+    }
+    int i = 0;
+    while (i < pipe_count - 1)
+    {
+        child_pids[i] = 0;
+        i++;
     }
     return (child_pids);
 }
@@ -92,7 +98,7 @@ void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count , t_min
     pid_t pid;
     pid = 1;
     i = 0;
-    while (i < pipe_count)
+    while (i < pipe_count - 1)
     {
         ft_close_fdpair(pipe_fds[i]);
         i++;
@@ -101,17 +107,18 @@ void cleanup_resources(int **pipe_fds, pid_t *child_pids, int pipe_count , t_min
     while (pid > 0)
     {
         pid = waitpid(-1, &status, 0);
-        if (pipe_count - 1 > 0 && child_pids[pipe_count - 1])
+        if (pipe_count != 0 && pid == child_pids[pipe_count - 1])
         {
             if (WIFEXITED(status))
                 shell->exit_status = WEXITSTATUS(status);
             if (WIFSIGNALED(status))
                 shell->exit_status = 128 + WTERMSIG(status);
+            
         }
     }
 
     i = 0;
-    while (i < pipe_count)
+    while (i < pipe_count - 1)
     {
         free(pipe_fds[i]);
         i++;

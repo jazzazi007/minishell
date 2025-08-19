@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:45 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/19 16:12:52 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:37:05 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,13 @@ static int	init_shell_pipes(t_minishell *sh,
 
 	(void)sh;
 	count = count_pipes(sh->cmds);
-	// *fds = init_pipes(count);
 	*fds = NULL;
-	if (count > 0)
-		*fds = init_pipes(count);
-	if (!(*fds))
-		return (-1);
+	if (count > 1)
+	{
+		*fds = init_pipes(count - 1);
+		if (!(*fds))
+			return (-1);
+	}
 	*pids = init_child_pids(count, *fds);
 	if (!(*pids))
 		return (-1);
@@ -43,7 +44,7 @@ static void	child_exec(int i, int count,
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	j = -1;
-	while (++j < count)
+	while (++j < count - 1)
 	{
 		if (j != i - 1)
 			close(sh->fds[j][0]);
@@ -55,7 +56,7 @@ static void	child_exec(int i, int count,
 	if (i < count - 1 && count > 1)
 		fd_out = sh->fds[i][1];
 	fork_operate(fd_in, fd_out, cmd);
-	cmd_exec(cmd, sh);
+	clean_exit(sh, cmd_exec(cmd, sh));
 	// exit(1);
 }
 
@@ -124,6 +125,7 @@ void	check_pipes_forks(t_minishell	*sh)
 	if (count == 1 && !built_ins(get_cmd_node(sh, i), sh))
 	{
 		//handle free
+		cleanup_resources(sh->fds, pids, count , sh);
 		return;
 	}
 	else

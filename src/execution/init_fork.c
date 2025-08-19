@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:11 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/18 14:34:31 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:41:00 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void fork_operate(int fd_in, int fd_out, t_cmd *cmd)
             {
                 dup2(redir->here_fd, STDIN_FILENO);
                 close(redir->here_fd);
+                redir->here_fd = -1;
             }
         }
         redir = redir->next;

@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 19:05:14 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/19 15:33:46 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 16:27:32 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ t_cmd *build_cmd(t_tokenizer **r_tokens, t_minishell *shell)
 				if (ft_fill_redir(&c_cmd->redir, curr, shell) < 0)
 				{
 					ft_free_cmds(cmd);
-					printf("error filling redir\n");
 					return (NULL);
 				}
 			}

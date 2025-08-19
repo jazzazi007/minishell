@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/19 15:59:08 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:52:07 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,27 @@ int built_ins(t_cmd *agv, t_minishell *shell)
 		return (pwd(), 0);
 	return (1);
 }
+
+void	free_fds(t_cmd *cmd)
+{
+	t_redir *tmp;
+
+	while (cmd)
+	{
+		tmp = cmd->redir;
+		while (tmp)
+		{
+			if (tmp->red_type == 3 && tmp->here_fd != -1)
+				close(tmp->here_fd);
+			tmp = tmp->next;
+		}
+		cmd = cmd->next;
+	}
+}
+
 int	cmd_exec(t_cmd *agv, t_minishell *shell)
 {
+	free_fds(shell->cmds);
 	if (!built_ins(agv, shell))
 		return (0);
 	if(agv->args[0] == NULL && agv->redir->red_type == 3)

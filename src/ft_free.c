@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 11:55:39 by codespace         #+#    #+#             */
-/*   Updated: 2025/08/19 15:34:20 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:43:14 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void ft_free_redir(t_redir *redir)
 	{
 		tmp = redir->next;
         free(redir->filename);
+		if (redir->red_type == 3 && redir->here_fd != -1)
+			close(redir->here_fd);
 		free(redir);
 		redir = tmp;
 	}

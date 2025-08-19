@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:28:03 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/19 15:52:06 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:21:18 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,4 +180,5 @@ void    signla_exc_parent(void);
 void    handle_quit(int sig);
 void    handle_c(int sig);
 void    handle_herdoc(void);
+void clean_exit(t_minishell *cmd, int status);
 #endif

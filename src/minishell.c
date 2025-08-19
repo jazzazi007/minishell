@@ -6,7 +6,7 @@
 /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/19 14:45:53 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:21:00 by ralbliwi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,14 @@ void	ft_run_shell(t_minishell *shell)
 		shell->cmds = NULL; 
 	}
 }
-
+void clean_exit(t_minishell *cmd, int status)
+{
+	ft_free_args(cmd->envp);
+	ft_free_cmds(cmd->cmds);
+	if(cmd)
+		free(cmd);
+	exit(status);
+}
 int	main(int ac, char **av, char **envp)
 {
 	t_minishell *shell;
