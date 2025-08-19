@@ -14,42 +14,30 @@
 
 int	check_is_closed(t_tokenizer *tokens)
 {
-	t_tokenizer *tmp;
-	int flag;
-	int i;
+    t_tokenizer *tmp = tokens;
+    int single_quote = 0;
+    int double_quote = 0;
+    int i;
 
-	flag = 1;
-	tmp = tokens;
-	if (!tokens)
-		return (1);
-	while (tmp && flag)
-	{
-		i = 0;
-		while (tmp->value[i] && flag)
-		{
-			if (tmp->value[i] == '\'' || tmp->value[i] == '\"')
-			{
-				flag = 0;
-				char quote = tmp->value[i];
-				i++;
-				while (tmp->value[i] && tmp->value[i] != quote)
-					i++;
-				if (tmp->value[i] != quote)
-					break ;
-				flag = 1;
-				i++;
-			}
-			else
-				i++;
-		}
-		tmp = tmp->next;
-	}
-	if (!flag)
-	{
-		write(2,"Unclosed quotes\n", 17);
-		return (1);
-	}
-	return (0);
+    while (tmp)
+    {
+        i = 0;
+        while (tmp->value[i])
+        {
+            if (tmp->value[i] == '\'')
+                single_quote++;
+            else if (tmp->value[i] == '\"')
+                double_quote++;
+            i++;
+        }
+        tmp = tmp->next;
+    }
+    if ((single_quote % 2 != 0) || (double_quote % 2 != 0))
+    {
+        write(2, "Unclosed quotes\n", 16);
+        return (1);
+    }
+    return (0);
 }
 
 int ft_parse_cmd(t_minishell *shell, const char *input)

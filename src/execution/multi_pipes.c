@@ -105,6 +105,7 @@ void	check_pipes_forks(t_minishell	*sh)
 	count = init_shell_pipes(sh, &fds, &pids);
 	if (count < 0)
 		return ;
+	
 	// Handle 'exit' in parent if it's the only command
 	if (ft_strcmp(get_cmd_node(sh, 0)->args[0], "exit") == 0 && count == 1)
 	{
