@@ -64,6 +64,8 @@ int **init_pipes(int pipe_count)
     pid_t *child_pids;
 
     child_pids = malloc(sizeof(pid_t) * (pipe_count));
+    if (child_pids)
+        memset(child_pids, 0, sizeof(pid_t) * pipe_count);
     if (!child_pids)
     {
         int i = 0;
