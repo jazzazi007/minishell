@@ -2,6 +2,5 @@
 */*.o
 libft/libft.a
 minishell
-notes.txt
 *.supp
 vg*
