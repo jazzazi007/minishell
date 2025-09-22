@@ -1,6 +1,0 @@
-*.o
-*/*.o
-libft/libft.a
-minishell
-*.supp
-vg*

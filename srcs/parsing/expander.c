@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/17 18:14:56 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/19 13:52:26 by ralbliwi         ###   ########.fr       */
+/*   Created: 2025/09/21 21:10:09 by felayan           #+#    #+#             */
+/*   Updated: 2025/09/21 22:02:09 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 static char	*get_var_token(const char *var, int *loc)
@@ -21,9 +22,9 @@ static char	*get_var_token(const char *var, int *loc)
 	return (ft_substr(var, start, *loc - start));
 }
 
-int	expand_var(t_shell *dt, const char *token, char **expanded)
+static int	expand_var(t_shell *dt, const char *token, char **expanded)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (token[i])
@@ -51,25 +52,20 @@ int	expand_var(t_shell *dt, const char *token, char **expanded)
 
 void	expander(t_shell *dt)
 {
-	t_tokenizer	*current;
+	t_tokens	*current;
 	char		*expanded;
 
 	expanded = NULL;
 	current = dt -> tokens;
 	while (current)
 	{
-		// if ((current->type >= T_REDIR_IN && current->type < T_FILE))
-		// 	current->next->type = T_FILE;
 		if (current -> type == T_HEREDOC)
 			current->next->is_expandable = false;
 		if (current -> is_expandable)
 		{
 			expanded = ft_strdup("");
 			if (!expanded || expand_var(dt, current -> value, &expanded))
-			{
 				clean_shell(dt, MALLOC_FAILURE);
-				clean_tokens(dt -> tokens);
-			}
 			free(current -> value);
 			current -> value = expanded;
 		}

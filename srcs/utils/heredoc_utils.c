@@ -1,14 +1,15 @@
-// /* ************************************************************************** */
-// /*                                                                            */
-// /*                                                        :::      ::::::::   */
-// /*   exp_utils.c                                        :+:      :+:    :+:   */
-// /*                                                    +:+ +:+         +:+     */
-// /*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
-// /*                                                +#+#+#+#+#+   +#+           */
-// /*   Created: 2025/08/02 11:26:27 by ralbliwi          #+#    #+#             */
-// /*   Updated: 2025/08/18 16:56:47 by ralbliwi         ###   ########.fr       */
-// /*                                                                            */
-// /* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/02 11:26:27 by ralbliwi          #+#    #+#             */
+/*   Updated: 2025/09/22 03:46:19 by felayan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*ft_var_expand(const char *str, int *i, t_shell *sh)
@@ -53,51 +54,7 @@ char	*ft_strappend(char *dst, const char *src)
 	return (tmp);
 }
 
-char	*resolve_cmd_path(char *cmd0, t_shell *shell)
-{
-	if (!cmd0)
-		return(NULL);
-	if (access(cmd0, X_OK) == 0)
-		return (ft_strdup(cmd0));
-	return (get_cmd_path(cmd0, shell->envp));
-}
-
-void ft_strstrip(char **str_r)
-{
-	int i;
-	int j;
-	char quote;
-	char *buff;
-
-	i = 0;
-	j = 0;
-	quote = '\0';
-	buff = *str_r;
-	while ((*str_r)[i])
-	{
-		if (((*str_r)[i] == '\'' || (*str_r)[i] == '\"') && quote == '\0')
-		{
-			quote = (*str_r)[i];
-			i++;
-		}
-		if ((*str_r)[i] && ((*str_r)[i] != quote))
-		{
-			buff[j] = (*str_r)[i];
-			i++;
-			j++;
-		}
-		if (quote && (*str_r)[i] == quote)
-		{
-			quote = '\0';
-			i++;
-		}
-	}
-	buff[j] = '\0';
-	*str_r = buff;
-}
-
-char	*append_expanded_part(char *res, char *input, int *i,
-	t_shell *sh)
+char	*append_expanded_part(char *res, char *input, int *i, t_shell *sh)
 {
 	char	*tmp;
 	char	*appn;
@@ -118,12 +75,6 @@ char	*append_expanded_part(char *res, char *input, int *i,
 		(*i)++;
 	}
 	appn = ft_strappend(res, tmp);
-	if (!appn)
-	{
-		free(res);
-		free(tmp);
-		return (NULL);
-	}
 	free(res);
 	free(tmp);
 	return (appn);

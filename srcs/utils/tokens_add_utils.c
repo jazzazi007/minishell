@@ -1,21 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokens_add_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/21 21:13:23 by felayan           #+#    #+#             */
+/*   Updated: 2025/09/21 22:02:09 by felayan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-t_tk get_opertype(const char *s)
+t_tk	get_opertype(const char *s)
 {
 	if (!ft_strncmp(s, "<<", 2))
-		return T_HEREDOC;
+		return (T_HEREDOC);
 	if (!ft_strncmp(s, ">>", 2))
-		return T_APPEND;
+		return (T_APPEND);
 	if (*s == '<')
-		return T_REDIR_IN;
+		return (T_REDIR_IN);
 	if (*s == '>')
-		return T_REDIR_OUT;
+		return (T_REDIR_OUT);
 	if (*s == '|')
-		return T_PIPE;
-	return T_WORD;
+		return (T_PIPE);
+	return (T_WORD);
 }
 
-static t_tokenizer	*get_last_token(t_tokenizer *tokens)
+static t_tokens	*get_last_token(t_tokens *tokens)
 {
 	if (!tokens)
 		return (NULL);
@@ -26,13 +38,16 @@ static t_tokenizer	*get_last_token(t_tokenizer *tokens)
 
 void	add_token(t_shell *dt, t_tk t_type, char *token, bool exp)
 {
-	t_tokenizer	*new;
-	t_tokenizer	*last;
+	t_tokens	*new;
+	t_tokens	*last;
 
 	last = NULL;
-	new = malloc(sizeof(t_tokenizer));
+	new = malloc(sizeof(t_tokens));
 	if (!new)
+	{
+		free(token);
 		clean_shell(dt, MALLOC_FAILURE);
+	}
 	new -> value = token;
 	new -> type = t_type;
 	new -> is_expandable = exp;

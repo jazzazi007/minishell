@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/21 21:12:40 by felayan           #+#    #+#             */
+/*   Updated: 2025/09/21 21:12:41 by felayan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 bool	is_var(char var)
@@ -61,24 +73,19 @@ char	*append_str(char **env, char *s1, const char *s2, bool is_special)
 	char	*val;
 	char	*appended;
 
+	val = NULL;
+	appended = NULL;
 	if (is_special)
-	{
 		appended = ft_strjoin(s1, s2);
-		if (!appended)
-		{
-			free(s1);
-			return (NULL);
-		}
-	}
 	else
 	{
 		val = get_env_value(s2, env);
-		appended = ft_strjoin(s1, val);
-		if (!appended)
+		if (!val)
 		{
 			free(s1);
 			return (NULL);
 		}
+		appended = ft_strjoin(s1, val);
 		free(val);
 	}
 	free(s1);
@@ -89,7 +96,7 @@ int	crt_var(char **env, char **expanded, char *key, bool is_special)
 {
 	if (!key)
 	{
-		free (*expanded);
+		free(*expanded);
 		return (MALLOC_FAILURE);
 	}
 	*expanded = append_str(env, *expanded, key, is_special);

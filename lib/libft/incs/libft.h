@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 17:27:12 by felayan           #+#    #+#             */
-/*   Updated: 2024/09/14 03:07:41 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/22 05:57:38 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,8 @@ char	**ft_split(const char *s, char d);
 t_list	*ft_lstnew(void *content);
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-char	*ft_strtok(char *str, const char *delim);
 char	*ft_strcpy(char *destination, const char *source);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strcat(char *dest, const char *src);
-
 
 #endif

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax_check.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/21 21:09:46 by felayan           #+#    #+#             */
+/*   Updated: 2025/09/21 22:02:09 by felayan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 bool	is_closed_quotes(const char *input, int loc)
@@ -25,9 +37,9 @@ bool	is_closed_quotes(const char *input, int loc)
 	return (true);
 }
 
-static bool	is_pipe_error(t_tokenizer *tokens, t_tokenizer **tr)
+static bool	is_pipe_error(t_tokens *tokens, t_tokens **tr)
 {
-	if (is_pipe(tokens -> value ))
+	if (is_pipe(tokens -> value))
 	{
 		*tr = tokens;
 		return (true);
@@ -50,7 +62,7 @@ static bool	is_pipe_error(t_tokenizer *tokens, t_tokenizer **tr)
 	return (false);
 }
 
-static bool	is_redir_error(t_tokenizer *tokens, bool *is_new, t_tokenizer **tr)
+static bool	is_redir_error(t_tokens *tokens, bool *is_new, t_tokens **tr)
 {
 	*is_new = false;
 	while (tokens && tokens -> next)
@@ -86,10 +98,10 @@ static void	print_syntax_error(char *token, bool quotes_err, bool is_new)
 	}
 }
 
-int	syntax_check(t_tokenizer *tokens, bool quotes_err)
+int	syntax_check(t_tokens *tokens, bool quotes_err)
 {
 	bool		is_newline_err;
-	t_tokenizer	*tr;
+	t_tokens	*tr;
 
 	tr = NULL;
 	is_newline_err = false;

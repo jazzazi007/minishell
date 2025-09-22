@@ -38,7 +38,6 @@ SRCS	=	\
 		$(SRCS_DR)/main.c \
 		$(SRCS_DR)/init_env.c \
 		$(SRCS_DR)/signals.c \
-		$(SRCS_DR)/return.c \
 		$(SRCS_DR)/parsing/tokenizer.c \
 		$(SRCS_DR)/parsing/tokens_add.c \
 		$(SRCS_DR)/parsing/syntax_check.c \
@@ -51,12 +50,12 @@ SRCS	=	\
 		$(SRCS_DR)/utils/expander_utils.c \
 		$(SRCS_DR)/utils/parsing_utils.c \
 		$(SRCS_DR)/utils/heredoc_utils.c \
+		$(SRCS_DR)/utils/execution_utils.c \
 		$(SRCS_DR)/utils/clean.c \
 		$(SRCS_DR)/utils/utils.c \
-		$(SRCS_DR)/execution/multi_pipes.c \
-		$(SRCS_DR)/execution/init_pipes.c \
-		$(SRCS_DR)/execution/init_fork.c \
-		$(SRCS_DR)/execution/ft_execute.c \
+		$(SRCS_DR)/execution/execution.c \
+		$(SRCS_DR)/execution/dup_open.c \
+		$(SRCS_DR)/execution/exec_childs.c \
 		$(SRCS_DR)/execution/builtins/export.c \
 		$(SRCS_DR)/execution/builtins/unset.c \
 		$(SRCS_DR)/execution/builtins/exit.c \

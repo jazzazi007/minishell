@@ -1,14 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/05 17:00:44 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/19 18:21:00 by ralbliwi         ###   ########.fr       */
+/*   Created: 2025/09/21 21:17:16 by felayan           #+#    #+#             */
+/*   Updated: 2025/09/22 05:38:28 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	print_shell_banner(char **envp)
@@ -33,8 +34,7 @@ static void	print_shell_banner(char **envp)
 		printf("\t███████╗███████║█████╗  ██║     ██║      ╚███╔╝ \n");
 		printf("\t╚════██║██╔══██║██╔══╝  ██║     ██║      ██╔██╗ \n");
 		printf("\t███████║██║  ██║███████╗███████╗███████╗██╔╝ ██╗\n");
-		printf("\t╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝\n");
-		printf(RST"\n");
+		printf("\t╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝\n"RST"\n");
 	}
 	else
 		perror("fork banner");
@@ -50,15 +50,15 @@ static void	start_shell(t_shell *shell, char *line, char **envp)
 		if (!isatty(STDIN_FILENO))
 			dup2(STDERR_FILENO, STDIN_FILENO);
 		line = readline("\001\033[31m\002SHELLX 🔥 > \001\033[0m\002");
-		if (!line)
-			break ;
 		shell -> exit_status = g_exit_status;
 		g_exit_status = 0;
+		if (!line)
+			break ;
 		if (!is_empty(line))
 		{
 			add_history(line);
 			if (!parsing(shell, line))
-				check_pipes_forks(shell);
+				execution(shell);
 			free(line);
 			clean_cmds(shell->cmds);
 			shell->cmds = NULL;
@@ -69,7 +69,7 @@ static void	start_shell(t_shell *shell, char *line, char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	t_shell	shell;
-	char		*line;
+	char	*line;
 
 	(void)ac;
 	(void)av;

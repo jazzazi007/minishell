@@ -1,51 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free.c                                          :+:      :+:    :+:   */
+/*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 11:55:39 by codespace         #+#    #+#             */
-/*   Updated: 2025/08/19 18:43:14 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/09/22 05:44:46 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
-void	cleanup_resources(int **fds, pid_t *pids, int count, t_shell *shell)
+void	cleanup_resources(t_shell *sh)
 {
-    int i;
-    int status;
+	t_cmd	*cmd;
+	pid_t	last_pid;
 
-    (void)shell;
-    pid_t pid;
-    pid = 1;
-    i = 0;
-    while (i < count - 1)
-    {
-        ft_close_fdpair(fds[i]);
-        i++;
-    }
-
-    while (pid > 0)
-    {
-        pid = waitpid(-1, &status, 0);
-        if (count != 0 && pid == pids[count - 1])
-        {
-            if (WIFEXITED(status))
-                g_exit_status = WEXITSTATUS(status);
-            if (WIFSIGNALED(status))
-                g_exit_status = 128 + WTERMSIG(status);
-        }
-    }
-
-    i = 0;
-    while (i < count - 1)
-    {
-        free(fds[i]);
-        i++;
-    }
-    free(fds);
-    free(pids);
+	cmd = sh -> cmds;
+	last_pid = 0;
+	while (cmd)
+	{
+		if (cmd -> pid > 0)
+		{
+			if (waitpid(cmd -> pid, &sh -> exit_status, 0) > 0)
+				last_pid = cmd -> pid;
+		}
+		if (cmd -> fds[0] != -1)
+			close(cmd -> fds[0]);
+		if (cmd -> fds[1] != -1)
+			close(cmd -> fds[1]);
+		cmd = cmd -> next;
+	}
+	if (last_pid > 0)
+	{
+		if (WIFEXITED(sh -> exit_status))
+			g_exit_status = WEXITSTATUS(sh -> exit_status);
+		else if (WIFSIGNALED(sh -> exit_status))
+			g_exit_status = 128 + WTERMSIG(sh -> exit_status);
+	}
 }
 
 void	clean_cmds(t_cmd *cmd)
@@ -65,29 +58,28 @@ void	clean_cmds(t_cmd *cmd)
 			free(cmd -> redir[rdrs].filename);
 		free(cmd -> args);
 		free(cmd -> redir);
+		free(cmd -> cmd_path);
 		free(cmd);
 		cmd = tmp;
 	}
 }
 
-void clean_env(char **envp)
+void	clean_strs(char **strs)
 {
-	int i;
+	int	i;
 
-	if (!envp)
-		return;
 	i = 0;
-	while (envp[i])
+	while (strs[i])
 	{
-		free(envp[i]);
+		free(strs[i]);
 		i++;
 	}
-	free(envp);
+	free(strs);
 }
 
-void	clean_tokens(t_tokenizer *tokens)
+void	clean_tokens(t_tokens *tokens)
 {
-	t_tokenizer	*tmp;
+	t_tokens	*tmp;
 
 	while (tokens)
 	{
@@ -99,7 +91,7 @@ void	clean_tokens(t_tokenizer *tokens)
 	}
 }
 
-void clean_shell(t_shell *shell, int status)
+void	clean_shell(t_shell *shell, int status)
 {
 	if (shell->cmds)
 	{
@@ -108,7 +100,7 @@ void clean_shell(t_shell *shell, int status)
 	}
 	if (shell->envp)
 	{
-		clean_env(shell->envp);
+		clean_strs(shell->envp);
 		shell->envp = NULL;
 	}
 	if (shell -> tokens)

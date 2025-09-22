@@ -1,14 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_utils.c                                         :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:48:22 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/18 16:40:03 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/09/22 05:46:16 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 bool	is_empty(const char *line)
@@ -27,38 +28,13 @@ bool	is_empty(const char *line)
 	return (true);
 }
 
-void	file_close(int file_closing)
+bool	is_parent_builtin(const char *cmd)
 {
-	if (file_closing >= 0)
-		close(file_closing);
-	return ;
-}
-
-char	*get_cmd_assist(char *cmd, char *dir)
-{
-	char	*full_path;
-
-	full_path = malloc(ft_strlen(dir) + ft_strlen(cmd) + 2);
-	if (!full_path)
-		return (NULL);
-	ft_strcpy(full_path, dir);
-	ft_strcat(full_path, "/");
-	ft_strcat(full_path, cmd);
-	return (full_path);
-}
-
-char	*strip_quotes(const char *str)
-{
-	int	len;
-
-	len = ft_strlen(str);
-	if (len >= 2)
-	{
-		if ((str[0] == '"' && str[len - 1] == '"')
-			|| (str[0] == '\'' && str[len - 1] == '\''))
-			return (ft_substr(str, 1, len - 2));
-	}
-	return (ft_strdup(str));
+	if (!ft_strcmp(cmd, "export") || !ft_strcmp(cmd, "unset"))
+		return (true);
+	if (!ft_strcmp(cmd, "exit") || !ft_strcmp(cmd, "cd"))
+		return (true);
+	return (false);
 }
 
 void	close_fds(void)
@@ -71,4 +47,12 @@ void	close_fds(void)
 		close(fd);
 		fd++;
 	}
+}
+
+void	ft_close_fdpair(int fd[2])
+{
+	if (fd[0] > 0)
+		close(fd[0]);
+	if (fd[1] > 0)
+		close(fd[1]);
 }
