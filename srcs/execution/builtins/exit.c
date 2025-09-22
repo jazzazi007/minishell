@@ -12,53 +12,6 @@
 
 #include "minishell.h"
 
-int count_cmd(t_cmd *cmd) {
-    int i;
-
-    i = 0;
-    if (!cmd)
-        return 0;
-    while (cmd) {
-        i++;
-        cmd = cmd->next;
-    }
-    return i;
-}
-
-// static int	parse_sign(const char **str)
-// {
-// 	int	sign;
-
-// 	sign = 1;
-// 	if (**str == '+' || **str == '-')
-// 	{
-// 		if (**str == '-')
-// 			sign = -1;
-// 		(*str)++;
-// 	}
-// 	return (sign);
-// }
-
-// static int	parse_digits(const char **str, int *found_digit)
-// {
-// 	int	result;
-
-// 	result = 0;
-// 	while (**str >= '0' && **str <= '9')
-// 	{
-// 		*found_digit = 1;
-// 		result = result * 10 + (**str - '0');
-// 		(*str)++;
-// 	}
-// 	return (result);
-// }
-// static const char	*skip_whitespace(const char *str)
-// {
-// 	while (*str && ft_strchr(SPACES, *str))
-// 		str++;
-// 	return (str);
-// }
-
 static void	ft_atoi_exit(const char *str, int *sta, bool *val)
 {
 	int	sign;
@@ -77,7 +30,8 @@ static void	ft_atoi_exit(const char *str, int *sta, bool *val)
 		(*sta) = ((*sta) * 10) + (str[i] - '0');
 		i++;
 	}
-	i = skip_whitesp(&str[i]);
+	if (i != ft_strlen(str))
+		i += skip_whitesp(&str[i]);
 	if (i != ft_strlen(str))
 	{
 		(*sta) = 2;
@@ -86,39 +40,38 @@ static void	ft_atoi_exit(const char *str, int *sta, bool *val)
 	(*sta) *= sign;
 }
 
-static void	exit_status(t_shell *shell, int status)
+static void	exit_status(t_shell *shell, int status, bool in_child)
 {
-	//ft_free_args(shell->envp);
-	clean_shell(shell, status);
+	(void)status;
+	if (!in_child)
+		ft_putstr_fd("exit\n", 1);
+	clean_shell(shell, shell -> exit_status);
 }
 
-void exit_command(t_cmd *cmd, t_shell *shell)
+void	exit_command(t_cmd *cmd, t_shell *shell)
 {
-	bool valid;
+	bool	valid;
 
 	valid = true;
-    int count = count_cmd(cmd);
-    if (count == 1)
-        ft_putstr_fd("exit\n", 1);
-    if (!cmd->args[1])
-        exit_status(shell, shell -> exit_status);
-	else
+	if (shell -> cmd_count == 1 && !shell -> cmds -> args[1])
+		exit_status(shell, shell -> exit_status, false);
+	ft_atoi_exit(cmd -> args[1], &shell -> exit_status, &valid);
+	if (shell -> exit_status == 2 && !valid)
 	{
-    ft_atoi_exit(cmd -> args[1], &shell -> exit_status, &valid);
-    if (shell -> exit_status == 2 && !valid)
-    {
-        ft_putstr_fd("minishell: exit: ", 2);
+		if (shell -> cmd_count == 1)
+			ft_putstr_fd("exit\n", 1);
+		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(cmd -> args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		exit_status(shell, shell -> exit_status);
-    }
-    if (cmd->args[2])
-    {
-        ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		shell->exit_status = 1;
+		exit_status(shell, shell -> exit_status, true);
+	}
+	if (cmd->args[2])
+	{
+		if (shell -> cmd_count == 1)
+			ft_putstr_fd("exit\n", 1);
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		shell -> exit_status = 1;
 		return ;
-    }
-		exit_status(shell, shell -> exit_status);
 	}
 }
 

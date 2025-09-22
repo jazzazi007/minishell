@@ -12,42 +12,39 @@
 
 #include "minishell.h"
 
-int cd(char **av, char **envp)
+static	void change_dir(char *dir, t_shell *sh)
 {
-    char path[PATH_MAX];
-    char *home;
-    int status;
+	if (chdir(dir))
+	{
+		perror("cd");
+		sh -> exit_status = 1;
+	}
+}
 
-    (void)envp;
+int	cd(char **av, t_shell *sh)
+{
+	char	*home;
 
-    status = 0;
-    if (!av[1])
-    {
-        home = getenv("HOME");
-        if (!home)
-        {
-            printf("cd: HOME not set\n");
-            status = 1;
-        }
-        if (chdir(home) != 0)
-        {
-            perror("cd");
-            status =  1;
-        }
-    }
-    else if(av[2])
-    {
-        printf("minishell: cd: too many arguments\n");
-        status = 1;
-    }
-    else
-        if (chdir(av[1]) != 0)
-        {
-            perror("cd");
-            status = 1;
-        }
-    
-    if (getcwd(path, sizeof(path)) == NULL)
-        perror("getcwd");
-    return(status);
+	if (!av[1])
+	{
+		home = get_env_value("HOME", sh -> envp);
+		if (!home)
+			sh -> exit_status = MALLOC_FAILURE;
+		else if (home[0] == '\0')
+		{
+			ft_putstr_fd("cd: HOME not set\n", 2);
+			sh -> exit_status = 1;
+		}
+		else
+			change_dir(home, sh);
+		free(home);
+	}
+	else if (av[2])
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		sh -> exit_status = 1;
+	}
+	else
+		change_dir(av[1], sh);
+	return(0);
 }

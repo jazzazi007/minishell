@@ -137,7 +137,7 @@ t_tk	get_opertype(const char *s);
 int		skip_whitesp(const char *s);
 int		is_oper(char c);
 
-int		open_dup_fds(int fd_in, int fd_out, t_cmd *cmd);
+int		open_dup_fds(int fd_in, int fd_out, t_shell *sh);
 void	cmd_exec(t_cmd *agv, t_shell *shell);
 char	*resolve_path(char *cmd0, t_shell *shell);
 void	execution(t_shell *sh);
@@ -154,7 +154,7 @@ void	exit_command(t_cmd *cmd, t_shell *shell);
 int		export_cmd(char **args, t_shell *shell);
 int		unset_cmd(char **args, t_shell *shell);
 int		built_ins(t_cmd *agv, t_shell *shell);
-int		cd(char **av, char **envp);
+int		cd(char **av, t_shell *sh);
 int		env(t_shell *shell);
 int		echo(char **cmd);
 int		pwd(void);

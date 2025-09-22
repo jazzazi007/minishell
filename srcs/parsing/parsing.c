@@ -58,20 +58,21 @@ static int	add_cmd(t_cmd *cmd, t_tokens **tokens, t_shell *dt)
 static int	tokens_to_cmd(t_shell *dt, t_tokens *tokens)
 {
 	t_cmd	*new_cmd;
+	int		status;
 
 	while (tokens)
 	{
 		new_cmd = init_cmd(dt, tokens);
-		g_exit_status = add_cmd(new_cmd, &tokens, dt);
-		if (g_exit_status == MALLOC_FAILURE)
+		status = add_cmd(new_cmd, &tokens, dt);
+		if (status == MALLOC_FAILURE)
 		{
 			clean_cmds(new_cmd);
 			clean_shell(dt, MALLOC_FAILURE);
 		}
-		else if (g_exit_status == 130)
+		else if (status == 130)
 		{
 			clean_cmds(new_cmd);
-			return (130);
+			return (status);
 		}
 		append_cmd(dt, new_cmd);
 		if (tokens && is_pipe(tokens -> value))

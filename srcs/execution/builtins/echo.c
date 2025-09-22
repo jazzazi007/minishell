@@ -39,5 +39,5 @@ int	echo(char **args)
 	}
 	if (newline)
 		printf("\n");
-    return 0;
+	return (0);
 }

@@ -43,7 +43,7 @@ int	tokenizer(const char *input, t_shell *shell)
 		create_tokens(input + i, shell);
 	if (syntax_check(shell -> tokens, !is_closed))
 	{
-		g_exit_status = 2;
+		shell -> exit_status = 2;
 		return (SYNTAX_ERR);
 	}
 	return (SUCCESS);

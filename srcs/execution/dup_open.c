@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static int	open_file(char *file, t_rdr type)
+static int	open_file(char *file, t_rdr type, int *status)
 {
 	int	fd;
 
@@ -31,19 +31,19 @@ static int	open_file(char *file, t_rdr type)
 	if (fd < 0)
 	{
 		perror("minishell");
-		g_exit_status = errno;
+		*status = errno;
 	}
 	return (fd);
 }
 
-static int	change_fd(int fd, bool in)
+static int	change_fd(int fd, bool in, int *status)
 {
 	if (fd != STDIN_FILENO && in)
 	{
 		if (dup2(fd, STDIN_FILENO) < 0)
 		{
 			perror("minishell: dup");
-			g_exit_status = errno;
+			*status = errno;
 			close(fd);
 			return (1);
 		}
@@ -54,7 +54,7 @@ static int	change_fd(int fd, bool in)
 		if (dup2(fd, STDOUT_FILENO) < 0)
 		{
 			perror("minishell: dup");
-			g_exit_status = errno;
+			*status = errno;
 			close(fd);
 			return (1);
 		}
@@ -63,29 +63,29 @@ static int	change_fd(int fd, bool in)
 	return (SUCCESS);
 }
 
-int	open_dup_fds(int fd_in, int fd_out, t_cmd *cmd)
+int	open_dup_fds(int fd_in, int fd_out, t_shell *sh)
 {
 	t_redir	*rdr;
 	int		i;
 	int		fd;
 
 	i = 0;
-	rdr = cmd -> redir;
-	if (change_fd(fd_in, true) || change_fd(fd_out, false))
+	rdr = sh -> cmds -> redir;
+	if (change_fd(fd_in, true, &sh -> exit_status) || change_fd(fd_out, false, &sh -> exit_status))
 		return (1);
-	while (i < cmd -> redir_count)
+	while (i < sh -> cmds -> redir_count)
 	{
-		fd = open_file(rdr[i].filename, rdr[i].red_type);
+		fd = open_file(rdr[i].filename, rdr[i].red_type, &sh -> exit_status);
 		if (fd == -1)
 			return (1);
 		if (fd == -2)
 		{
-			if (rdr[i].here_fd >= 0 && change_fd(rdr[i].here_fd, true))
+			if (rdr[i].here_fd >= 0 && change_fd(rdr[i].here_fd, true, &sh -> exit_status))
 				return (1);
 		}
-		else if (rdr[i].red_type == IN && change_fd(fd, true))
+		else if (rdr[i].red_type == IN && change_fd(fd, true, &sh -> exit_status))
 			return (1);
-		else if (rdr[i].red_type != IN && change_fd(fd, false))
+		else if (rdr[i].red_type != IN && change_fd(fd, false, &sh -> exit_status))
 			return (1);
 		i++;
 	}

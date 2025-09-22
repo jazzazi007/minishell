@@ -50,7 +50,8 @@ static void	start_shell(t_shell *shell, char *line, char **envp)
 		if (!isatty(STDIN_FILENO))
 			dup2(STDERR_FILENO, STDIN_FILENO);
 		line = readline("\001\033[31m\002SHELLX 🔥 > \001\033[0m\002");
-		shell -> exit_status = g_exit_status;
+		if (g_exit_status == 130 || g_exit_status == 131)
+			shell -> exit_status = g_exit_status;
 		g_exit_status = 0;
 		if (!line)
 			break ;
@@ -63,6 +64,7 @@ static void	start_shell(t_shell *shell, char *line, char **envp)
 			clean_cmds(shell->cmds);
 			shell->cmds = NULL;
 		}
+		//shell -> exit_status = 0;
 	}
 }
 

@@ -25,7 +25,7 @@ static int	check_path(char *path, bool *found)
 	return (1);
 }
 
-static char	*check_status(char *path, char *cmd, bool found)
+static char	*check_status(char *path, char *cmd, bool found, t_shell *sh)
 {
 	if (!path)
 	{
@@ -34,13 +34,13 @@ static char	*check_status(char *path, char *cmd, bool found)
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": pemission denied\n", 2);
-			g_exit_status = 126;
+			sh -> exit_status = 126;
 		}
 		else
 		{
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": command not found\n", 2);
-			g_exit_status = 127;
+			sh -> exit_status = 127;
 		}
 	}
 	return (path);
@@ -59,7 +59,7 @@ static char	*get_cmd_assist(char *cmd, char *dir)
 	return (full_path);
 }
 
-static char	*get_cmd_path(char *cmd, char **env)
+static char	*get_cmd_path(char *cmd, t_shell *sh)
 {
 	char	*full_path;
 	char	*paths;
@@ -69,7 +69,7 @@ static char	*get_cmd_path(char *cmd, char **env)
 
 	i = -1;
 	found = false;
-	paths = get_env_value("PATH", env);
+	paths = get_env_value("PATH", sh -> envp);
 	if (!paths)
 		return (NULL);
 	dir = ft_split(paths, ':');
@@ -85,7 +85,7 @@ static char	*get_cmd_path(char *cmd, char **env)
 		full_path = NULL;
 	}
 	clean_strs(dir);
-	return (check_status(full_path, cmd, found));
+	return (check_status(full_path, cmd, found, sh));
 }
 
 char	*resolve_path(char *cmd, t_shell *shell)
@@ -96,17 +96,17 @@ char	*resolve_path(char *cmd, t_shell *shell)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			perror(cmd);
-			g_exit_status = 127;
+			shell -> exit_status = 127;
 			return (NULL);
 		}
 		if (access(cmd, X_OK) != 0)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			perror(cmd);
-			g_exit_status = 126;
+			shell -> exit_status = 126;
 			return (NULL);
 		}
 		return (ft_strdup(cmd));
 	}
-	return (get_cmd_path(cmd, shell->envp));
+	return (get_cmd_path(cmd, shell));
 }

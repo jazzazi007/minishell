@@ -26,8 +26,8 @@ void	child_exec(t_shell *sh, t_cmd *curr, t_cmd *prev)
 	if (curr -> next)
 		fd_out = curr -> fds[1];
 	signal_excuter();
-	if (open_dup_fds(fd_in, fd_out, curr))
-		clean_shell(sh, g_exit_status);
+	if (open_dup_fds(fd_in, fd_out, sh))
+		clean_shell(sh, sh -> exit_status);
 	while (tmp)
 	{
 		if (tmp != prev && tmp -> fds[0] >= 0)
@@ -37,7 +37,7 @@ void	child_exec(t_shell *sh, t_cmd *curr, t_cmd *prev)
 		tmp = tmp -> next;
 	}
 	cmd_exec(curr, sh);
-	clean_shell(sh, g_exit_status);
+	clean_shell(sh, sh -> exit_status);
 }
 
 int	child_fork(t_cmd *cmd, t_cmd *prev, t_shell *sh)
@@ -46,8 +46,8 @@ int	child_fork(t_cmd *cmd, t_cmd *prev, t_shell *sh)
 	if (cmd -> pid < 0)
 	{
 		perror("minshell: fork");
-		g_exit_status = errno;
-		return (g_exit_status);
+		sh -> exit_status = errno;
+		return (sh -> exit_status);
 	}
 	if (!cmd -> pid)
 		child_exec(sh, cmd, prev);
@@ -63,11 +63,11 @@ void	cmd_exec(t_cmd *cmd, t_shell *shell)
 	if (!cmd -> args[0] && cmd->redir && cmd -> redir[0].red_type == HEREDOC)
 		return ;
 	cmd -> cmd_path = resolve_path(cmd -> args[0], shell);
-	if (!cmd->cmd_path)
+	if (!cmd ->cmd_path)
 		return ;
 	if (execve(cmd -> cmd_path, cmd -> args, shell -> envp) == -1)
 	{
-		g_exit_status = errno;
+		shell -> exit_status = errno;
 		return ;
 	}
 	return ;

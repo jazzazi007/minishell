@@ -26,9 +26,9 @@ static int	init_pipes(t_shell *sh)
 			if (pipe(tmp -> fds) < 0)
 			{
 				perror("minishell: pipe");
-				g_exit_status = errno;
+				sh -> exit_status = errno;
 				close_fds();
-				return (g_exit_status);
+				return (sh -> exit_status);
 			}
 		}
 		tmp = tmp -> next;
@@ -38,20 +38,20 @@ static int	init_pipes(t_shell *sh)
 
 int	built_ins(t_cmd *agv, t_shell *shell)
 {
-	if (ft_strncmp(agv->args[0], "cd", 3) == 0)
-		return (0);
-	if (ft_strncmp(agv->args[0], "exit", 5) == 0)
-		return (0);
-	else if (ft_strncmp(agv->args[0], "echo", 5) == 0)
+	if (!ft_strcmp(agv->args[0], "cd"))
+		return (cd(agv -> args, shell));
+	if (!ft_strcmp(agv->args[0], "exit"))
+		return (exit_command(agv, shell), 0);
+	else if (!ft_strcmp(agv->args[0], "echo"))
 		return (echo(agv->args));
-	else if (ft_strncmp(agv->args[0], "export", 7) == 0)
+	else if (!ft_strcmp(agv->args[0], "export"))
 		return (export_cmd(agv->args, shell));
-	else if (ft_strncmp(agv->args[0], "unset", 6) == 0)
+	else if (!ft_strcmp(agv->args[0], "unset"))
 		return (unset_cmd(agv->args, shell));
-	else if (ft_strncmp(agv->args[0], "env", 4) == 0)
+	else if (!ft_strcmp(agv->args[0], "env"))
 		return (env(shell));
-	else if (ft_strncmp(agv->args[0], "pwd", 4) == 0)
-		return (pwd(), 0);
+	else if (!ft_strcmp(agv->args[0], "pwd"))
+		return (pwd());
 	return (1);
 }
 
@@ -64,18 +64,18 @@ static int	parent_builtin_exec(t_shell *sh, t_cmd *cmd)
 	if (stdfd[0] < 0 || stdfd[1] < 0)
 	{
 		perror("minishell: dup");
-		g_exit_status = errno;
+		sh -> exit_status = errno;
 		ft_close_fdpair(stdfd);
-		return (g_exit_status);
+		return (sh -> exit_status);
 	}
-	if (open_dup_fds(STDIN_FILENO, STDOUT_FILENO, cmd) == SUCCESS)
+	if (open_dup_fds(STDIN_FILENO, STDOUT_FILENO, sh) == SUCCESS)
 		built_ins(cmd, sh);
 	if (dup2(stdfd[0], STDIN_FILENO) < 0 || dup2(stdfd[1], STDOUT_FILENO) < 0)
 	{
 		perror("minishell: dup");
-		g_exit_status = errno;
+		sh -> exit_status = errno;
 		ft_close_fdpair(stdfd);
-		return (g_exit_status);
+		return (sh -> exit_status);
 	}
 	ft_close_fdpair(stdfd);
 	return (SUCCESS);
@@ -99,6 +99,7 @@ void	execution(t_shell *sh)
 	{
 		while (cmd)
 		{
+			sh -> exit_status = 0;
 			if (child_fork(cmd, prev, sh))
 				return ;
 			prev = cmd;

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/05 11:55:39 by codespace         #+#    #+#             */
-/*   Updated: 2025/09/22 05:44:46 by felayan          ###   ########.fr       */
+/*   Created: 2025/09/22 14:20:46 by felayan           #+#    #+#             */
+/*   Updated: 2025/09/22 14:20:48 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,15 @@ void	cleanup_resources(t_shell *sh)
 			if (waitpid(cmd -> pid, &sh -> exit_status, 0) > 0)
 				last_pid = cmd -> pid;
 		}
-		if (cmd -> fds[0] != -1)
-			close(cmd -> fds[0]);
-		if (cmd -> fds[1] != -1)
-			close(cmd -> fds[1]);
+		ft_close_fdpair(cmd -> fds);
 		cmd = cmd -> next;
 	}
 	if (last_pid > 0)
 	{
 		if (WIFEXITED(sh -> exit_status))
-			g_exit_status = WEXITSTATUS(sh -> exit_status);
+			sh -> exit_status = WEXITSTATUS(sh -> exit_status);
 		else if (WIFSIGNALED(sh -> exit_status))
-			g_exit_status = 128 + WTERMSIG(sh -> exit_status);
+			sh -> exit_status = 128 + WTERMSIG(sh -> exit_status);
 	}
 }
 
@@ -109,8 +106,5 @@ void	clean_shell(t_shell *shell, int status)
 		shell -> tokens = NULL;
 	}
 	close_fds();
-	if (status)
-		exit(status);
-	if (!status)
-		exit(SUCCESS);
+	exit(status);
 }
