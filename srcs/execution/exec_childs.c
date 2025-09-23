@@ -52,7 +52,13 @@ int	child_fork(t_cmd *cmd, t_cmd *prev, t_shell *sh)
 	if (!cmd -> pid)
 		child_exec(sh, cmd, prev);
 	else
+	{
+		if (prev && prev -> fds[0] >= 0)
+			close(prev->fds[0]);
+		if (cmd -> next && cmd -> fds[1] >= 0)
+			close(cmd -> fds[1]);
 		signal_exc_parent();
+	}
 	return (SUCCESS);
 }
 
