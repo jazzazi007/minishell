@@ -66,7 +66,7 @@ void	cmd_exec(t_cmd *cmd, t_shell *shell)
 {
 	if (!built_ins(cmd, shell))
 		return ;
-	if (!cmd -> args[0] && cmd->redir && cmd -> redir[0].type == HEREDOC)
+	if (!cmd -> args[0] && cmd->redir)
 		return ;
 	cmd -> cmd_path = resolve_path(cmd -> args[0], shell);
 	if (!cmd ->cmd_path)
