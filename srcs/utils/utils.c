@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:48:22 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/22 05:46:16 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/23 03:02:29 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,22 @@ void	ft_close_fdpair(int fd[2])
 		close(fd[0]);
 	if (fd[1] > 0)
 		close(fd[1]);
+}
+
+char	*ret_fail(char **paths, char *arg, t_shell *sh)
+{
+	free(*paths);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(arg, 2);
+	if (access(arg, F_OK))
+	{
+		ft_putstr_fd(": No such file or directory\n", 2);
+		sh -> exit = 127;
+	}
+	else if (access(arg, X_OK))
+	{
+		ft_putstr_fd(": Permission denied\n", 2);
+		sh -> exit = 126;
+	}
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:10:01 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/21 22:02:09 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/22 22:48:54 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char	*ft_here_expand(char *str, t_shell *shell)
 	tmp = ft_strdup("");
 	if (!tmp)
 	{
-		shell -> exit_status = MALLOC_FAILURE;
+		shell -> exit = MALLOC_FAILURE;
 		return (NULL);
 	}
 	i = 0;
@@ -31,7 +31,7 @@ static char	*ft_here_expand(char *str, t_shell *shell)
 			tmp = append_expanded_part(tmp, str, &i, shell);
 			if (!tmp)
 			{
-				shell -> exit_status = MALLOC_FAILURE;
+				shell -> exit = MALLOC_FAILURE;
 				return (NULL);
 			}
 		}

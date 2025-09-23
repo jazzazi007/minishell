@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:17:16 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 05:38:28 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/22 22:46:59 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	start_shell(t_shell *shell, char *line, char **envp)
 			dup2(STDERR_FILENO, STDIN_FILENO);
 		line = readline("\001\033[31m\002SHELLX 🔥 > \001\033[0m\002");
 		if (g_exit_status == 130 || g_exit_status == 131)
-			shell -> exit_status = g_exit_status;
+			shell -> exit = g_exit_status;
 		g_exit_status = 0;
 		if (!line)
 			break ;
@@ -64,7 +64,6 @@ static void	start_shell(t_shell *shell, char *line, char **envp)
 			clean_cmds(shell->cmds);
 			shell->cmds = NULL;
 		}
-		//shell -> exit_status = 0;
 	}
 }
 
@@ -81,5 +80,5 @@ int	main(int ac, char **av, char **envp)
 	start_shell(&shell, line, envp);
 	printf("exit\n");
 	close(0);
-	clean_shell(&shell, shell.exit_status);
+	clean_shell(&shell, shell.exit);
 }

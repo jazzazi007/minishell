@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:11 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/22 02:42:41 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/22 22:52:51 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,14 @@ static int	open_file(char *file, t_rdr type, int *status)
 		return (-2);
 	if (fd < 0)
 	{
-		perror("minishell");
-		*status = errno;
+		ft_putstr_fd("minishell: ", 2);
+		perror(file);
+		*status = 1;
 	}
 	return (fd);
 }
 
-static int	change_fd(int fd, bool in, int *status)
+static int	dup_fd(int fd, bool in, int *status)
 {
 	if (fd != STDIN_FILENO && in)
 	{
@@ -63,29 +64,29 @@ static int	change_fd(int fd, bool in, int *status)
 	return (SUCCESS);
 }
 
-int	open_dup_fds(int fd_in, int fd_out, t_shell *sh)
+int	open_dup_fds(int fd_in, int fd_out, t_shell *sh, t_cmd *cmd)
 {
 	t_redir	*rdr;
 	int		i;
 	int		fd;
 
 	i = 0;
-	rdr = sh -> cmds -> redir;
-	if (change_fd(fd_in, true, &sh -> exit_status) || change_fd(fd_out, false, &sh -> exit_status))
+	rdr = cmd -> redir;
+	if (dup_fd(fd_in, true, &sh -> exit) || dup_fd(fd_out, false, &sh -> exit))
 		return (1);
-	while (i < sh -> cmds -> redir_count)
+	while (i < cmd -> redir_count)
 	{
-		fd = open_file(rdr[i].filename, rdr[i].red_type, &sh -> exit_status);
+		fd = open_file(rdr[i].filename, rdr[i].type, &sh -> exit);
 		if (fd == -1)
 			return (1);
 		if (fd == -2)
 		{
-			if (rdr[i].here_fd >= 0 && change_fd(rdr[i].here_fd, true, &sh -> exit_status))
+			if (rdr[i].doc_fd >= 0 && dup_fd(rdr[i].doc_fd, true, &sh -> exit))
 				return (1);
 		}
-		else if (rdr[i].red_type == IN && change_fd(fd, true, &sh -> exit_status))
+		else if (rdr[i].type == IN && dup_fd(fd, true, &sh -> exit))
 			return (1);
-		else if (rdr[i].red_type != IN && change_fd(fd, false, &sh -> exit_status))
+		else if (rdr[i].type != IN && dup_fd(fd, false, &sh -> exit))
 			return (1);
 		i++;
 	}

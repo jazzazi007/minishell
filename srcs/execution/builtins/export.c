@@ -1,101 +1,64 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/23 01:37:10 by felayan           #+#    #+#             */
+/*   Updated: 2025/09/23 01:37:10 by felayan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static int find_env(char **envp, const char *name)
+static void	print_exp(char **env)
 {
-    int i = 0;
-    size_t len = strlen(name);
-    while (envp[i])
-    {
-        if (ft_strncmp(envp[i], name, len) == 0)   // REMOVED 2nd condition
-            return i;
-        i++;
-    }
-    return -1;
+	int		i;
+	char	*eq;
+	int		key_len;
+
+	i = 0;
+	while (env[i])
+	{
+		eq = ft_strchr(env[i], '=');
+		ft_putstr_fd("declare -x ", STDOUT_FILENO);
+		if (eq)
+		{
+			key_len = eq - env[i];
+			write(1, env[i], key_len);
+			printf("=\"%s\"\n", eq + 1);
+		}
+		else
+			printf("%s\n", env[i]);
+		i++;
+	}
 }
 
-static int check_export_name(const char *name)
+static void	export_add(char *arg, t_shell *sh)
 {
-    if (!name || !name[0] || name[0] == '=')
-        return 0;
-    for (int i = 0; name[i] && name[i] != '='; i++)
-    {
-        if (!(name[i] == '_' || (name[i] >= 'A' && name[i] <= 'Z') ||
-              (name[i] >= 'a' && name[i] <= 'z') ||
-              (i > 0 && name[i] >= '0' && name[i] <= '9')))
-            return 0;
-    }
-    return 1;
+	if (!is_valid_key(arg))
+	{
+		sh -> exit = 1;
+		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+	}
+	else
+		set_var(sh, arg);
 }
 
-static void set_env(char ***envp, const char *arg)
+int	export_cmd(char **args, t_shell *shell)
 {
-    char *eq = ft_strchr(arg, '=');
-    size_t name_len = 0;
-    // if (!eq)
-    //     return; //this condition if i want to add to env and there is no '=' sign
-    if (eq)
-        name_len = eq - arg;
-    else
-        name_len = ft_strlen(arg);
-    char name[name_len + 1];
-    strncpy(name, arg, name_len);//convert to ft_stncpy   FORBIDDEN FUNC
-    name[name_len] = '\0';
-    int idx = find_env(*envp, name);
-    if (idx != -1)
-    {
-        free((*envp)[idx]);
-        (*envp)[idx] = ft_strdup(arg);
-    }
-    else
-    {                            //FIX EXPORT DUPLICATES KEYS (done in find_env)
-        // Add new variable 
-        int count = 0;
-        while ((*envp)[count])
-            count++; 
-        char **new_envp = malloc(sizeof(char *) * (count + 2));
-        for (int i = 0; i < count; i++)  // FORBIDDEN
-            new_envp[i] = (*envp)[i];
-        new_envp[count] = ft_strdup(arg);//protection
-        new_envp[count + 1] = NULL;
-        free(*envp);
-        *envp = new_envp;
-    }
-}
+	int	i;
 
-int export_cmd(char **args, t_shell *shell)
-{
-    int i = 1;
-    int ret = 0;
-    if (!args[1])
-    {
-        // Print sorted env
-        for (int j = 0; shell->envp[j]; j++)
-        {
-            char    *eq = ft_strchr(shell ->envp[j], '=');
-            if (eq)
-            {
-                int     key_len = eq - shell -> envp[j];
-                write(1, "declare -x ", 11);
-                write(1, shell -> envp[j], key_len);
-                printf("=\"%s\"\n", eq + 1);
-            }
-            else
-                printf("declare -x %s\n", shell -> envp[j]);
-        }
-        return 0;
-    }
-    while (args[i])
-    {
-        if (!check_export_name(args[i]))
-        {
-            fprintf(stderr, "minishell: export: `%s': not a valid identifier\n", args[i]); // FORBIDDEN FUNC
-            ret = 1;
-        }
-        else
-        {
-            set_env(&shell->envp, args[i]);
-        }
-        i++;
-    }
-    return ret;
+	i = 1;
+	if (!args[1])
+		print_exp(shell -> envp);
+	while (args[i])
+	{
+		export_add(args[i], shell);
+		i++;
+	}
+	return (0);
 }

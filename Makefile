@@ -51,6 +51,7 @@ SRCS	=	\
 		$(SRCS_DR)/utils/parsing_utils.c \
 		$(SRCS_DR)/utils/heredoc_utils.c \
 		$(SRCS_DR)/utils/execution_utils.c \
+		$(SRCS_DR)/utils/export_utils.c \
 		$(SRCS_DR)/utils/clean.c \
 		$(SRCS_DR)/utils/utils.c \
 		$(SRCS_DR)/execution/execution.c \

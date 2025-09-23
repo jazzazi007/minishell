@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:13:23 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/21 22:02:09 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/22 22:49:28 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static t_tokens	*get_last_token(t_tokens *tokens)
 	return (tokens);
 }
 
-void	add_token(t_shell *dt, t_tk t_type, char *token, bool exp)
+void	add_token(t_shell *sh, t_tk t_type, char *token, bool exp)
 {
 	t_tokens	*new;
 	t_tokens	*last;
@@ -46,17 +46,17 @@ void	add_token(t_shell *dt, t_tk t_type, char *token, bool exp)
 	if (!new)
 	{
 		free(token);
-		clean_shell(dt, MALLOC_FAILURE);
+		clean_shell(sh, MALLOC_FAILURE);
 	}
 	new -> value = token;
 	new -> type = t_type;
 	new -> is_expandable = exp;
 	new -> next = NULL;
-	if (!dt -> tokens)
-		dt -> tokens = new;
+	if (!sh -> tokens)
+		sh -> tokens = new;
 	else
 	{
-		last = get_last_token(dt -> tokens);
+		last = get_last_token(sh -> tokens);
 		last -> next = new;
 	}
 }

@@ -6,13 +6,13 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:09:34 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/21 21:12:00 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/22 22:49:28 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	add_single_quotes(t_shell *dt, const char *input, int *index)
+void	add_single_quotes(t_shell *sh, const char *input, int *index)
 {
 	int		sub_len;
 	int		start;
@@ -29,13 +29,13 @@ void	add_single_quotes(t_shell *dt, const char *input, int *index)
 	}
 	sub = ft_substr(input, start, sub_len);
 	if (!sub)
-		clean_shell(dt, MALLOC_FAILURE);
-	add_token(dt, T_SINGLE, sub, false);
+		clean_shell(sh, MALLOC_FAILURE);
+	add_token(sh, T_SINGLE, sub, false);
 	if (input[*index] == '\'')
 		(*index)++;
 }
 
-void	add_double_quotes(t_shell *dt, const char *input, int *index)
+void	add_double_quotes(t_shell *sh, const char *input, int *index)
 {
 	int		sub_len;
 	int		start;
@@ -56,13 +56,13 @@ void	add_double_quotes(t_shell *dt, const char *input, int *index)
 	}
 	sub = ft_substr(input, start, sub_len);
 	if (!sub)
-		clean_shell(dt, MALLOC_FAILURE);
-	add_token(dt, T_DOUBLE, sub, is_expandable);
+		clean_shell(sh, MALLOC_FAILURE);
+	add_token(sh, T_DOUBLE, sub, is_expandable);
 	if (input[*index] == '\"')
 		(*index)++;
 }
 
-void	add_operator(t_shell *dt, const char *input, int *index)
+void	add_operator(t_shell *sh, const char *input, int *index)
 {
 	char	*sub;
 	t_tk	oper_t;
@@ -80,11 +80,11 @@ void	add_operator(t_shell *dt, const char *input, int *index)
 		*index += 2;
 	}
 	if (!sub)
-		clean_shell(dt, MALLOC_FAILURE);
-	add_token(dt, oper_t, sub, false);
+		clean_shell(sh, MALLOC_FAILURE);
+	add_token(sh, oper_t, sub, false);
 }
 
-void	add_word(t_shell *dt, const char *input, int *index)
+void	add_word(t_shell *sh, const char *input, int *index)
 {
 	int		sub_len;
 	int		start;
@@ -104,6 +104,6 @@ void	add_word(t_shell *dt, const char *input, int *index)
 	}
 	sub = ft_substr(input, start, sub_len);
 	if (!sub)
-		clean_shell(dt, MALLOC_FAILURE);
-	add_token(dt, T_WORD, sub, is_expandable);
+		clean_shell(sh, MALLOC_FAILURE);
+	add_token(sh, T_WORD, sub, is_expandable);
 }

@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:45 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/22 05:54:27 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/22 22:47:26 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ static int	init_pipes(t_shell *sh)
 			if (pipe(tmp -> fds) < 0)
 			{
 				perror("minishell: pipe");
-				sh -> exit_status = errno;
+				sh -> exit = errno;
 				close_fds();
-				return (sh -> exit_status);
+				return (sh -> exit);
 			}
 		}
 		tmp = tmp -> next;
@@ -36,22 +36,22 @@ static int	init_pipes(t_shell *sh)
 	return (SUCCESS);
 }
 
-int	built_ins(t_cmd *agv, t_shell *shell)
+int	built_ins(t_cmd *cmd, t_shell *shell)
 {
-	if (!ft_strcmp(agv->args[0], "cd"))
-		return (cd(agv -> args, shell));
-	if (!ft_strcmp(agv->args[0], "exit"))
-		return (exit_command(agv, shell), 0);
-	else if (!ft_strcmp(agv->args[0], "echo"))
-		return (echo(agv->args));
-	else if (!ft_strcmp(agv->args[0], "export"))
-		return (export_cmd(agv->args, shell));
-	else if (!ft_strcmp(agv->args[0], "unset"))
-		return (unset_cmd(agv->args, shell));
-	else if (!ft_strcmp(agv->args[0], "env"))
-		return (env(shell));
-	else if (!ft_strcmp(agv->args[0], "pwd"))
-		return (pwd());
+	if (!ft_strcmp(cmd->args[0], "cd"))
+		return (cd(cmd -> args, shell));
+	if (!ft_strcmp(cmd->args[0], "exit"))
+		return (exit_command(cmd, shell), 0);
+	else if (!ft_strcmp(cmd->args[0], "echo"))
+		return (echo(cmd->args));
+	else if (!ft_strcmp(cmd->args[0], "export"))
+		return (export_cmd(cmd->args, shell));
+	else if (!ft_strcmp(cmd->args[0], "unset"))
+		return (unset_cmd(cmd->args, shell));
+	else if (!ft_strcmp(cmd->args[0], "env"))
+		return (env(shell, cmd));
+	else if (!ft_strcmp(cmd->args[0], "pwd"))
+		return (pwd(shell));
 	return (1);
 }
 
@@ -64,18 +64,18 @@ static int	parent_builtin_exec(t_shell *sh, t_cmd *cmd)
 	if (stdfd[0] < 0 || stdfd[1] < 0)
 	{
 		perror("minishell: dup");
-		sh -> exit_status = errno;
+		sh -> exit = errno;
 		ft_close_fdpair(stdfd);
-		return (sh -> exit_status);
+		return (sh -> exit);
 	}
-	if (open_dup_fds(STDIN_FILENO, STDOUT_FILENO, sh) == SUCCESS)
+	if (open_dup_fds(STDIN_FILENO, STDOUT_FILENO, sh, cmd) == SUCCESS)
 		built_ins(cmd, sh);
 	if (dup2(stdfd[0], STDIN_FILENO) < 0 || dup2(stdfd[1], STDOUT_FILENO) < 0)
 	{
 		perror("minishell: dup");
-		sh -> exit_status = errno;
+		sh -> exit = errno;
 		ft_close_fdpair(stdfd);
-		return (sh -> exit_status);
+		return (sh -> exit);
 	}
 	ft_close_fdpair(stdfd);
 	return (SUCCESS);
@@ -99,7 +99,7 @@ void	execution(t_shell *sh)
 	{
 		while (cmd)
 		{
-			sh -> exit_status = 0;
+			sh -> exit = 0;
 			if (child_fork(cmd, prev, sh))
 				return ;
 			prev = cmd;

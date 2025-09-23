@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 14:21:27 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 14:21:28 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/23 02:33:24 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*ft_var_expand(const char *str, int *i, t_shell *sh)
 	if (str[*i] == '?')
 	{
 		(*i)++;
-		return (ft_itoa(sh->exit_status));
+		return (ft_itoa(sh->exit));
 	}
 	if (!ft_isalnum(str[*i]) && str[*i] != '_')
 		return (ft_strdup("$"));

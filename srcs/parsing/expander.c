@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:10:09 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/21 22:02:09 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/22 22:49:28 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*get_var_token(const char *var, int *loc)
 	return (ft_substr(var, start, *loc - start));
 }
 
-static int	expand_var(t_shell *dt, const char *token, char **expanded)
+static int	expand_var(t_shell *sh, const char *token, char **expanded)
 {
 	int	i;
 
@@ -37,26 +37,26 @@ static int	expand_var(t_shell *dt, const char *token, char **expanded)
 		}
 		else if (token[++i] == '?')
 		{
-			if (crt_var(dt -> envp, expanded, ft_itoa(dt-> exit_status), true))
+			if (crt_var(sh -> envp, expanded, ft_itoa(sh-> exit), true))
 				return (MALLOC_FAILURE);
 			i++;
 		}
 		else
 		{
-			if (crt_var(dt -> envp, expanded, get_var_token(token, &i), false))
+			if (crt_var(sh -> envp, expanded, get_var_token(token, &i), false))
 				return (MALLOC_FAILURE);
 		}
 	}
 	return (SUCCESS);
 }
 
-void	expander(t_shell *dt)
+void	expander(t_shell *sh)
 {
 	t_tokens	*current;
 	char		*expanded;
 
 	expanded = NULL;
-	current = dt -> tokens;
+	current = sh -> tokens;
 	while (current)
 	{
 		if (current -> type == T_HEREDOC)
@@ -64,8 +64,8 @@ void	expander(t_shell *dt)
 		if (current -> is_expandable)
 		{
 			expanded = ft_strdup("");
-			if (!expanded || expand_var(dt, current -> value, &expanded))
-				clean_shell(dt, MALLOC_FAILURE);
+			if (!expanded || expand_var(sh, current -> value, &expanded))
+				clean_shell(sh, MALLOC_FAILURE);
 			free(current -> value);
 			current -> value = expanded;
 		}

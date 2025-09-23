@@ -3,51 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 12:41:48 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/08/19 12:41:50 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/09/23 03:35:48 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int find_env(char **envp, const char *name)
+static int	find_key_index(char **envp, const char *key)
 {
-    int i = 0;
-    size_t len = strlen(name);
-    while (envp[i])
-    {
-        if (strncmp(envp[i], name, len) == 0) //removed 2nd condition to fix unset for no value keys
-            return i;
-        i++;
-    }
-    return -1;
+	int	i;
+	int	len;
+
+	i = 0;
+	len = ft_strlen(key);
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], key, len)
+			&& (envp[i][len] == '=' || envp[i][len] == '\0'))
+			return (i);
+		i++;
+	}
+	return (-1);
 }
 
-static void remove_env(char ***envp, int index)
+static void	remove_var(t_shell *sh, int index)
 {
-    int count = 0;
-    while ((*envp)[count])
-        count++;
-    free((*envp)[index]);
-    for (int i = index; i < count - 1; i++)
-        (*envp)[i] = (*envp)[i + 1];
-    (*envp)[count - 1] = NULL;
+	int	entries;
+
+	entries = count_env_entries(sh -> envp);
+	free(sh -> envp[index]);
+	while (index < entries)
+	{
+		sh -> envp[index] = sh -> envp[index + 1];
+		index++;
+	}
 }
 
-int unset_cmd(char **args, t_shell *shell)
+int	unset_cmd(char **args, t_shell *shell)
 {
-    int i = 1;
-    int ret = 0;
-    if (!args[1])
-        return (0);
-    while (args[i])
-    {
-        int idx = find_env(shell->envp, args[i]);
-        if (idx != -1)
-            remove_env(&shell->envp, idx);
-        i++;
-    }
-    return ret;
+	int	i;
+	int	index;
+
+	i = 1;
+	while (args[i])
+	{
+		index = find_key_index(shell -> envp, args[i]);
+		if (index >= 0)
+			remove_var(shell, index);
+		i++;
+	}
+	return (0);
 }

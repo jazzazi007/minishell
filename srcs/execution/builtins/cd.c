@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralbliwi <ralbliwi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:22:39 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/08/19 16:22:32 by ralbliwi         ###   ########.fr       */
+/*   Updated: 2025/09/23 02:32:55 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	void change_dir(char *dir, t_shell *sh)
+static void	change_dir(char *dir, t_shell *sh)
 {
 	if (chdir(dir))
 	{
 		perror("cd");
-		sh -> exit_status = 1;
+		sh -> exit = 1;
 	}
 }
 
@@ -29,11 +29,11 @@ int	cd(char **av, t_shell *sh)
 	{
 		home = get_env_value("HOME", sh -> envp);
 		if (!home)
-			sh -> exit_status = MALLOC_FAILURE;
+			sh -> exit = MALLOC_FAILURE;
 		else if (home[0] == '\0')
 		{
 			ft_putstr_fd("cd: HOME not set\n", 2);
-			sh -> exit_status = 1;
+			sh -> exit = 1;
 		}
 		else
 			change_dir(home, sh);
@@ -42,9 +42,9 @@ int	cd(char **av, t_shell *sh)
 	else if (av[2])
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
-		sh -> exit_status = 1;
+		sh -> exit = 1;
 	}
 	else
 		change_dir(av[1], sh);
-	return(0);
+	return (0);
 }

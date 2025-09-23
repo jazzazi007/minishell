@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:32:57 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 05:57:57 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/23 03:02:39 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ struct s_tokens
 
 struct s_redir
 {
-	t_rdr	red_type;
+	t_rdr	type;
 	char	*filename;
-	int		here_fd;
+	int		doc_fd;
 };
 
 struct s_cmd
@@ -96,7 +96,7 @@ struct s_shell
 	char		**envp;
 	t_cmd		*cmds;
 	int			cmd_count;
-	int			exit_status;
+	int			exit;
 	t_tokens	*tokens;
 };
 
@@ -108,24 +108,25 @@ void	clean_strs(char **strs);
 
 char	*append_str(char **env, char *s1, const char *s2, bool is_special);
 char	*append_char(char *s, char c);
-int		add_redir_cmd(t_cmd *cmd, t_tokens **tokens, int *rdr_i, t_shell *dt);
+int		add_redir_cmd(t_cmd *cmd, t_tokens **tokens, int *rdr_i, t_shell *sh);
 int		crt_var(char **env, char **expanded, char *key, bool is_special);
 int		add_word_cmd(t_cmd *cmd, const char *token, int *wrd_i);
 int		syntax_check(t_tokens *tokens, bool quotes_err);
 int		tokenizer(const char *input, t_shell *shell);
 int		parsing(t_shell *shell, const char *input);
-void	add_token(t_shell *dt, t_tk t_type, char *token, bool exp);
-void	add_single_quotes(t_shell *dt, const char *input, int *i);
-void	add_double_quotes(t_shell *dt, const char *input, int *i);
-void	add_operator(t_shell *dt, const char *input, int *i);
-void	add_word(t_shell *dt, const char *input, int *i);
-void	expander(t_shell *dt);
+void	add_token(t_shell *sh, t_tk t_type, char *token, bool exp);
+void	add_single_quotes(t_shell *sh, const char *input, int *i);
+void	add_double_quotes(t_shell *sh, const char *input, int *i);
+void	add_operator(t_shell *sh, const char *input, int *i);
+void	add_word(t_shell *sh, const char *input, int *i);
+void	expander(t_shell *sh);
 bool	is_closed_quotes(const char *input, int loc);
-t_cmd	*init_cmd(t_shell *dt, t_tokens *tokens);
+t_cmd	*init_cmd(t_shell *sh, t_tokens *tokens);
 t_cmd	*get_last_cmd(t_cmd *cmd);
 
+int		count_env_entries(char **envp);
 char	*get_env_value(const char *key, char **envp);
-void	init_env(t_shell *dt, char **env);
+void	init_env(t_shell *sh, char **env);
 void	ft_close_fdpair(int fd[2]);
 void	close_fds(void);
 bool	is_redir(const char *token);
@@ -136,8 +137,9 @@ bool	is_var(char var);
 t_tk	get_opertype(const char *s);
 int		skip_whitesp(const char *s);
 int		is_oper(char c);
+char	*ret_fail(char **paths, char *arg, t_shell *sh);
 
-int		open_dup_fds(int fd_in, int fd_out, t_shell *sh);
+int		open_dup_fds(int fd_in, int fd_out, t_shell *sh, t_cmd *cmd);
 void	cmd_exec(t_cmd *agv, t_shell *shell);
 char	*resolve_path(char *cmd0, t_shell *shell);
 void	execution(t_shell *sh);
@@ -153,11 +155,13 @@ int		ft_open_heredoc(t_tokens *delim, t_shell *shell);
 void	exit_command(t_cmd *cmd, t_shell *shell);
 int		export_cmd(char **args, t_shell *shell);
 int		unset_cmd(char **args, t_shell *shell);
-int		built_ins(t_cmd *agv, t_shell *shell);
+int		built_ins(t_cmd *cmd, t_shell *shell);
 int		cd(char **av, t_shell *sh);
-int		env(t_shell *shell);
+int		env(t_shell *shell, t_cmd *cmd);
 int		echo(char **cmd);
-int		pwd(void);
+int		pwd(t_shell *sh);
+void	set_var(t_shell *sh, const char *var);
+bool	is_valid_key(const char *name);
 
 void	setup_signal_handlers(void);
 void	sigint_handler(int signum);

@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 14:20:46 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 14:20:48 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/23 01:32:18 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	cleanup_resources(t_shell *sh)
 	{
 		if (cmd -> pid > 0)
 		{
-			if (waitpid(cmd -> pid, &sh -> exit_status, 0) > 0)
+			if (waitpid(cmd -> pid, &sh -> exit, 0) > 0)
 				last_pid = cmd -> pid;
 		}
 		ft_close_fdpair(cmd -> fds);
@@ -31,10 +31,10 @@ void	cleanup_resources(t_shell *sh)
 	}
 	if (last_pid > 0)
 	{
-		if (WIFEXITED(sh -> exit_status))
-			sh -> exit_status = WEXITSTATUS(sh -> exit_status);
-		else if (WIFSIGNALED(sh -> exit_status))
-			sh -> exit_status = 128 + WTERMSIG(sh -> exit_status);
+		if (WIFEXITED(sh -> exit))
+			sh -> exit = WEXITSTATUS(sh -> exit);
+		else if (WIFSIGNALED(sh -> exit))
+			sh -> exit = 128 + WTERMSIG(sh -> exit);
 	}
 }
 
@@ -66,6 +66,8 @@ void	clean_strs(char **strs)
 	int	i;
 
 	i = 0;
+	if (!strs)
+		return ;
 	while (strs[i])
 	{
 		free(strs[i]);

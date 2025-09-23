@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 14:22:01 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 14:22:02 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/22 22:52:51 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,16 @@ static void	token_cmd_count(t_tokens *tokens, int *wrds, int *rdrs)
 	}
 }
 
-t_cmd	*init_cmd(t_shell *dt, t_tokens *tokens)
+t_cmd	*init_cmd(t_shell *sh, t_tokens *tokens)
 {
 	t_cmd	*cmd;
 	int		i;
 
 	i = 0;
-	(void)dt;
+	(void)sh;
 	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
-		clean_shell(dt, MALLOC_FAILURE);
+		clean_shell(sh, MALLOC_FAILURE);
 	ft_bzero(cmd, sizeof(t_cmd));
 	token_cmd_count(tokens, &cmd -> word_count, &cmd -> redir_count);
 	cmd -> args = malloc(sizeof(char *) * (cmd ->word_count + 1));
@@ -49,7 +49,7 @@ t_cmd	*init_cmd(t_shell *dt, t_tokens *tokens)
 		free(cmd -> args);
 		free(cmd -> redir);
 		free(cmd);
-		clean_shell(dt, MALLOC_FAILURE);
+		clean_shell(sh, MALLOC_FAILURE);
 	}
 	while (i < cmd -> redir_count)
 		cmd -> redir[i++].filename = NULL;
@@ -64,25 +64,25 @@ t_cmd	*get_last_cmd(t_cmd *cmd)
 	return (cmd);
 }
 
-int	add_redir_cmd(t_cmd *cmd, t_tokens **tokens, int	*rdr_i, t_shell *dt)
+int	add_redir_cmd(t_cmd *cmd, t_tokens **tokens, int	*rdr_i, t_shell *sh)
 {
 	if (!ft_strcmp((*tokens)-> value, ">"))
-		cmd -> redir[*rdr_i].red_type = OUT;
+		cmd -> redir[*rdr_i].type = OUT;
 	else if (!ft_strcmp((*tokens)-> value, "<"))
-		cmd -> redir[*rdr_i].red_type = IN;
+		cmd -> redir[*rdr_i].type = IN;
 	else if (!ft_strcmp((*tokens)-> value, ">>"))
-		cmd -> redir[*rdr_i].red_type = APPEND;
+		cmd -> redir[*rdr_i].type = APPEND;
 	else if (!ft_strcmp((*tokens)-> value, "<<"))
 	{
-		cmd -> redir[*rdr_i].red_type = HEREDOC;
+		cmd -> redir[*rdr_i].type = HEREDOC;
 		signal(SIGINT, SIG_IGN);
 		setup_signal_handlers();
-		cmd -> redir[*rdr_i].here_fd = ft_open_heredoc((*tokens)->next, dt);
+		cmd -> redir[*rdr_i].doc_fd = ft_open_heredoc((*tokens)->next, sh);
 		if (g_exit_status)
 			return (g_exit_status);
 	}
 	(*tokens) = (*tokens)-> next;
-	if (cmd -> redir[*rdr_i].red_type != HEREDOC)
+	if (cmd -> redir[*rdr_i].type != HEREDOC)
 	{
 		cmd -> redir[*rdr_i].filename = ft_strdup((*tokens)-> value);
 		if (!cmd -> redir[*rdr_i].filename)

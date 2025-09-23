@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/22 05:54:11 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/22 22:49:57 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	child_exec(t_shell *sh, t_cmd *curr, t_cmd *prev)
 	if (curr -> next)
 		fd_out = curr -> fds[1];
 	signal_excuter();
-	if (open_dup_fds(fd_in, fd_out, sh))
-		clean_shell(sh, sh -> exit_status);
+	if (open_dup_fds(fd_in, fd_out, sh, curr))
+		clean_shell(sh, sh -> exit);
 	while (tmp)
 	{
 		if (tmp != prev && tmp -> fds[0] >= 0)
@@ -37,7 +37,7 @@ void	child_exec(t_shell *sh, t_cmd *curr, t_cmd *prev)
 		tmp = tmp -> next;
 	}
 	cmd_exec(curr, sh);
-	clean_shell(sh, sh -> exit_status);
+	clean_shell(sh, sh -> exit);
 }
 
 int	child_fork(t_cmd *cmd, t_cmd *prev, t_shell *sh)
@@ -46,8 +46,8 @@ int	child_fork(t_cmd *cmd, t_cmd *prev, t_shell *sh)
 	if (cmd -> pid < 0)
 	{
 		perror("minshell: fork");
-		sh -> exit_status = errno;
-		return (sh -> exit_status);
+		sh -> exit = errno;
+		return (sh -> exit);
 	}
 	if (!cmd -> pid)
 		child_exec(sh, cmd, prev);
@@ -60,14 +60,14 @@ void	cmd_exec(t_cmd *cmd, t_shell *shell)
 {
 	if (!built_ins(cmd, shell))
 		return ;
-	if (!cmd -> args[0] && cmd->redir && cmd -> redir[0].red_type == HEREDOC)
+	if (!cmd -> args[0] && cmd->redir && cmd -> redir[0].type == HEREDOC)
 		return ;
 	cmd -> cmd_path = resolve_path(cmd -> args[0], shell);
 	if (!cmd ->cmd_path)
 		return ;
 	if (execve(cmd -> cmd_path, cmd -> args, shell -> envp) == -1)
 	{
-		shell -> exit_status = errno;
+		shell -> exit = errno;
 		return ;
 	}
 	return ;

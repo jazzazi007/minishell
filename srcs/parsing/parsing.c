@@ -6,27 +6,27 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:09:57 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/21 22:06:45 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/23 04:17:37 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	append_cmd(t_shell *dt, t_cmd *new)
+static void	append_cmd(t_shell *sh, t_cmd *new)
 {
 	t_cmd	*last;
 
-	if (!dt -> cmds)
-		dt -> cmds = new;
+	if (!sh -> cmds)
+		sh -> cmds = new;
 	else
 	{
-		last = get_last_cmd(dt -> cmds);
+		last = get_last_cmd(sh -> cmds);
 		last -> next = new;
 	}
-	dt -> cmd_count++;
+	sh -> cmd_count++;
 }
 
-static int	add_cmd(t_cmd *cmd, t_tokens **tokens, t_shell *dt)
+static int	add_cmd(t_cmd *cmd, t_tokens **tokens, t_shell *sh)
 {
 	int	status;
 	int	wrd_i;
@@ -39,7 +39,7 @@ static int	add_cmd(t_cmd *cmd, t_tokens **tokens, t_shell *dt)
 	{
 		if (is_redir((*tokens)-> value))
 		{
-			status = add_redir_cmd(cmd, tokens, &rdr_i, dt);
+			status = add_redir_cmd(cmd, tokens, &rdr_i, sh);
 			if (status == MALLOC_FAILURE)
 				return (MALLOC_FAILURE);
 			else if (status == 130)
@@ -55,33 +55,33 @@ static int	add_cmd(t_cmd *cmd, t_tokens **tokens, t_shell *dt)
 	return (SUCCESS);
 }
 
-static int	tokens_to_cmd(t_shell *dt, t_tokens *tokens)
+static int	tokens_to_cmd(t_shell *sh, t_tokens *tokens)
 {
 	t_cmd	*new_cmd;
 	int		status;
 
 	while (tokens)
 	{
-		new_cmd = init_cmd(dt, tokens);
-		status = add_cmd(new_cmd, &tokens, dt);
+		new_cmd = init_cmd(sh, tokens);
+		status = add_cmd(new_cmd, &tokens, sh);
 		if (status == MALLOC_FAILURE)
 		{
 			clean_cmds(new_cmd);
-			clean_shell(dt, MALLOC_FAILURE);
+			clean_shell(sh, MALLOC_FAILURE);
 		}
 		else if (status == 130)
 		{
 			clean_cmds(new_cmd);
 			return (status);
 		}
-		append_cmd(dt, new_cmd);
+		append_cmd(sh, new_cmd);
 		if (tokens && is_pipe(tokens -> value))
 			tokens = tokens -> next;
 	}
 	return (SUCCESS);
 }
 
-static void	merge_tokens_exp(t_shell *dt, const char *line, t_tokens *tmp)
+static void	merge_tokens_exp(t_shell *sh, const char *line, t_tokens *tmp)
 {
 	t_tokens	*to_free;
 	char		*merge;
@@ -96,7 +96,7 @@ static void	merge_tokens_exp(t_shell *dt, const char *line, t_tokens *tmp)
 			{
 				merge = ft_strjoin(tmp -> value, tmp -> next -> value);
 				if (!merge)
-					clean_shell(dt, MALLOC_FAILURE);
+					clean_shell(sh, MALLOC_FAILURE);
 				free(tmp -> value);
 				tmp -> value = merge;
 				to_free = tmp -> next;

@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 03:12:03 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 05:53:44 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/23 03:02:19 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ static char	*check_status(char *path, char *cmd, bool found, t_shell *sh)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(cmd, 2);
-			ft_putstr_fd(": pemission denied\n", 2);
-			sh -> exit_status = 126;
+			ft_putstr_fd(": Pemission denied\n", 2);
+			sh -> exit = 126;
 		}
 		else
 		{
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": command not found\n", 2);
-			sh -> exit_status = 127;
+			sh -> exit = 127;
 		}
 	}
 	return (path);
@@ -62,16 +62,16 @@ static char	*get_cmd_assist(char *cmd, char *dir)
 static char	*get_cmd_path(char *cmd, t_shell *sh)
 {
 	char	*full_path;
-	char	*paths;
 	char	**dir;
 	bool	found;
 	int		i;
+	char	*paths;
 
 	i = -1;
 	found = false;
 	paths = get_env_value("PATH", sh -> envp);
-	if (!paths)
-		return (NULL);
+	if (!paths || !paths[0])
+		return (ret_fail(&paths, cmd, sh));
 	dir = ft_split(paths, ':');
 	free(paths);
 	if (!dir)
@@ -96,14 +96,14 @@ char	*resolve_path(char *cmd, t_shell *shell)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			perror(cmd);
-			shell -> exit_status = 127;
+			shell -> exit = 127;
 			return (NULL);
 		}
 		if (access(cmd, X_OK) != 0)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			perror(cmd);
-			shell -> exit_status = 126;
+			shell -> exit = 126;
 			return (NULL);
 		}
 		return (ft_strdup(cmd));

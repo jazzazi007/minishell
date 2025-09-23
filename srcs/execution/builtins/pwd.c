@@ -3,23 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moaljazz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:56 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/06/18 19:23:57 by moaljazz         ###   ########.fr       */
+/*   Updated: 2025/09/22 22:48:47 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int pwd() {
-   char cwd[PATH_MAX];
+int	pwd(t_shell *sh)
+{
+	char	cwd[PATH_MAX];
 
-   if (getcwd(cwd, sizeof(cwd)) != NULL) {
-       printf("%s\n", cwd);
-   } else {
-       perror("getcwd() error");
-       return 1;
-   }
-   return 0;
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		printf("%s\n", cwd);
+	else
+	{
+		perror("pwd");
+		sh -> exit = errno;
+	}
+	return (0);
 }

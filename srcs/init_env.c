@@ -6,13 +6,13 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:17:22 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/21 21:17:23 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/23 00:39:04 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	count_env_entries(char **envp)
+int	count_env_entries(char **envp)
 {
 	int	entries;
 
@@ -38,14 +38,14 @@ static int	copy_env(char **dest, char **envp)
 	return (SUCCESS);
 }
 
-void	init_env(t_shell *dt, char **env)
+void	init_env(t_shell *sh, char **env)
 {
 	int	entries;
 
 	entries = count_env_entries(env);
-	dt -> envp = malloc(sizeof(char *) * (entries + 1));
-	if (!dt -> envp)
-		clean_shell(dt, MALLOC_FAILURE);
-	if (copy_env(dt -> envp, env))
-		clean_shell(dt, MALLOC_FAILURE);
+	sh -> envp = malloc(sizeof(char *) * (entries + 1));
+	if (!sh -> envp)
+		clean_shell(sh, MALLOC_FAILURE);
+	if (copy_env(sh -> envp, env))
+		clean_shell(sh, MALLOC_FAILURE);
 }
