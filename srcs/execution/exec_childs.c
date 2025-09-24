@@ -59,12 +59,30 @@ int	child_fork(t_cmd *cmd, t_cmd *prev, t_shell *sh)
 	}
 	return (SUCCESS);
 }
+static int	check_if_dir(char *arg, int *status)
+{
+	if (!arg)
+		return (0);
+	int	fd = open(arg, O_RDWR);
+	if (fd < 0 && errno == EISDIR)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		perror(arg);
+		*status = 126;
+		return (0);
+	}
+	else if (fd >= 0)
+		close(fd);
+	return (1);
+}
 
 void	cmd_exec(t_cmd *cmd, t_shell *shell)
 {
 	if (!built_ins(cmd, shell))
 		return ;
 	if (!cmd -> args[0] && cmd->redir)
+		return ;
+	if (!check_if_dir(cmd -> args[0], &shell -> exit))
 		return ;
 	cmd -> cmd_path = resolve_path(cmd -> args[0], shell);
 	if (!cmd ->cmd_path)

@@ -51,7 +51,7 @@ static void	exit_status(t_shell *shell, t_cmd *cmd, bool valid)
 		ft_putstr_fd(cmd -> args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
 	}
-	else if (shell -> exit != 2 && cmd -> args[1] && cmd -> args[2])
+	else if (cmd -> args[1] && cmd -> args[2])
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		shell -> exit = 1;
