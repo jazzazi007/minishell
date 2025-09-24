@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 03:12:03 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/23 03:02:19 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/24 18:45:22 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,14 @@ static int	check_path(char *path, bool *found)
 
 static char	*check_status(char *path, char *cmd, bool found, t_shell *sh)
 {
+	if (!cmd[0])
+	{
+		free(path);
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": command not found\n", 2);
+		sh -> exit = 127;
+		return (NULL);
+	}
 	if (!path)
 	{
 		if (found)

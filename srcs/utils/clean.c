@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 14:20:46 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/23 01:32:18 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/24 18:47:11 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,27 @@
 void	cleanup_resources(t_shell *sh)
 {
 	t_cmd	*cmd;
-	pid_t	last_pid;
+	pid_t	pid;
+	int		status;
 
+	status = 0;
 	cmd = sh -> cmds;
-	last_pid = 0;
 	while (cmd)
 	{
-		if (cmd -> pid > 0)
-		{
-			if (waitpid(cmd -> pid, &sh -> exit, 0) > 0)
-				last_pid = cmd -> pid;
-		}
 		ft_close_fdpair(cmd -> fds);
 		cmd = cmd -> next;
 	}
-	if (last_pid > 0)
+	pid = waitpid(-1, &status, 0);
+	while (pid > 0)
 	{
-		if (WIFEXITED(sh -> exit))
-			sh -> exit = WEXITSTATUS(sh -> exit);
-		else if (WIFSIGNALED(sh -> exit))
-			sh -> exit = 128 + WTERMSIG(sh -> exit);
+		if (pid == sh -> last_cmd_pid)
+		{
+			if (WIFEXITED(status))
+				sh -> exit = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				sh -> exit = 128 + WTERMSIG(status);
+		}
+		pid = waitpid(-1, &status, 0);
 	}
 }
 

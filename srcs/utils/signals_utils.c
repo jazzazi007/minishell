@@ -6,23 +6,22 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 01:20:35 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/21 01:20:40 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/24 18:47:04 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 void	handle_quit(int sig)
 {
 	(void)sig;
 	write(1, "Quit (core dumped)\n", 19);
-	g_exit_status = 131;
 }
 
 void	handle_c(int sig)
 {
 	(void)sig;
 	write(1, "\n", 1);
-	g_exit_status = 130;
 }
 
 void	handle_herdoc_c(int sig)

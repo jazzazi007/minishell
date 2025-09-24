@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:32:57 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/23 03:02:39 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/24 17:53:04 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ struct s_shell
 	t_cmd		*cmds;
 	int			cmd_count;
 	int			exit;
+	pid_t		last_cmd_pid;
 	t_tokens	*tokens;
 };
 

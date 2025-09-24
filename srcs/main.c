@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:17:16 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 22:46:59 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/24 17:53:37 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static void	start_shell(t_shell *shell, char *line, char **envp)
 	while (42)
 	{
 		shell -> cmd_count = 0;
+		shell -> last_cmd_pid = -1;
 		setup_signal_handlers();
 		if (!isatty(STDIN_FILENO))
 			dup2(STDERR_FILENO, STDIN_FILENO);

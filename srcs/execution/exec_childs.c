@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/22 22:49:57 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/24 18:30:33 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,8 @@ int	child_fork(t_cmd *cmd, t_cmd *prev, t_shell *sh)
 		child_exec(sh, cmd, prev);
 	else
 	{
-		if (prev && prev -> fds[0] >= 0)
-			close(prev->fds[0]);
-		if (cmd -> next && cmd -> fds[1] >= 0)
-			close(cmd -> fds[1]);
+		if (!cmd -> next)
+			sh -> last_cmd_pid = cmd -> pid;
 		signal_exc_parent();
 	}
 	return (SUCCESS);
@@ -69,6 +67,7 @@ void	cmd_exec(t_cmd *cmd, t_shell *shell)
 	if (!cmd -> args[0] && cmd->redir)
 		return ;
 	cmd -> cmd_path = resolve_path(cmd -> args[0], shell);
+	printf(BBLU"%s\n"RST, cmd -> cmd_path);
 	if (!cmd ->cmd_path)
 		return ;
 	if (execve(cmd -> cmd_path, cmd -> args, shell -> envp) == -1)
