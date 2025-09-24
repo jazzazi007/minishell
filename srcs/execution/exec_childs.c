@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/24 18:30:33 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/24 18:52:11 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	cmd_exec(t_cmd *cmd, t_shell *shell)
 	if (!cmd -> args[0] && cmd->redir)
 		return ;
 	cmd -> cmd_path = resolve_path(cmd -> args[0], shell);
-	printf(BBLU"%s\n"RST, cmd -> cmd_path);
 	if (!cmd ->cmd_path)
 		return ;
 	if (execve(cmd -> cmd_path, cmd -> args, shell -> envp) == -1)
