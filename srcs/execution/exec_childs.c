@@ -59,11 +59,15 @@ int	child_fork(t_cmd *cmd, t_cmd *prev, t_shell *sh)
 	}
 	return (SUCCESS);
 }
+
 static int	check_if_dir(char *arg, int *status)
 {
+	int	fd;
+
+	fd = -1;
 	if (!arg)
 		return (0);
-	int	fd = open(arg, O_RDWR);
+	fd = open(arg, O_RDWR);
 	if (fd < 0 && errno == EISDIR)
 	{
 		ft_putstr_fd("minishell: ", 2);
