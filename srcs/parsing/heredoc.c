@@ -6,69 +6,32 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:10:01 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 22:48:54 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 22:49:53 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*ft_here_expand(char *str, t_shell *shell)
+static int	write_heredoc(char *input, int fd[2], int st, t_shell *shell)
 {
-	char	*tmp;
-	int		i;
-
-	tmp = ft_strdup("");
-	if (!tmp)
+	if (st == 1 && ft_strchr(input, '$'))
 	{
-		shell -> exit = MALLOC_FAILURE;
-		return (NULL);
-	}
-	i = 0;
-	if (ft_strchr(str, '$'))
-	{
-		while (str[i])
-		{
-			tmp = append_expanded_part(tmp, str, &i, shell);
-			if (!tmp)
-			{
-				shell -> exit = MALLOC_FAILURE;
-				return (NULL);
-			}
-		}
-	}
-	return (tmp);
-}
-
-static int	ft_write_to_heredoc(char *input, int fd[2], int st, t_shell *shell)
-{
-	int		len;
-	char	*tmp;
-
-	if (st == 1)
-	{
-		tmp = ft_here_expand(input, shell);
-		if (!tmp)
-		{
-			free(input);
-			ft_close_fdpair(fd);
+		shell -> expand = ft_strdup("");
+		if (!shell -> expand)
 			return (-1);
-		}
-		if (ft_strcmp(tmp, "") != 0)
-		{
-			free(input);
-			input = tmp;
-		}
-		else
-			free(tmp);
+		if (expand_var(shell, input))
+			return (-1);
+		free(input);
+		input = ft_strdup(shell -> expand);
+		free(shell -> expand);
 	}
-	len = ft_strlen(input);
-	write(fd[1], input, len);
-	write(fd[1], "\n", 1);
+	ft_putstr_fd(input, fd[1]);
+	ft_putchar_fd('\n', fd[1]);
 	free(input);
-	return (0);
+	return (SUCCESS);
 }
 
-static int	ft_exp_status(t_tokens *delim)
+static int	is_expand(t_tokens *delim)
 {
 	int	status;
 
@@ -82,12 +45,12 @@ static int	handle_input(char *input, int *fd, t_tokens *delim, t_shell *sh)
 {
 	if (!input)
 	{
-		if (g_exit_status == 130)
+		if (g_sig == 130)
 		{
-			ft_close_fdpair(fd);
+			close_pair(fd);
 			return (-1);
 		}
-		write(2, "minishell: warning: heredoc terminated by EOF\n", 47);
+		ft_putstr_fd("minishell: warning: heredoc terminated by EOF\n", 2);
 		return (0);
 	}
 	if (!ft_strcmp(input, delim -> value))
@@ -95,15 +58,15 @@ static int	handle_input(char *input, int *fd, t_tokens *delim, t_shell *sh)
 		free(input);
 		return (0);
 	}
-	if (ft_write_to_heredoc(input, fd, ft_exp_status(delim), sh) < 0)
+	if (write_heredoc(input, fd, is_expand(delim), sh) < 0)
 	{
-		ft_close_fdpair(fd);
+		close_pair(fd);
 		return (-1);
 	}
 	return (1);
 }
 
-int	ft_open_heredoc(t_tokens *delim, t_shell *shell)
+int	open_doc(t_tokens *delim, t_shell *shell)
 {
 	int		fd[2];
 	char	*input;
@@ -114,7 +77,7 @@ int	ft_open_heredoc(t_tokens *delim, t_shell *shell)
 		return (-1);
 	while (1)
 	{
-		handle_herdoc();
+		doc_signals();
 		input = readline("> ");
 		status = handle_input(input, fd, delim, shell);
 		if (status == 0)

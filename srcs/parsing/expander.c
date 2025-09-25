@@ -6,45 +6,50 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:10:09 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 22:49:28 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 22:42:44 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_var_token(const char *var, int *loc)
+static char	*get_var(const char *var, int *loc)
 {
 	int	start;
 
 	start = *loc;
+	if (ft_isdigit(var[*loc]))
+	{
+		(*loc)++;
+		return (NULL);
+	}
 	while (var[*loc] && (ft_isalnum(var[*loc]) || var[*loc] == '_'))
 		(*loc)++;
 	return (ft_substr(var, start, *loc - start));
 }
 
-static int	expand_var(t_shell *sh, const char *token, char **expanded)
+int	expand_var(t_shell *sh, const char *tk)
 {
 	int	i;
 
 	i = 0;
-	while (token[i])
+	while (tk[i])
 	{
-		if (token[i] != '$' || !is_var(token[i + 1]))
+		if (tk[i] != '$' || !is_var(tk[i + 1]))
 		{
-			*expanded = append_char(*expanded, token[i++]);
-			if (!*expanded)
-				return (MALLOC_FAILURE);
+			sh -> expand = append_char(sh -> expand, tk[i++]);
+			if (!sh -> expand)
+				return (MALC_FAIL);
 		}
-		else if (token[++i] == '?')
+		else if (tk[++i] == '?')
 		{
-			if (crt_var(sh -> envp, expanded, ft_itoa(sh-> exit), true))
-				return (MALLOC_FAILURE);
+			if (create_var(sh, tk[i], ft_itoa(sh-> exit), true) == MALC_FAIL)
+				return (MALC_FAIL);
 			i++;
 		}
 		else
 		{
-			if (crt_var(sh -> envp, expanded, get_var_token(token, &i), false))
-				return (MALLOC_FAILURE);
+			if (create_var(sh, tk[i - 1], get_var(tk, &i), false) == MALC_FAIL)
+				return (MALC_FAIL);
 		}
 	}
 	return (SUCCESS);
@@ -53,21 +58,23 @@ static int	expand_var(t_shell *sh, const char *token, char **expanded)
 void	expander(t_shell *sh)
 {
 	t_tokens	*current;
-	char		*expanded;
 
-	expanded = NULL;
 	current = sh -> tokens;
 	while (current)
 	{
 		if (current -> type == T_HEREDOC)
-			current->next->is_expandable = false;
+			current -> next -> is_expandable = false;
 		if (current -> is_expandable)
 		{
-			expanded = ft_strdup("");
-			if (!expanded || expand_var(sh, current -> value, &expanded))
-				clean_shell(sh, MALLOC_FAILURE);
+			sh -> expand = ft_strdup("");
+			if (!sh -> expand || expand_var(sh, current -> value))
+				clean_shell(sh, MALC_FAIL);
 			free(current -> value);
-			current -> value = expanded;
+			current -> value = ft_strdup(sh -> expand);
+			if (!current -> value)
+				clean_shell(sh, MALC_FAIL);
+			free(sh -> expand);
+			sh -> expand = NULL;
 		}
 		current = current -> next;
 	}

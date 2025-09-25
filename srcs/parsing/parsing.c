@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:09:57 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/23 04:17:37 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 21:14:53 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,15 @@ static int	add_cmd(t_cmd *cmd, t_tokens **tokens, t_shell *sh)
 		if (is_redir((*tokens)-> value))
 		{
 			status = add_redir_cmd(cmd, tokens, &rdr_i, sh);
-			if (status == MALLOC_FAILURE)
-				return (MALLOC_FAILURE);
+			if (status == MALC_FAIL)
+				return (MALC_FAIL);
 			else if (status == 130)
 				return (130);
 		}
 		else
 		{
 			if (add_word_cmd(cmd, (*tokens)-> value, &wrd_i))
-				return (MALLOC_FAILURE);
+				return (MALC_FAIL);
 		}
 		(*tokens) = (*tokens)-> next;
 	}
@@ -64,10 +64,10 @@ static int	tokens_to_cmd(t_shell *sh, t_tokens *tokens)
 	{
 		new_cmd = init_cmd(sh, tokens);
 		status = add_cmd(new_cmd, &tokens, sh);
-		if (status == MALLOC_FAILURE)
+		if (status == MALC_FAIL)
 		{
 			clean_cmds(new_cmd);
-			clean_shell(sh, MALLOC_FAILURE);
+			clean_shell(sh, MALC_FAIL);
 		}
 		else if (status == 130)
 		{
@@ -81,13 +81,13 @@ static int	tokens_to_cmd(t_shell *sh, t_tokens *tokens)
 	return (SUCCESS);
 }
 
-static void	merge_tokens_exp(t_shell *sh, const char *line, t_tokens *tmp)
+static void	merge_tokens_exp(t_shell *sh, t_tokens *tmp)
 {
 	t_tokens	*to_free;
 	char		*merge;
 	char		*eq;
 
-	eq = ft_strchr(line, '=');
+	eq = ft_strchr(sh -> cmd_line, '=');
 	while (tmp && tmp -> next && eq)
 	{
 		if (tmp -> value[ft_strlen(tmp -> value) - 1] == '=')
@@ -96,12 +96,12 @@ static void	merge_tokens_exp(t_shell *sh, const char *line, t_tokens *tmp)
 			{
 				merge = ft_strjoin(tmp -> value, tmp -> next -> value);
 				if (!merge)
-					clean_shell(sh, MALLOC_FAILURE);
+					clean_shell(sh, MALC_FAIL);
 				free(tmp -> value);
 				tmp -> value = merge;
 				to_free = tmp -> next;
 				tmp -> next = to_free -> next;
-				free(to_free->value);
+				free(to_free -> value);
 				free(to_free);
 			}
 			eq = ft_strchr(eq + 1, '=');
@@ -110,9 +110,9 @@ static void	merge_tokens_exp(t_shell *sh, const char *line, t_tokens *tmp)
 	}
 }
 
-int	parsing(t_shell *shell, const char *input)
+int	parsing(t_shell *shell)
 {
-	if (tokenizer(input, shell) == SYNTAX_ERR)
+	if (tokenizer(shell) == SYNTAX_ERR)
 	{
 		clean_tokens(shell -> tokens);
 		shell -> tokens = NULL;
@@ -121,7 +121,7 @@ int	parsing(t_shell *shell, const char *input)
 	expander(shell);
 	if (!ft_strcmp(shell -> tokens -> value, "export")
 		&& shell -> tokens -> next)
-		merge_tokens_exp(shell, input, shell -> tokens -> next);
+		merge_tokens_exp(shell, shell -> tokens -> next);
 	if (tokens_to_cmd(shell, shell -> tokens) == 130)
 	{
 		clean_tokens(shell -> tokens);

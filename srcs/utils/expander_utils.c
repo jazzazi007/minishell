@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:12:40 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/23 02:33:20 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 23:01:36 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,6 @@ bool	is_var(char var)
 	if (ft_isalnum(var) || var == '_' || var == '?')
 		return (true);
 	return (false);
-}
-
-char	*get_env_value(const char *key, char **envp)
-{
-	int		i;
-	size_t	len;
-	char	*tmp;
-
-	i = 0;
-	len = ft_strlen(key);
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], key, len) == 0 && envp[i][len] == '=')
-		{
-			tmp = ft_strdup(&envp[i][len + 1]);
-			return (tmp);
-		}
-		i++;
-	}
-	tmp = ft_strdup("");
-	return (tmp);
 }
 
 char	*append_char(char *s, char c)
@@ -92,16 +71,47 @@ char	*append_str(char **env, char *s1, const char *s2, bool is_special)
 	return (appended);
 }
 
-int	crt_var(char **env, char **expanded, char *key, bool is_special)
+int	append_arg(t_shell *sh, char c)
 {
-	if (!key)
+	int		num;
+	char	*tmp;
+
+	num = c - '0';
+	if (num >= sh -> ac)
+		return (1);
+	tmp = sh -> expand;
+	if (sh -> av[num])
+		sh -> expand = ft_strjoin(tmp, sh -> av[num]);
+	free(tmp);
+	if (!sh -> expand)
+		return (MALC_FAIL);
+	return (SUCCESS);
+}
+
+int	create_var(t_shell *sh, char c, char *key, bool is_special)
+{
+	int	st;
+
+	if (!key && !ft_isdigit(c))
+		return (MALC_FAIL);
+	if (ft_isdigit(c))
 	{
-		free(*expanded);
-		return (MALLOC_FAILURE);
+		st = append_arg(sh, c);
+		if (!st)
+		{
+			free(key);
+			return (SUCCESS);
+		}
+		else if (st == MALC_FAIL)
+		{
+			free(key);
+			return (MALC_FAIL);
+		}
+		return (1);
 	}
-	*expanded = append_str(env, *expanded, key, is_special);
+	sh -> expand = append_str(sh -> envp, sh -> expand, key, is_special);
 	free(key);
-	if (!*expanded)
-		return (MALLOC_FAILURE);
+	if (!sh -> expand)
+		return (MALC_FAIL);
 	return (SUCCESS);
 }

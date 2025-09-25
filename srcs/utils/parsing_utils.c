@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 14:22:01 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 22:52:51 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 21:18:44 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,18 @@ t_cmd	*init_cmd(t_shell *sh, t_tokens *tokens)
 	(void)sh;
 	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
-		clean_shell(sh, MALLOC_FAILURE);
+		clean_shell(sh, MALC_FAIL);
 	ft_bzero(cmd, sizeof(t_cmd));
 	token_cmd_count(tokens, &cmd -> word_count, &cmd -> redir_count);
 	cmd -> args = malloc(sizeof(char *) * (cmd ->word_count + 1));
 	if (cmd -> redir_count > 0)
 		cmd -> redir = malloc(sizeof(t_redir) * (cmd -> redir_count));
-	if (!cmd -> args || (!cmd -> redir && cmd ->redir_count > 0))
+	if (!cmd -> args || (!cmd -> redir && cmd -> redir_count > 0))
 	{
 		free(cmd -> args);
 		free(cmd -> redir);
 		free(cmd);
-		clean_shell(sh, MALLOC_FAILURE);
+		clean_shell(sh, MALC_FAIL);
 	}
 	while (i < cmd -> redir_count)
 		cmd -> redir[i++].filename = NULL;
@@ -75,18 +75,16 @@ int	add_redir_cmd(t_cmd *cmd, t_tokens **tokens, int	*rdr_i, t_shell *sh)
 	else if (!ft_strcmp((*tokens)-> value, "<<"))
 	{
 		cmd -> redir[*rdr_i].type = HEREDOC;
-		signal(SIGINT, SIG_IGN);
-		setup_signal_handlers();
-		cmd -> redir[*rdr_i].doc_fd = ft_open_heredoc((*tokens)->next, sh);
-		if (g_exit_status)
-			return (g_exit_status);
+		cmd -> redir[*rdr_i].doc_fd = open_doc((*tokens)->next, sh);
+		if (g_sig)
+			return (g_sig);
 	}
 	(*tokens) = (*tokens)-> next;
 	if (cmd -> redir[*rdr_i].type != HEREDOC)
 	{
 		cmd -> redir[*rdr_i].filename = ft_strdup((*tokens)-> value);
 		if (!cmd -> redir[*rdr_i].filename)
-			return (MALLOC_FAILURE);
+			return (MALC_FAIL);
 	}
 	(*rdr_i)++;
 	return (SUCCESS);
@@ -96,7 +94,7 @@ int	add_word_cmd(t_cmd *cmd, const char *token, int *wrd_i)
 {
 	cmd -> args[*wrd_i] = ft_strdup(token);
 	if (!cmd -> args[*wrd_i])
-		return (MALLOC_FAILURE);
+		return (MALC_FAIL);
 	(*wrd_i)++;
 	return (SUCCESS);
 }

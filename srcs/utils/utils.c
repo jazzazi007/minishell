@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:48:22 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/23 03:02:29 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 21:20:13 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	close_fds(void)
 	}
 }
 
-void	ft_close_fdpair(int fd[2])
+void	close_pair(int fd[2])
 {
 	if (fd[0] > 0)
 		close(fd[0]);

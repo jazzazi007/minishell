@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:22:51 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/22 20:51:57 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/26 00:54:43 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	check_newline(bool *newline, int *index, char **args)
 	}
 }
 
-int	echo(char **args)
+int	echo_cmd(char **args)
 {
 	int		i;
 	bool	newline;
@@ -45,5 +45,5 @@ int	echo(char **args)
 	}
 	if (newline)
 		printf("\n");
-	return (0);
+	return (SUCCESS);
 }

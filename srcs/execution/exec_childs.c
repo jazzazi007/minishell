@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:25:19 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/24 18:52:11 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/26 01:06:07 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	child_exec(t_shell *sh, t_cmd *curr, t_cmd *prev)
 		fd_in = prev -> fds[0];
 	if (curr -> next)
 		fd_out = curr -> fds[1];
-	signal_excuter();
+	child_signals();
 	if (open_dup_fds(fd_in, fd_out, sh, curr))
 		clean_shell(sh, sh -> exit);
 	while (tmp)
@@ -55,46 +55,43 @@ int	child_fork(t_cmd *cmd, t_cmd *prev, t_shell *sh)
 	{
 		if (!cmd -> next)
 			sh -> last_cmd_pid = cmd -> pid;
-		signal_exc_parent();
+		parent_exec_signals();
 	}
 	return (SUCCESS);
 }
 
-static int	check_if_dir(char *arg, int *status)
+static bool	is_dir(char *arg, int *status)
 {
 	int	fd;
 
 	fd = -1;
-	if (!arg)
-		return (0);
 	fd = open(arg, O_RDWR);
 	if (fd < 0 && errno == EISDIR)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		perror(arg);
 		*status = 126;
-		return (0);
+		return (true);
 	}
 	else if (fd >= 0)
 		close(fd);
-	return (1);
+	return (false);
 }
 
 void	cmd_exec(t_cmd *cmd, t_shell *shell)
 {
 	if (!built_ins(cmd, shell))
 		return ;
-	if (!cmd -> args[0] && cmd->redir)
+	if (!cmd -> args[0])
 		return ;
-	if (!check_if_dir(cmd -> args[0], &shell -> exit))
+	if (is_dir(cmd -> args[0], &shell -> exit))
 		return ;
 	cmd -> cmd_path = resolve_path(cmd -> args[0], shell);
-	if (!cmd ->cmd_path)
+	if (!cmd -> cmd_path)
 		return ;
-	if (execve(cmd -> cmd_path, cmd -> args, shell -> envp) == -1)
+	if (execve(cmd -> cmd_path, cmd -> args, shell -> envp) < 0)
 	{
 		shell -> exit = errno;
 		return ;
 	}
-	return ;
 }

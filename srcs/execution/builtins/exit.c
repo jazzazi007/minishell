@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 13:24:56 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/09/22 22:48:36 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 20:29:05 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	exit_status(t_shell *shell, t_cmd *cmd, bool valid)
 	clean_shell(shell, shell -> exit);
 }
 
-void	exit_command(t_cmd *cmd, t_shell *shell)
+void	exit_cmd(t_cmd *cmd, t_shell *shell)
 {
 	bool	valid;
 

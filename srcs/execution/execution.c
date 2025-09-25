@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:23:45 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/24 17:32:25 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/26 01:05:19 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,27 @@ static int	init_pipes(t_shell *sh)
 
 int	built_ins(t_cmd *cmd, t_shell *shell)
 {
-	if (!ft_strcmp(cmd->args[0], "cd"))
-		return (cd(cmd -> args, shell));
-	if (!ft_strcmp(cmd->args[0], "exit"))
-		return (exit_command(cmd, shell), 0);
-	else if (!ft_strcmp(cmd->args[0], "echo"))
-		return (echo(cmd->args));
-	else if (!ft_strcmp(cmd->args[0], "export"))
-		return (export_cmd(cmd->args, shell));
-	else if (!ft_strcmp(cmd->args[0], "unset"))
-		return (unset_cmd(cmd->args, shell));
-	else if (!ft_strcmp(cmd->args[0], "env"))
-		return (env(shell, cmd));
-	else if (!ft_strcmp(cmd->args[0], "pwd"))
-		return (pwd(shell));
+	if (!ft_strcmp(cmd -> args[0], "cd"))
+		return (cd_cmd(cmd -> args, shell));
+	if (!ft_strcmp(cmd -> args[0], "exit"))
+	{
+		exit_cmd(cmd, shell);
+		return (SUCCESS);
+	}
+	if (!ft_strcmp(cmd -> args[0], "echo"))
+		return (echo_cmd(cmd -> args));
+	if (!ft_strcmp(cmd -> args[0], "export"))
+		return (export_cmd(cmd -> args, shell));
+	if (!ft_strcmp(cmd -> args[0], "unset"))
+		return (unset_cmd(cmd -> args, shell));
+	if (!ft_strcmp(cmd -> args[0], "env"))
+		return (env_cmd(shell, cmd));
+	if (!ft_strcmp(cmd -> args[0], "pwd"))
+		return (pwd_cmd(shell));
 	return (1);
 }
 
-static int	parent_builtin_exec(t_shell *sh, t_cmd *cmd)
+static void	parent_builtin_exec(t_shell *sh, t_cmd *cmd)
 {
 	int	stdfd[2];
 
@@ -65,8 +68,8 @@ static int	parent_builtin_exec(t_shell *sh, t_cmd *cmd)
 	{
 		perror("minishell: dup");
 		sh -> exit = errno;
-		ft_close_fdpair(stdfd);
-		return (sh -> exit);
+		close_pair(stdfd);
+		return ;
 	}
 	if (open_dup_fds(STDIN_FILENO, STDOUT_FILENO, sh, cmd) == SUCCESS)
 		built_ins(cmd, sh);
@@ -74,11 +77,10 @@ static int	parent_builtin_exec(t_shell *sh, t_cmd *cmd)
 	{
 		perror("minishell: dup");
 		sh -> exit = errno;
-		ft_close_fdpair(stdfd);
-		return (sh -> exit);
+		close_pair(stdfd);
+		return ;
 	}
-	ft_close_fdpair(stdfd);
-	return (SUCCESS);
+	close_pair(stdfd);
 }
 
 void	execution(t_shell *sh)
@@ -92,19 +94,20 @@ void	execution(t_shell *sh)
 		return ;
 	if (sh -> cmd_count == 1 && is_parent_builtin(cmd -> args[0]))
 	{
-		if (parent_builtin_exec(sh, cmd))
-			return ;
+		parent_builtin_exec(sh, cmd);
+		clean_cmds(sh -> cmds);
+		sh -> cmds = NULL;
+		return ;
 	}
-	else
+	while (cmd)
 	{
-		while (cmd)
-		{
-			sh -> exit = 0;
-			if (child_fork(cmd, prev, sh))
-				return ;
-			prev = cmd;
-			cmd = cmd -> next;
-		}
+		sh -> exit = 0;
+		if (child_fork(cmd, prev, sh))
+			return ;
+		prev = cmd;
+		cmd = cmd -> next;
 	}
-	cleanup_resources(sh);
+	close_and_wait(sh);
+	clean_cmds(sh -> cmds);
+	sh -> cmds = NULL;
 }

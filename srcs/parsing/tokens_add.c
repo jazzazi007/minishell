@@ -6,85 +6,85 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:09:34 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 22:49:28 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 21:03:10 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	add_single_quotes(t_shell *sh, const char *input, int *index)
+void	add_single_quotes(t_shell *sh, int *indx)
 {
 	int		sub_len;
 	int		start;
 	char	*sub;
 
-	(*index)++;
+	(*indx)++;
 	sub = NULL;
-	start = *index;
+	start = *indx;
 	sub_len = 0;
-	while (input[*index] && input[*index] != '\'')
+	while (sh -> cmd_line[*indx] && sh -> cmd_line[*indx] != '\'')
 	{
-		(*index)++;
+		(*indx)++;
 		sub_len++;
 	}
-	sub = ft_substr(input, start, sub_len);
+	sub = ft_substr(sh -> cmd_line, start, sub_len);
 	if (!sub)
-		clean_shell(sh, MALLOC_FAILURE);
+		clean_shell(sh, MALC_FAIL);
 	add_token(sh, T_SINGLE, sub, false);
-	if (input[*index] == '\'')
-		(*index)++;
+	if (sh -> cmd_line[*indx] == '\'')
+		(*indx)++;
 }
 
-void	add_double_quotes(t_shell *sh, const char *input, int *index)
+void	add_double_quotes(t_shell *sh, int *indx)
 {
 	int		sub_len;
 	int		start;
 	char	*sub;
 	bool	is_expandable;
 
-	(*index)++;
+	(*indx)++;
 	sub = NULL;
-	start = *index;
+	start = *indx;
 	sub_len = 0;
 	is_expandable = false;
-	while (input[*index] && input[*index] != '\"')
+	while (sh -> cmd_line[*indx] && sh -> cmd_line[*indx] != '\"')
 	{
-		if (input[*index] == '$' && is_var(input[*index + 1]))
+		if (sh -> cmd_line[*indx] == '$' && is_var(sh -> cmd_line[*indx + 1]))
 			is_expandable = true;
-		(*index)++;
+		(*indx)++;
 		sub_len++;
 	}
-	sub = ft_substr(input, start, sub_len);
+	sub = ft_substr(sh -> cmd_line, start, sub_len);
 	if (!sub)
-		clean_shell(sh, MALLOC_FAILURE);
+		clean_shell(sh, MALC_FAIL);
 	add_token(sh, T_DOUBLE, sub, is_expandable);
-	if (input[*index] == '\"')
-		(*index)++;
+	if (sh -> cmd_line[*indx] == '\"')
+		(*indx)++;
 }
 
-void	add_operator(t_shell *sh, const char *input, int *index)
+void	add_operator(t_shell *sh, int *indx)
 {
 	char	*sub;
 	t_tk	oper_t;
 
-	oper_t = get_opertype(&input[*index]);
+	oper_t = get_opertype(&sh -> cmd_line[*indx]);
 	sub = NULL;
 	if (oper_t == T_REDIR_IN || oper_t == T_REDIR_OUT || oper_t == T_PIPE)
 	{
-		sub = ft_substr(input, *index, 1);
-		(*index)++;
+		sub = ft_substr(sh -> cmd_line, *indx, 1);
+		(*indx)++;
 	}
 	else if (oper_t == T_APPEND || oper_t == T_HEREDOC)
 	{
-		sub = ft_substr(input, *index, 2);
-		*index += 2;
+		sub = ft_substr(sh -> cmd_line, *indx, 2);
+		*indx += 2;
 	}
 	if (!sub)
-		clean_shell(sh, MALLOC_FAILURE);
+		clean_shell(sh, MALC_FAIL);
 	add_token(sh, oper_t, sub, false);
 }
 
-void	add_word(t_shell *sh, const char *input, int *index)
+void	add_word(t_shell *sh, int *indx)
 {
 	int		sub_len;
 	int		start;
@@ -92,18 +92,18 @@ void	add_word(t_shell *sh, const char *input, int *index)
 	bool	is_expandable;
 
 	sub = NULL;
-	start = *index;
+	start = *indx;
 	sub_len = 0;
 	is_expandable = false;
-	while (input[*index] && is_word(&input[*index]))
+	while (sh -> cmd_line[*indx] && is_word(sh -> cmd_line[*indx]))
 	{
-		if (input[*index] == '$' && is_var(input[*index + 1]))
+		if (sh -> cmd_line[*indx] == '$' && is_var(sh -> cmd_line[*indx + 1]))
 			is_expandable = true;
-		(*index)++;
+		(*indx)++;
 		sub_len++;
 	}
-	sub = ft_substr(input, start, sub_len);
+	sub = ft_substr(sh -> cmd_line, start, sub_len);
 	if (!sub)
-		clean_shell(sh, MALLOC_FAILURE);
+		clean_shell(sh, MALC_FAIL);
 	add_token(sh, T_WORD, sub, is_expandable);
 }

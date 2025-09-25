@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:22:39 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/23 02:32:55 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/26 00:55:54 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,14 @@ static void	change_dir(char *dir, t_shell *sh)
 {
 	if (chdir(dir))
 	{
-		perror("cd");
+		perror("cd_cmd");
 		sh -> exit = 1;
 	}
+	else
+		sh -> exit = 0;
 }
 
-int	cd(char **av, t_shell *sh)
+int	cd_cmd(char **av, t_shell *sh)
 {
 	char	*home;
 
@@ -29,7 +31,7 @@ int	cd(char **av, t_shell *sh)
 	{
 		home = get_env_value("HOME", sh -> envp);
 		if (!home)
-			sh -> exit = MALLOC_FAILURE;
+			sh -> exit = MALC_FAIL;
 		else if (home[0] == '\0')
 		{
 			ft_putstr_fd("cd: HOME not set\n", 2);
@@ -46,5 +48,5 @@ int	cd(char **av, t_shell *sh)
 	}
 	else
 		change_dir(av[1], sh);
-	return (0);
+	return (SUCCESS);
 }

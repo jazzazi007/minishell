@@ -6,13 +6,13 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 14:20:46 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/24 18:47:11 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/26 01:05:19 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	cleanup_resources(t_shell *sh)
+void	close_and_wait(t_shell *sh)
 {
 	t_cmd	*cmd;
 	pid_t	pid;
@@ -22,7 +22,7 @@ void	cleanup_resources(t_shell *sh)
 	cmd = sh -> cmds;
 	while (cmd)
 	{
-		ft_close_fdpair(cmd -> fds);
+		close_pair(cmd -> fds);
 		cmd = cmd -> next;
 	}
 	pid = waitpid(-1, &status, 0);
@@ -93,21 +93,18 @@ void	clean_tokens(t_tokens *tokens)
 
 void	clean_shell(t_shell *shell, int status)
 {
-	if (shell->cmds)
-	{
-		clean_cmds(shell->cmds);
-		shell->cmds = NULL;
-	}
-	if (shell->envp)
-	{
-		clean_strs(shell->envp);
-		shell->envp = NULL;
-	}
+	if (shell -> cmds)
+		clean_cmds(shell -> cmds);
+	if (shell -> envp)
+		clean_strs(shell -> envp);
 	if (shell -> tokens)
-	{
 		clean_tokens(shell -> tokens);
-		shell -> tokens = NULL;
-	}
+	if (shell -> cmd_line)
+		free(shell -> cmd_line);
+	shell -> expand = NULL;
+	shell -> tokens = NULL;
+	shell -> cmds = NULL;
+	shell -> envp = NULL;
 	close_fds();
 	exit(status);
 }

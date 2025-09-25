@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:13:23 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/22 22:49:28 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 18:33:13 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	add_token(t_shell *sh, t_tk t_type, char *token, bool exp)
 	if (!new)
 	{
 		free(token);
-		clean_shell(sh, MALLOC_FAILURE);
+		clean_shell(sh, MALC_FAIL);
 	}
 	new -> value = token;
 	new -> type = t_type;

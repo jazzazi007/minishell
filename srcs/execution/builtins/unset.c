@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 12:41:48 by ralbliwi          #+#    #+#             */
-/*   Updated: 2025/09/23 03:35:48 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/26 01:08:40 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,22 @@ static void	remove_var(t_shell *sh, int index)
 
 int	unset_cmd(char **args, t_shell *shell)
 {
-	int	i;
-	int	index;
+	int		i;
+	int		index;
+	char	*eq;
 
 	i = 1;
 	while (args[i])
 	{
-		index = find_key_index(shell -> envp, args[i]);
-		if (index >= 0)
-			remove_var(shell, index);
+		eq = ft_strchr(args[i], '=');
+		if (!eq)
+		{
+			index = find_key_index(shell -> envp, args[i]);
+			if (index >= 0)
+				remove_var(shell, index);
+		}
 		i++;
 	}
-	return (0);
+	shell -> exit = 0;
+	return (SUCCESS);
 }

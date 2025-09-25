@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:09:46 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/21 22:02:09 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 21:04:37 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ static void	print_syntax_error(char *token, bool quotes_err, bool is_new)
 			ft_putstr_fd("newline", STDERR_FILENO);
 		else
 			ft_putstr_fd(token, STDERR_FILENO);
-		ft_putstr_fd("'\n", STDERR_FILENO);
+		ft_putstr_fd("\'\n", STDERR_FILENO);
 	}
 }
 

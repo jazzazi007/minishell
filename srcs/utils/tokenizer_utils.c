@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:13:19 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/21 21:20:47 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 21:02:27 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ int	skip_whitesp(const char *s)
 	return (i);
 }
 
-bool	is_word(const char *token)
+bool	is_word(char token)
 {
-	if (is_oper(token[0])
-		|| token[0] == '\'' || token[0] == '\"'
-		|| token[0] == ' ' || (token[0] >= 9 && token[0] <= 13))
+	if (is_oper(token)
+		|| token == '\'' || token == '\"'
+		|| token == ' ' || (token >= 9 && token <= 13))
 		return (false);
 	return (true);
 }

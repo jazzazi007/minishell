@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 03:12:03 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/24 18:45:22 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/25 18:33:13 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	check_path(char *path, bool *found)
 {
 	if (!path)
-		return (MALLOC_FAILURE);
+		return (MALC_FAIL);
 	if (access(path, F_OK) == 0)
 	{
 		*found = true;
