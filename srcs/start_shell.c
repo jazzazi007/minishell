@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:17:22 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/25 21:12:36 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/26 21:30:00 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ void	start_shell(t_shell *shell, int argc, char **argv, char **envp)
 			add_history(shell -> cmd_line);
 			if (!parsing(shell))
 				execution(shell);
-			free(shell -> cmd_line);
 		}
+		free(shell -> cmd_line);
 	}
 	printf("exit\n");
 	close(0);

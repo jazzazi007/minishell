@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 14:20:46 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/26 01:05:19 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/26 22:34:57 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	clean_cmds(t_cmd *cmd)
 		free(cmd);
 		cmd = tmp;
 	}
+	close_fds();
 }
 
 void	clean_strs(char **strs)
@@ -105,6 +106,5 @@ void	clean_shell(t_shell *shell, int status)
 	shell -> tokens = NULL;
 	shell -> cmds = NULL;
 	shell -> envp = NULL;
-	close_fds();
 	exit(status);
 }
