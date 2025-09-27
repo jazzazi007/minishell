@@ -48,7 +48,7 @@ int	expand_var(t_shell *sh, const char *tk)
 		}
 		else
 		{
-			if (create_var(sh, tk[i - 1], get_var(tk, &i), false) == MALC_FAIL)
+			if (create_var(sh, tk[i], get_var(tk, &i), false) == MALC_FAIL)
 				return (MALC_FAIL);
 		}
 	}
@@ -68,7 +68,10 @@ void	expander(t_shell *sh)
 		{
 			sh -> expand = ft_strdup("");
 			if (!sh -> expand || expand_var(sh, current -> value))
+			{
+				free(sh -> expand);
 				clean_shell(sh, MALC_FAIL);
+			}
 			free(current -> value);
 			current -> value = ft_strdup(sh -> expand);
 			if (!current -> value)
