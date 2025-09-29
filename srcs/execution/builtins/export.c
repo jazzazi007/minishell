@@ -6,51 +6,72 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 01:37:10 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/26 00:57:05 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/28 23:45:43 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	is_valid_key(const char *name)
+static int	partition(char **arr, int low, int high)
 {
-	int	i;
+	int		i;
+	int		j;
+	char	*pivot;
 
-	i = 1;
-	if (name[0] == '_' || ft_isalpha(name[0]))
+	j = low;
+	i = low - 1;
+	pivot = arr[high];
+	while (j < high)
 	{
-		while (name[i] && name[i] != '=')
+		if (ft_strcmp(arr[j], pivot) < 0)
 		{
-			if (!(name[i] == '_' || ft_isalnum(name[i])))
-				return (false);
 			i++;
+			swap(&arr[i], &arr[j]);
 		}
-		return (true);
+		j++;
 	}
-	return (false);
+	swap(&arr[i + 1], &arr[high]);
+	return (i + 1);
 }
 
-static void	print_exp(char **env)
+static void	sort_env(char **arr, int low, int high)
+{
+	int	pi;
+
+	if (low < high)
+	{
+		pi = partition(arr, low, high);
+		sort_env(arr, low, pi - 1);
+		sort_env(arr, pi + 1, high);
+	}
+}
+
+static int	print_exp(char **env)
 {
 	int		i;
 	char	*eq;
-	int		key_len;
+	char	**sorted_env;
 
 	i = 0;
-	while (env[i])
+	sorted_env = malloc(sizeof(char *) * (count_env_entries(env) + 1));
+	if (copy_env(sorted_env, env))
 	{
-		eq = ft_strchr(env[i], '=');
-		ft_putstr_fd("declare -x ", STDOUT_FILENO);
+		clean_strs(sorted_env);
+		return (MALC_FAIL);
+	}
+	sort_env(sorted_env, 0, count_env_entries(sorted_env) - 1);
+	while (sorted_env[i])
+	{
+		eq = ft_strchr(sorted_env[i], '=');
 		if (eq)
-		{
-			key_len = eq - env[i];
-			write(1, env[i], key_len);
-			printf("=\"%s\"\n", eq + 1);
-		}
+			printf("declare -x %.*s=\"%s\"\n",
+				(int)(eq - sorted_env[i]), sorted_env[i], eq + 1);
 		else
-			printf("%s\n", env[i]);
+			printf("declare -x %s\n", sorted_env[i]);
 		i++;
 	}
+	clean_strs(sorted_env);
+	return (SUCCESS);
 }
 
 static void	export_add(char *arg, t_shell *sh)
@@ -77,7 +98,8 @@ int	export_cmd(char **args, t_shell *shell)
 	if (!args[1])
 	{
 		shell -> exit = 0;
-		print_exp(shell -> envp);
+		if (print_exp(shell -> envp))
+			clean_shell(shell, MALC_FAIL);
 	}
 	while (args[i])
 	{

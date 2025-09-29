@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:22:39 by moaljazz          #+#    #+#             */
-/*   Updated: 2025/09/26 00:55:54 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/28 20:56:43 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	change_dir(char *dir, t_shell *sh)
 {
 	if (chdir(dir))
 	{
-		perror("cd_cmd");
+		perror("cd");
 		sh -> exit = 1;
 	}
 	else

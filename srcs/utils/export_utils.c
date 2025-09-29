@@ -6,11 +6,38 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 00:19:34 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/25 18:33:13 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/28 19:22:22 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	swap(char **a, char **b)
+{
+	char	*tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+bool	is_valid_key(const char *name)
+{
+	int	i;
+
+	i = 1;
+	if (name[0] == '_' || ft_isalpha(name[0]))
+	{
+		while (name[i] && name[i] != '=')
+		{
+			if (!(name[i] == '_' || ft_isalnum(name[i])))
+				return (false);
+			i++;
+		}
+		return (true);
+	}
+	return (false);
+}
 
 int	update_env(t_shell *sh, const char *var, char ***new_env)
 {

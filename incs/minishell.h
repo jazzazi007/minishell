@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:32:57 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/26 01:08:03 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/29 06:26:33 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@
 /*	   STRUCTS & ENUMS		*/
 /* ======================== */
 extern volatile sig_atomic_t	g_sig;
-typedef struct s_tokens			t_tokens;
+typedef struct s_tokens			t_tkns;
 typedef struct s_redir			t_redir;
 typedef struct s_shell			t_shell;
 typedef struct s_cmd			t_cmd;
@@ -74,10 +74,11 @@ enum e_rdr
 
 struct s_tokens
 {
-	bool		is_expandable;
-	char		*value;
-	t_tokens	*next;
-	t_tk		type;
+	bool	is_not_mergable;
+	bool	is_expand;
+	char	*value;
+	t_tkns	*next;
+	t_tk	type;
 };
 
 struct s_redir
@@ -101,25 +102,26 @@ struct s_cmd
 
 struct s_shell
 {
-	pid_t		last_cmd_pid;
-	char		*cmd_line;
-	int			cmd_count;
-	t_tokens	*tokens;
-	char		*expand;
-	char		**envp;
-	t_cmd		*cmds;
-	int			exit;
-	char		**av;
-	int			ac;
+	pid_t	last_cmd_pid;
+	char	*cmd_line;
+	int		cmd_count;
+	t_tkns	*tokens;
+	char	*expand;
+	char	**envp;
+	t_cmd	*cmds;
+	t_tkns	*last;
+	int		exit;
+	char	**av;
+	int		ac;
 };
 
 /* ======================== */
 /*		PARSING FUNCS		*/
 /* ======================== */
-int		add_redir_cmd(t_cmd *cmd, t_tokens **tokens, int *rdr_i, t_shell *sh);
+int		add_redir_cmd(t_cmd *cmd, t_tkns **tokens, int *rdr_i, t_shell *sh);
 int		create_var(t_shell *sh, char c, char *key, bool is_special);
 int		add_word_cmd(t_cmd *cmd, const char *token, int *wrd_i);
-int		syntax_check(t_tokens *tokens, bool quotes_err);
+int		syntax_check(t_tkns *tokens, bool quotes_err);
 int		expand_var(t_shell *sh, const char *tk);
 int		append_arg(t_shell *sh, char c);
 int		tokenizer(t_shell *shell);
@@ -138,7 +140,7 @@ void	expander(t_shell *sh);
 
 bool	is_closed_quotes(const char *input, int loc);
 
-t_cmd	*init_cmd(t_shell *sh, t_tokens *tokens);
+t_cmd	*init_cmd(t_shell *sh, t_tkns *tokens);
 t_cmd	*get_last_cmd(t_cmd *cmd);
 
 /* ======================== */
@@ -147,24 +149,28 @@ t_cmd	*get_last_cmd(t_cmd *cmd);
 void	clean_shell(t_shell *shell, int status);
 void	update_shlvl(t_shell *sh, char **shlvl);
 void	update_key(char **key, const char *var);
+void	split_var(t_shell *sh, t_tkns *curr);
 void	set_var(t_shell *sh, const char *var);
+void	check_empty_expansions(t_shell *sh);
+void	parent_exec_sigquit(int sig);
+void	clean_tokens(t_tkns *head);
 void	close_and_wait(t_shell *sh);
-void	clean_tokens(t_tokens *head);
-void	prompt_signals(void);
-void	close_pair(int fd[2]);
+void	parent_exec_sigint(int sig);
+void	merge_tokens(t_shell *sh);
 void	prompt_sigint(int signum);
-void	doc_sigint(int sig);
 void	parent_exec_signals(void);
+void	swap(char **a, char **b);
 void	clean_cmds(t_cmd *cmds);
 void	clean_strs(char **strs);
-void	parent_exec_sigquit(int sig);
+void	close_pair(int fd[2]);
+void	prompt_signals(void);
+void	doc_sigint(int sig);
 void	child_signals(void);
 void	doc_signals(void);
-void	parent_exec_sigint(int sig);
 void	close_fds(void);
-
 int		update_env(t_shell *sh, const char *var, char ***new_env);
-int		open_doc(t_tokens *delim, t_shell *shell);
+int		open_doc(t_tkns *delim, t_shell *shell);
+int		copy_env(char **dest, char **envp);
 int		count_env_entries(char **envp);
 int		skip_whitesp(const char *s);
 int		is_oper(char c);
@@ -176,11 +182,16 @@ char	*resolve_path(char *cmd0, t_shell *shell);
 char	**get_env_key(t_shell *sh, const char *key);
 
 bool	is_parent_builtin(const char *cmd);
+bool	is_valid_key(const char *name);
 bool	is_redir(const char *token);
 bool	is_empty(const char *line);
 bool	is_pipe(const char *token);
+bool	is_not_mergable(char c);
 bool	is_word(char token);
 bool	is_var(char var);
+
+t_tkns	*get_last_token(t_tkns *tokens);
+t_tkns	*create_token(char *val);
 
 t_tk	get_opertype(const char *s);
 

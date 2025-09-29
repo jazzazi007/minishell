@@ -6,11 +6,22 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:10:09 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/25 22:42:44 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/29 06:07:11 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	disable_expand(t_tkns *curr)
+{
+	while (curr && !curr -> is_not_mergable)
+	{
+		curr -> is_expand = false;
+		curr = curr -> next;
+	}
+	if (curr)
+		curr -> is_expand = false;
+}
 
 static char	*get_var(const char *var, int *loc)
 {
@@ -57,14 +68,14 @@ int	expand_var(t_shell *sh, const char *tk)
 
 void	expander(t_shell *sh)
 {
-	t_tokens	*current;
+	t_tkns	*current;
 
 	current = sh -> tokens;
 	while (current)
 	{
 		if (current -> type == T_HEREDOC)
-			current -> next -> is_expandable = false;
-		if (current -> is_expandable)
+			disable_expand(current -> next);
+		if (current -> is_expand)
 		{
 			sh -> expand = ft_strdup("");
 			if (!sh -> expand || expand_var(sh, current -> value))

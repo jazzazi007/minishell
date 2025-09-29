@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:17:22 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/26 21:30:00 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/28 18:58:13 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,13 @@ static void	print_shell_banner(char **envp)
 		perror("fork banner");
 }
 
-static int	copy_env(char **dest, char **envp)
+int	copy_env(char **dest, char **envp)
 {
 	int	i;
 
 	i = 0;
+	if (!dest)
+		return (MALC_FAIL);
 	while (envp[i])
 	{
 		dest[i] = ft_strdup(envp[i]);
@@ -62,8 +64,6 @@ static void	init_env(t_shell *sh, char **env)
 
 	shlvl = NULL;
 	sh -> envp = malloc(sizeof(char *) * (count_env_entries(env) + 1));
-	if (!sh -> envp)
-		clean_shell(sh, MALC_FAIL);
 	if (copy_env(sh -> envp, env))
 		clean_shell(sh, MALC_FAIL);
 	update_shlvl(sh, shlvl);

@@ -6,13 +6,13 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 14:22:01 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/26 21:51:30 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/29 05:00:01 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	token_cmd_count(t_tokens *tokens, int *wrds, int *rdrs)
+static void	token_cmd_count(t_tkns *tokens, int *wrds, int *rdrs)
 {
 	(*wrds) = 0;
 	(*rdrs) = 0;
@@ -29,7 +29,7 @@ static void	token_cmd_count(t_tokens *tokens, int *wrds, int *rdrs)
 	}
 }
 
-t_cmd	*init_cmd(t_shell *sh, t_tokens *tokens)
+t_cmd	*init_cmd(t_shell *sh, t_tkns *tokens)
 {
 	t_cmd	*cmd;
 	int		i;
@@ -64,7 +64,7 @@ t_cmd	*get_last_cmd(t_cmd *cmd)
 	return (cmd);
 }
 
-int	add_redir_cmd(t_cmd *cmd, t_tokens **tokens, int	*rdr_i, t_shell *sh)
+int	add_redir_cmd(t_cmd *cmd, t_tkns **tokens, int	*rdr_i, t_shell *sh)
 {
 	if (!ft_strcmp((*tokens)-> value, ">"))
 		cmd -> redir[*rdr_i].type = OUT;

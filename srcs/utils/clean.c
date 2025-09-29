@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 14:20:46 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/26 22:34:57 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/29 05:00:01 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ void	clean_strs(char **strs)
 	free(strs);
 }
 
-void	clean_tokens(t_tokens *tokens)
+void	clean_tokens(t_tkns *tokens)
 {
-	t_tokens	*tmp;
+	t_tkns	*tmp;
 
 	while (tokens)
 	{

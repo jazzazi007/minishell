@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 16:57:43 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/25 17:17:34 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/29 05:41:15 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,38 @@ char	*get_env_value(const char *key, char **envp)
 	return (tmp);
 }
 
-void	update_shlvl(t_shell *sh, char **shlvl)
+void	update_lvl(t_shell *sh, char **shlvl)
 {
 	char	*num;
 	char	*new_val;
+	int		lvl;
+
+	lvl = ft_atoi(ft_strchr(*shlvl, '=') + 1);
+	lvl++;
+	if (lvl < 0)
+		lvl = 0;
+	else if (lvl >= 1000)
+	{
+		printf("minishell: warning: ");
+		printf("shell level (%d) too high, resetting to 1\n", lvl);
+		lvl = 1;
+	}
+	num = ft_itoa(lvl);
+	if (!num)
+		clean_shell(sh, MALC_FAIL);
+	new_val = ft_strjoin("SHLVL=", num);
+	free(num);
+	if (!new_val)
+		clean_shell(sh, MALC_FAIL);
+	update_key(shlvl, new_val);
+	free(new_val);
+}
+
+void	update_shlvl(t_shell *sh, char **shlvl)
+{
 	char	**new_env;
+	char	*value;
+	bool	is_valid_lvl;
 
 	shlvl = get_env_key(sh, "SHLVL");
 	if (!shlvl || !ft_strchr(*shlvl, '='))
@@ -78,18 +105,16 @@ void	update_shlvl(t_shell *sh, char **shlvl)
 			clean_strs(new_env);
 		return ;
 	}
-	if ((*shlvl)[ft_strchr(*shlvl, '=') - *shlvl + 1] == '\0')
+	value = ft_strchr(*shlvl, '=') + 1;
+	is_valid_lvl = (*value != '\0');
+	while (*value && is_valid_lvl)
+	{
+		if (!ft_isdigit(*value))
+			is_valid_lvl = false;
+		value++;
+	}
+	if (!is_valid_lvl)
 		update_key(shlvl, "SHLVL=1");
 	else
-	{
-		num = ft_itoa(ft_atoi(ft_strchr(*shlvl, '=') + 1) + 1);
-		if (!num)
-			return ;
-		new_val = ft_strjoin("SHLVL=", num);
-		free(num);
-		if (!new_val)
-			return ;
-		update_key(shlvl, new_val);
-		free(new_val);
-	}
+		update_lvl(sh, shlvl);
 }

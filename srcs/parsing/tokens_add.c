@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:09:34 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/25 21:03:10 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/29 04:49:29 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	add_single_quotes(t_shell *sh, int *indx)
 
 	(*indx)++;
 	sub = NULL;
-	start = *indx;
 	sub_len = 0;
+	start = *indx;
 	while (sh -> cmd_line[*indx] && sh -> cmd_line[*indx] != '\'')
 	{
 		(*indx)++;
@@ -30,9 +30,11 @@ void	add_single_quotes(t_shell *sh, int *indx)
 	sub = ft_substr(sh -> cmd_line, start, sub_len);
 	if (!sub)
 		clean_shell(sh, MALC_FAIL);
-	add_token(sh, T_SINGLE, sub, false);
 	if (sh -> cmd_line[*indx] == '\'')
 		(*indx)++;
+	add_token(sh, T_SINGLE, sub, false);
+	sh -> last = get_last_token(sh -> tokens);
+	sh -> last -> is_not_mergable = is_not_mergable(sh -> cmd_line[*indx]);
 }
 
 void	add_double_quotes(t_shell *sh, int *indx)
@@ -60,6 +62,8 @@ void	add_double_quotes(t_shell *sh, int *indx)
 	add_token(sh, T_DOUBLE, sub, is_expandable);
 	if (sh -> cmd_line[*indx] == '\"')
 		(*indx)++;
+	sh -> last = get_last_token(sh -> tokens);
+	sh -> last -> is_not_mergable = is_not_mergable(sh -> cmd_line[*indx]);
 }
 
 void	add_operator(t_shell *sh, int *indx)
@@ -82,6 +86,8 @@ void	add_operator(t_shell *sh, int *indx)
 	if (!sub)
 		clean_shell(sh, MALC_FAIL);
 	add_token(sh, oper_t, sub, false);
+	sh -> last = get_last_token(sh -> tokens);
+	sh -> last -> is_not_mergable = true;
 }
 
 void	add_word(t_shell *sh, int *indx)
@@ -106,4 +112,6 @@ void	add_word(t_shell *sh, int *indx)
 	if (!sub)
 		clean_shell(sh, MALC_FAIL);
 	add_token(sh, T_WORD, sub, is_expandable);
+	sh -> last = get_last_token(sh -> tokens);
+	sh -> last -> is_not_mergable = is_not_mergable(sh -> cmd_line[*indx]);
 }

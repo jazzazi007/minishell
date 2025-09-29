@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:09:46 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/25 21:04:37 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/29 05:01:25 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool	is_closed_quotes(const char *input, int loc)
 	return (true);
 }
 
-static bool	is_pipe_error(t_tokens *tokens, t_tokens **tr)
+static bool	is_pipe_error(t_tkns *tokens, t_tkns **tr)
 {
 	if (is_pipe(tokens -> value))
 	{
@@ -62,7 +62,7 @@ static bool	is_pipe_error(t_tokens *tokens, t_tokens **tr)
 	return (false);
 }
 
-static bool	is_redir_error(t_tokens *tokens, bool *is_new, t_tokens **tr)
+static bool	is_redir_error(t_tkns *tokens, bool *is_new, t_tkns **tr)
 {
 	*is_new = false;
 	while (tokens && tokens -> next)
@@ -98,10 +98,10 @@ static void	print_syntax_error(char *token, bool quotes_err, bool is_new)
 	}
 }
 
-int	syntax_check(t_tokens *tokens, bool quotes_err)
+int	syntax_check(t_tkns *tokens, bool quotes_err)
 {
-	bool		is_newline_err;
-	t_tokens	*tr;
+	bool	is_newline_err;
+	t_tkns	*tr;
 
 	tr = NULL;
 	is_newline_err = false;

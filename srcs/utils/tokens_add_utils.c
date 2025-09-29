@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:13:23 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/25 18:33:13 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/29 05:00:01 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_tk	get_opertype(const char *s)
 	return (T_WORD);
 }
 
-static t_tokens	*get_last_token(t_tokens *tokens)
+t_tkns	*get_last_token(t_tkns *tokens)
 {
 	if (!tokens)
 		return (NULL);
@@ -38,11 +38,11 @@ static t_tokens	*get_last_token(t_tokens *tokens)
 
 void	add_token(t_shell *sh, t_tk t_type, char *token, bool exp)
 {
-	t_tokens	*new;
-	t_tokens	*last;
+	t_tkns	*new;
+	t_tkns	*last;
 
 	last = NULL;
-	new = malloc(sizeof(t_tokens));
+	new = malloc(sizeof(t_tkns));
 	if (!new)
 	{
 		free(token);
@@ -50,7 +50,7 @@ void	add_token(t_shell *sh, t_tk t_type, char *token, bool exp)
 	}
 	new -> value = token;
 	new -> type = t_type;
-	new -> is_expandable = exp;
+	new -> is_expand = exp;
 	new -> next = NULL;
 	if (!sh -> tokens)
 		sh -> tokens = new;

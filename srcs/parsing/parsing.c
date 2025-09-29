@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:09:57 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/25 21:14:53 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/29 05:45:35 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	append_cmd(t_shell *sh, t_cmd *new)
 	sh -> cmd_count++;
 }
 
-static int	add_cmd(t_cmd *cmd, t_tokens **tokens, t_shell *sh)
+static int	add_cmd(t_cmd *cmd, t_tkns **tokens, t_shell *sh)
 {
 	int	status;
 	int	wrd_i;
@@ -55,11 +55,13 @@ static int	add_cmd(t_cmd *cmd, t_tokens **tokens, t_shell *sh)
 	return (SUCCESS);
 }
 
-static int	tokens_to_cmd(t_shell *sh, t_tokens *tokens)
+static int	tokens_to_cmd(t_shell *sh, t_tkns *tokens)
 {
 	t_cmd	*new_cmd;
 	int		status;
 
+	if (!tokens)
+		sh -> exit = 0;
 	while (tokens)
 	{
 		new_cmd = init_cmd(sh, tokens);
@@ -81,32 +83,17 @@ static int	tokens_to_cmd(t_shell *sh, t_tokens *tokens)
 	return (SUCCESS);
 }
 
-static void	merge_tokens_exp(t_shell *sh, t_tokens *tmp)
+static void	check_split_expansions(t_shell *sh)
 {
-	t_tokens	*to_free;
-	char		*merge;
-	char		*eq;
+	t_tkns	*curr;
 
-	eq = ft_strchr(sh -> cmd_line, '=');
-	while (tmp && tmp -> next && eq)
+	curr = sh -> tokens;
+	while (curr)
 	{
-		if (tmp -> value[ft_strlen(tmp -> value) - 1] == '=')
-		{
-			if (eq[1] == '\'' || eq[1] == '\"')
-			{
-				merge = ft_strjoin(tmp -> value, tmp -> next -> value);
-				if (!merge)
-					clean_shell(sh, MALC_FAIL);
-				free(tmp -> value);
-				tmp -> value = merge;
-				to_free = tmp -> next;
-				tmp -> next = to_free -> next;
-				free(to_free -> value);
-				free(to_free);
-			}
-			eq = ft_strchr(eq + 1, '=');
-		}
-		tmp = tmp -> next;
+		if (curr -> is_expand && curr -> type == T_WORD
+			&& ft_strchr(curr -> value, ' '))
+			split_var(sh, curr);
+		curr = curr -> next;
 	}
 }
 
@@ -119,9 +106,9 @@ int	parsing(t_shell *shell)
 		return (SYNTAX_ERR);
 	}
 	expander(shell);
-	if (!ft_strcmp(shell -> tokens -> value, "export")
-		&& shell -> tokens -> next)
-		merge_tokens_exp(shell, shell -> tokens -> next);
+	merge_tokens(shell);
+	check_empty_expansions(shell);
+	check_split_expansions(shell);
 	if (tokens_to_cmd(shell, shell -> tokens) == 130)
 	{
 		clean_tokens(shell -> tokens);

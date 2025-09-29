@@ -6,7 +6,7 @@
 /*   By: felayan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:10:01 by felayan           #+#    #+#             */
-/*   Updated: 2025/09/25 22:49:53 by felayan          ###   ########.fr       */
+/*   Updated: 2025/09/29 05:00:01 by felayan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	write_heredoc(char *input, int fd[2], int st, t_shell *shell)
 	return (SUCCESS);
 }
 
-static int	is_expand(t_tokens *delim)
+static int	is_expand(t_tkns *delim)
 {
 	int	status;
 
@@ -41,7 +41,7 @@ static int	is_expand(t_tokens *delim)
 	return (status);
 }
 
-static int	handle_input(char *input, int *fd, t_tokens *delim, t_shell *sh)
+static int	handle_input(char *input, int *fd, t_tkns *delim, t_shell *sh)
 {
 	if (!input)
 	{
@@ -66,7 +66,7 @@ static int	handle_input(char *input, int *fd, t_tokens *delim, t_shell *sh)
 	return (1);
 }
 
-int	open_doc(t_tokens *delim, t_shell *shell)
+int	open_doc(t_tkns *delim, t_shell *shell)
 {
 	int		fd[2];
 	char	*input;
